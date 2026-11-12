@@ -7,5 +7,5 @@ self.addEventListener('fetch',event=>{
   if(!url.pathname.startsWith(new URL(self.registration.scope).pathname))return;
   if(url.pathname.match(/\/admin(?:\.html|-controls\.css|-controls\.js|\.css|\.js)$/)||url.pathname.includes('telemetria-config'))return;
   if(req.mode==='navigate'){event.respondWith(fetch(req).catch(()=>caches.match('./index.html')));return;}
-  event.respondWith(fetch(req).then(resp=>{if(resp.ok){const clone=resp.clone();caches.open(CACHE).then(c=>c.put(req,clone)).catch(()=>{});}return resp;}).catch(()=>caches.match(req)));
+  event.respondWith(fetch(req).then(resp=>{if(resp.ok){const clone=resp.clone();caches.open(CACHE).then(c=>c.put(req,clone)).catch(()=>{});}return resp;}).catch(()=>caches.match(req,{ignoreSearch:true})));
 });
