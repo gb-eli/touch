@@ -105,10 +105,20 @@
     }catch(e){console.warn('TV TOUCH WebGL',e);return null;}
   }
   function createFallback(){
-    const ctx=canvas.getContext('2d');if(!ctx) return()=>{};
+    let target=canvas;
+    let ctx=canvas.getContext('2d');
+    if(!ctx){
+      target=document.createElement('canvas');
+      target.className='cosmos-fallback';
+      target.setAttribute('aria-hidden','true');
+      target.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0';
+      canvas.parentElement.appendChild(target);
+      ctx=target.getContext('2d');
+    }
+    if(!ctx)return()=>{};
     const colors={earth:['#67d7ff','#0075bc','#07133d'],mars:['#ffd09a','#a44225','#3c1123'],jupiter:['#fff4d6','#d8995f','#5c251e'],saturn:['#ffe3a8','#bd9663','#563326'],neptune:['#85bdff','#125fd8','#07134e']};
     return now=>{
-      const w=canvas.width=Math.max(2,canvas.clientWidth),h=canvas.height=Math.max(2,canvas.clientHeight);ctx.fillStyle='#030817';ctx.fillRect(0,0,w,h);
+      const w=target.width=Math.max(2,canvas.clientWidth),h=target.height=Math.max(2,canvas.clientHeight);ctx.fillStyle='#030817';ctx.fillRect(0,0,w,h);
       const cx=w/2,cy=h/2,r=Math.min(w,h)*.30*state.zoom;const c=colors[state.planet];
       const g=ctx.createRadialGradient(cx-r*.35,cy-r*.4,r*.04,cx,cy,r);g.addColorStop(0,c[0]);g.addColorStop(.42,c[1]);g.addColorStop(1,c[2]);
       ctx.save();ctx.translate(cx,cy);ctx.rotate(state.rotX*.3);if(state.planet==='saturn'){ctx.beginPath();ctx.ellipse(0,0,r*1.7,r*.39,-.28,0,Math.PI*2);ctx.strokeStyle='#dab88aa6';ctx.lineWidth=r*.14;ctx.stroke();}ctx.restore();
@@ -118,8 +128,9 @@
   }
   function ensureRenderer(){
     if(state.renderer) return;
-    state.renderer=createWebGL()||createFallback();
-    if(state.renderer && canvas.getContext('webgl')) status.textContent='3D / WebGL';
+    const gpu=createWebGL();
+    state.renderer=gpu||createFallback();
+    status.textContent=gpu?'3D / WebGL':'Modo 2D compatível';
   }
   function setPlanet(id){
     if(!data[id])return;state.planet=id;

@@ -191,3 +191,9 @@ body[data-theme=light] .cosmos-panel,body[data-theme=light] .physics-panel,body[
 .studio-tile.pressed{transform:scale(.985)}
 
 .resource-icon svg{width:34px;height:34px;display:block}.card-open{font-size:15px;font-weight:850}
+@property --tvt-h1 {syntax:"<number>";inherits:true;initial-value:260;}
+@property --tvt-h2 {syntax:"<number>";inherits:true;initial-value:180;}
+@property --tvt-a {syntax:"<number>";inherits:true;initial-value:.24;}
+body[data-theme=colorful]{transition:background-color .3s,color .3s,--tvt-h1 7.5s ease,--tvt-h2 7.5s ease,--tvt-a 7.5s ease}
+.cosmos-hud{z-index:2}
+@media(prefers-reduced-motion:reduce){body[data-theme=colorful]{transition:none}}
