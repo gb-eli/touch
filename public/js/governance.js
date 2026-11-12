@@ -18,7 +18,7 @@
   function classify(el) {
     const tool=el.closest('[data-tool]'); if(tool) return 'tool_'+tool.dataset.tool;
     const resource=el.closest('[data-visit-resource],[data-open-resource]'); if(resource) return 'resource_'+(resource.dataset.visitResource||resource.dataset.openResource);
-    const nav=el.closest('[data-page],[data-go]'); if(nav){const page=nav.dataset.page||nav.dataset.go;return ['videos','laboratorio','diagnostico'].includes(page)?'module_'+page:null;}
+    const nav=el.closest('[data-page],[data-go]'); if(nav){const page=nav.dataset.page||nav.dataset.go;return ['videos','laboratorio','diagnostico','cosmos','memoria','fisica'].includes(page)?'module_'+page:null;}
     return null;
   }
   async function fetchTable(table,columns,query='') {
@@ -38,7 +38,7 @@
       const source=profiles[0]||DEFAULT_PROFILE;
       profile={rotation_sensitivity:Number(source.rotation_sensitivity)||1,brush_sensitivity:Number(source.brush_sensitivity)||1,drag_threshold_px:Number(source.drag_threshold_px)||12};
       synced=true;
-      localStorage.setItem('tvtouch:governance-cache:v1',JSON.stringify({features:[...features],station,profile,time:Date.now()}));
+      try {localStorage.setItem('tvtouch:governance-cache:v1',JSON.stringify({features:[...features],station,profile,time:Date.now()}));} catch {}
       refreshVisuals();
     } catch (error) {
       if(!synced) {try{const cached=JSON.parse(localStorage.getItem('tvtouch:governance-cache:v1')||'null');if(cached && Date.now()-cached.time<86400000){features=new Map(cached.features);if(cached.station===station)profile=cached.profile;refreshVisuals();}}catch{}}
@@ -53,6 +53,10 @@
       el.setAttribute('aria-disabled',String(blocked));
       if('disabled' in el)el.disabled=blocked;
     });
+    const current=document.querySelector('.page.active')?.id.replace('page-','');
+    if(['videos','laboratorio','diagnostico','cosmos','memoria','fisica'].includes(current)&&!available('module_'+current)){
+      document.querySelector('[data-page="inicio"]')?.click();
+    }
   }
   window.addEventListener('tvt:station-selected',e=>{if(STATIONS.includes(e.detail?.station)){station=e.detail.station;profile={...DEFAULT_PROFILE};reload();}});
   document.addEventListener('click',event=>{const key=classify(event.target);if(key&&!available(key)) {event.preventDefault();event.stopImmediatePropagation();notify('Atividade temporariamente desativada pela administração.');}},true);

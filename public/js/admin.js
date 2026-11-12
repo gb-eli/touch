@@ -15,7 +15,7 @@
     porto360:'Portos em 360°',navio360:'Navios em 360°',oceano360:'Oceanos em 360°',
     historia360:'História em 360°',espaco360:'Espaço em 360°',museus360:'Museus em 360°',
     natureza360:'Natureza em 360°',industrias360:'Indústrias em 360°',
-    desenho:'Quadro digital',solidos:'Sólidos 3D',encaixe:'Encaixe de formas',porto:'Desafio portuário'
+    desenho:'Quadro digital',solidos:'Sólidos 3D',encaixe:'Encaixe de formas',porto:'Desafio portuário',cosmos:'Universo 3D',memoria:'Jogo da memória',fisica:'Física 2D'
   });
   const AREAS = Object.freeze({comum:'Formação geral',tecnica:'Formação técnica',interdisciplinar:'Interdisciplinar'});
   const COLORS = ['#18b8a8','#577fda','#e9a566'];
