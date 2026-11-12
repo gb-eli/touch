@@ -112,20 +112,20 @@
   if (admin) root.classList.add('ux-admin');
   const host = admin ? $('.header-actions') : $('.top-right');
   if (!host) return;
-  const bar = document.createElement('div');
+  const bar = $('#uxThemeBar') || document.createElement('div');
   bar.className = 'ux-themes';
   bar.setAttribute('role','group');
   bar.setAttribute('aria-label','Tema do TV TOUCH');
-  [['dark','Black'],['light','Claro'],['colorful','Colorido']].forEach(([id,label]) => {
+  if (!bar.querySelector('[data-ux-theme]')) [['dark','Black'],['light','Claro'],['colorful','Colorido']].forEach(([id,label]) => {
     const b = document.createElement('button');
     b.type = 'button';b.className='ux-theme';b.dataset.uxTheme=id;
     b.textContent=label;b.setAttribute('aria-pressed','false');bar.appendChild(b);
   });
-  const pause = document.createElement('button');
+  const pause = $('#uxPause') || document.createElement('button');
   pause.type='button';pause.className='ux-pause';pause.textContent='Pausar cores';
   pause.hidden=true;pause.setAttribute('aria-pressed','false');
-  if (admin) {host.prepend(pause);host.prepend(bar);}
-  else {host.insertBefore(bar,host.querySelector('.connection'));host.insertBefore(pause,host.querySelector('.connection'));}
+  if(!bar.isConnected){if(admin)host.prepend(bar);else host.insertBefore(bar,host.querySelector('.connection'));}
+  if(!pause.isConnected){if(admin)host.prepend(pause);else host.insertBefore(pause,host.querySelector('.connection'));}
   const key='tvtouch-theme-mode';
   const backdrop=document.createElement('div');backdrop.className='ux-backdrop';backdrop.setAttribute('aria-hidden','true');
   const layers=[document.createElement('div'),document.createElement('div')];
@@ -155,13 +155,15 @@
   document.addEventListener('visibilitychange',schedule);
   if(motion.addEventListener)motion.addEventListener('change',schedule);
   setMode(read()||'dark');
+  document.querySelectorAll('[data-ux-action]').forEach(b=>b.addEventListener('click',()=>{const t=b.dataset.uxAction;if(t==='lesson')$('#lessonOpen')?.click();else if(t==='fullscreen')$('#fullscreenButton')?.click();else document.querySelector('[data-page="'+t+'"]')?.click();}));
+  window.TV_TOUCH_UX_BUILD='1.7.1';
   if (admin) {
     const nav=$('.side nav');
     if(nav&&!nav.querySelector('a[href="#controls"]'))nav.insertAdjacentHTML('beforeend','<a class="side-link" href="#controls"><span>⚙</span> Ferramentas e toque</a>');
     const title=$('#authTitle');if(title)title.textContent='Administração do TV TOUCH.';
     const desc=$('.auth-description');if(desc)desc.textContent='Consulte os indicadores das três TVs, gerencie as ferramentas e ajuste a resposta de toque de cada equipamento.';
     const sub=$('.logo small');if(sub)sub.textContent='Administração';
-    const ver=$('.version');if(ver)ver.textContent='TV TOUCH · AGV / v1.6';
+    const ver=$('.version');if(ver)ver.textContent='TV TOUCH · AGV / v1.7.1';
   } else {
     const title=$('#homeTitle');if(title)title.innerHTML='Aula pronta <span>para toque.</span>';
     const hero=$('.hero-content>p');if(hero)hero.textContent='Escolha a disciplina, abra um recurso e use a TV na horizontal: toque, arraste, amplie e explore com a turma.';
@@ -173,6 +175,6 @@
       entries.forEach(([step,label,desc,target])=>{const b=document.createElement('button');b.type='button';b.className='ux-action';b.innerHTML='<small>'+step+'</small><strong>'+label+'</strong><span>'+desc+'</span>';b.addEventListener('click',()=>{if(target==='lesson')$('#lessonOpen')?.click();else if(target==='fullscreen')$('#fullscreenButton')?.click();else document.querySelector('[data-page="'+target+'"]')?.click()});grid.appendChild(b)});
       lesson.insertAdjacentElement('afterend',grid);
     }
-    const ver=$('.sidebar-signature');if(ver)ver.textContent='TV TOUCH · AGV / v1.6';
+    const ver=$('.sidebar-signature');if(ver)ver.textContent='TV TOUCH · AGV / v1.7.1';
   }
 })();
