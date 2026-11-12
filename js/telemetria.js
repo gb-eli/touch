@@ -144,5 +144,5 @@
     const d=e.detail||{};if(['touch_peak','fps'].includes(d.type))send({kind:'metric',type:d.type,value:d.value,attempts:1,failures:0});
   });
   setContext();selectStation();
-  setTimeout(()=>{if(!context && !document.hidden && !$('resourceDialog').open)openDialog();},1100);
+  // A configuração da aula é acessada pelo professor; sem janela automática.
 })();
