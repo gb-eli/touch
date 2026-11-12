@@ -1,33 +1,42 @@
-# 📺 TV TOUCH AGV — v1.6
+# TV TOUCH / Studio 2.0 — AGV
 
-Portal pedagógico interativo para três painéis Android de 86 polegadas do Colégio Estadual Alberto Gomes Veiga (Paranaguá/PR). HTML/CSS/JS estático, GitHub Pages e Supabase opcional.
+Portal educacional para os painéis interativos Samsung WA86F de 86 polegadas, Android 14, uso horizontal. O código estático funciona no GitHub Pages sem framework ou workflow personalizado.
 
-## Estrutura
+## Interface
 
-- `main/public/`: código-fonte do site (portal e admin)
-- `main/supabase/`: SQL, regras de acesso e funções do backend; **não publicar**
-- `main/docs/`: documentação técnica e implantação
-- `gh-pages/`: **somente** os arquivos estáticos de `main/public/`, na raiz, sem SQL nem workflows
+- Launcher de 5 experiências em mosaico, com alvos grandes e barra de navegação inferior, projetado para 16:9.
+- Temas Black, Claro e Vivo, com variação de fundo moderada, opção Pausar e preferência salva no navegador.
+- Ícones SVG próprios; imagens de marca em SVG/PNG locais.
+- Estrutura responsiva para 1366×768, 1920×1080 e 3840×2160, com opção de navegação em telas menores.
+- Transições com `prefers-reduced-motion` e animações pausadas quando a aba não está visível.
 
-## Ambientes
+## Experiências
 
-- **Público**: `index.html` — ferramentas, vídeos 360°, laboratório 2D/3D, diagnóstico e seleção de disciplina sem login.
-- **Admin**: `admin.html` — Supabase Auth e autorização via `tvt_admins`; métricas, bloqueio/liberação de recursos e ajustes de gestos por TV.
+- **Universo 3D**: renderizador WebGL sem dependência de rede; fallback Canvas 2D; seleção de planetas, arraste para girar, pinça para zoom.
+- **Quadro livre**: desenho touch com cores, desfazer, salvar PNG (módulo anterior preservado).
+- **Formas 3D**: geometria manipulável por toque (módulo anterior preservado).
+- **Memória**: jogo de 6 pares com flip 3D, contagem de jogadas e reinício.
+- **Física 2D**: lançamento de esferas, gravidade ajustável, colisões simplificadas.
+- **Encaixe e quiz portuário**: preservados no laboratório.
+- **Biblioteca e vídeos**: acesso a recursos externos com aviso de necessidade de conexão e verificação pedagógica.
 
-## Publicação com menor uso de GitHub Actions
+## Arquitetura e segurança
 
-Não há workflow personalizado de publicação na `main`. Em **Settings → Pages → Build and deployment**, escolher **Deploy from a branch**, branch **gh-pages**, pasta **/(root)**.
+- `public/` = site estático (HTML/CSS/JS/SVG/PNG), sem segredos.
+- `supabase/` = backend opcional. Não publicar scripts SQL, Edge Function ou chaves secretas no GitHub Pages.
+- `docs/` = projeto, evolução e procedimentos.
+- `public/admin.html` = administração existente; operações reais dependem de Supabase Auth e políticas RLS.
+- Perfil e parâmetros de gesto por TV dependem do backend. Web apps não recalibram o controlador infravermelho físico.
+- Sem professor/aluno obrigatório, sem envio de notas, desenhos ou dados pessoais. Telemetria permanece opcional.
 
-O GitHub Pages executa automaticamente o workflow *gerenciado pelo GitHub* para publicar a branch: isso não equivale a **zero minutos garantidos**, especialmente em repositório privado. A exclusão do workflow personalizado evita nossas execuções próprias de build e deploy.
+## Implantação com GitHub Pages
 
-**Atualizações não são automáticas:** depois de aprovar mudanças em `main/public/`, sincronizar esses arquivos com a raiz de `gh-pages` e fazer push nessa branch. Não copiar as pastas `supabase/`, `docs/` ou segredos para `gh-pages`. Para não usar nenhum GitHub Actions, hospedar fora do GitHub Pages (por exemplo, Cloudflare Pages), mantendo o repositório no GitHub.
+`main`: código-fonte completo. `gh-pages`: **apenas conteúdo de** `public/` na raiz. Settings → Pages → Deploy from a branch → `gh-pages` → `/(root)`. Não usar workflow próprio.
 
-Não há Supabase ativo por padrão. As ferramentas locais funcionam sem backend; métricas reais e controles remotos dependem de projeto dedicado.
+A publicação por branch ainda pode criar uma execução gerenciada do Pages, eventualmente contabilizada no plano privado. Confira o consumo em Billing. Para zero GitHub Actions, utilize hospedagem externa.
 
-Veja [arquitetura](docs/ARCHITECTURE.md) e [implantação](docs/DEPLOY.md).
+## Homologação
 
-## Interface de toque (v1.6)
+`node --check public/js/*.js`, inspeção de referências e testes de navegador em resoluções horizontais. As interações WebGL/IR multitouch devem ser verificadas na Samsung WA86F real antes de homologação final.
 
-O script `public/js/ux.js` adiciona temas **Black**, **Claro** e **Colorido** (com variação suave e aleatória de matiz e intensidade), preferência por navegador, botão para pausar a animação e atalhos de aula. O mesmo tema acompanha portal público e administração. Em telas sensíveis ao toque, os controles têm alvos ampliados.
-
-A publicação é pela branch `gh-pages` (raiz), sem workflow personalizado. A alteração em `main` **não publica** automaticamente: a branch `gh-pages` deve receber os novos arquivos. O build gerenciado do GitHub Pages continua existindo.
+As experiências astronômicas e físicas são modelos didáticos ilustrativos, não simuladores científicos em escala.

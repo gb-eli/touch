@@ -45,7 +45,8 @@
   function setContext(){
     const text=context ? `${label[context.area]} · ${context.discipline} · ${context.station}` : 'Escolha a disciplina para organizar o uso do TV TOUCH. O registro de métricas é opcional.';
     $('lessonContextText').textContent=text;
-    $('lessonChip').textContent=context?`📘 ${context.discipline}`:'📘 Definir aula';
+    const chipLabel=$('lessonChip').querySelector('span') || $('lessonChip');
+    chipLabel.textContent=context?context.discipline:'Definir aula';
     $('lessonChip').title=context?`${text} · ${serverSession?'Métricas habilitadas':'Sem métricas'}`:'Selecionar disciplina';
   }
   function openDialog(){
