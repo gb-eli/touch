@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b2235">
+  <meta name="description" content="Painel de gestão protegido do projeto TV TOUCH AGV.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/admin-controls.css">
+  <title>TV TOUCH | Indicadores AGV</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Pular para indicadores</a>
+  <div class="layout">
+    <aside class="side">
+      <a class="logo" href="index.html" aria-label="TV TOUCH, voltar para o portal">
+        <span class="logo-icon">▣</span>
+        <span><strong>TV TOUCH</strong><small>GESTÃO INTELIGENTE</small></span>
+      </a>
+      <div class="side-label">PAINEL DE GESTÃO</div>
+      <nav aria-label="Navegação do painel">
+        <a class="side-link selected" href="#overview"><span>◫</span> Visão geral</a>
+        <a class="side-link" href="#usage"><span>◷</span> Utilização</a>
+        <a class="side-link" href="#devices"><span>▣</span> Equipamentos</a>
+        <a class="side-link" href="#quality"><span>⌁</span> Conectividade</a>
+      </nav>
+      <div class="side-divider"></div>
+      <div class="side-label">PORTAL</div>
+      <a class="side-link" href="index.html"><span>↗</span> Abrir atividades</a>
+      <div class="side-foot">
+        <div class="privacy"><span>◈</span><div><strong>Dados protegidos</strong><p>Sem cadastro de alunos. Relatórios acessíveis somente aos administradores autorizados.</p></div></div>
+        <span class="version">TV TOUCH • AGV / v1.4</span>
+      </div>
+    </aside>
+    <div class="content-wrap">
+      <header class="header">
+        <div class="trail">AGV <span>/</span> TV TOUCH <span>/</span> <strong>Indicadores</strong></div>
+        <div class="header-actions"><span id="livePill" class="pill"><i></i> Aguardando conexão</span><a href="index.html" class="open-portal">Abrir portal <span>↗</span></a></div>
+      </header>
+      <main id="main">
+        <section id="authView" class="auth-view" aria-labelledby="authTitle">
+          <div class="auth-card">
+            <div class="auth-symbol">▥</div>
+            <span class="eyebrow">TV TOUCH • ÁREA RESTRITA</span>
+            <h1 id="authTitle">Indicadores para decisões melhores.</h1>
+            <p class="auth-description">Acompanhe como os painéis interativos são utilizados, identifique os recursos de maior interesse e compare a qualidade técnica de cada equipamento.</p>
+            <form id="loginForm" class="auth-form" autocomplete="on">
+              <label for="email">E-mail administrativo</label>
+              <input id="email" name="email" type="email" autocomplete="username" placeholder="gestao@escola.edu.br" required>
+              <label for="password">Senha</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Sua senha do Supabase Auth" required>
+              <button type="submit" class="btn primary" id="loginButton">Entrar no painel <span>→</span></button>
+              <p id="authMessage" class="auth-message" role="status" aria-live="polite">Acesso exclusivo a administradores cadastrados no Supabase.</p>
+            </form>
+            <div class="demo-divider"><span>QUER CONHECER A INTERFACE?</span></div>
+            <button id="demoButton" type="button" class="btn outline">▣ Explorar demonstração com dados fictícios</button>
+            <p class="auth-note">O modo de demonstração não acessa o banco nem representa utilização real da escola.</p>
+          </div>
+          <div class="auth-graphic" aria-hidden="true"><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div><div class="data-plane"><span class="dp-label">TV TOUCH / PERFORMANCE</span><div class="dp-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="dp-row"><b>3</b> PAINÉIS <b>360°</b> EXPERIÊNCIAS</div></div></div>
+        </section>
+
+        <div id="dashboard" class="dashboard" hidden>
+          <section id="overview" class="intro">
+            <div><div class="eyebrow">INTELIGÊNCIA PEDAGÓGICA E TECNOLÓGICA</div><h1>Visão geral <span class="spark">✳</span></h1><p>Dados de utilização das TVs interativas do Colégio Estadual Alberto Gomes Veiga.</p></div>
+            <div class="intro-buttons"><button type="button" id="refreshButton" class="btn outline">⟳ Atualizar</button><button type="button" id="exportButton" class="btn primary">↓ Exportar CSV</button><button type="button" id="signoutButton" class="btn quiet">Sair</button></div>
+          </section>
+          <div id="demoNotice" class="demo-notice" hidden><strong>▣ MODO DEMONSTRAÇÃO</strong> Os indicadores abaixo são totalmente fictícios. Nenhum dado foi consultado no Supabase. <button type="button" id="leaveDemo">Sair da demonstração</button></div>
+          <div class="filter-row">
+            <div class="filter"><label for="periodFilter">Período</label><select id="periodFilter"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></div>
+            <div class="filter"><label for="stationFilter">Equipamento</label><select id="stationFilter"><option value="">Todas as TVs</option><option value="TV TOUCH 01">TV TOUCH 01</option><option value="TV TOUCH 02">TV TOUCH 02</option><option value="TV TOUCH 03">TV TOUCH 03</option></select></div>
+            <div class="updated">Última atualização <strong id="updatedAt">—</strong></div>
+          </div>
+          <div id="loadStatus" class="load-status" role="status" aria-live="polite"></div>
+          <section class="metrics" aria-label="Indicadores principais">
+            <article class="metric-card"><div class="metric-label">Sessões de aula <span class="mini-icon sky">◷</span></div><strong id="metricSessions">—</strong><p>Inícios com telemetria autorizada</p></article>
+            <article class="metric-card"><div class="metric-label">Ferramentas abertas <span class="mini-icon mint">↗</span></div><strong id="metricOpens">—</strong><p>Cliques registrados em recursos</p></article>
+            <article class="metric-card"><div class="metric-label">TVs utilizadas <span class="mini-icon lavender">▣</span></div><strong id="metricPanels">—</strong><p>Dos três painéis cadastrados</p></article>
+            <article class="metric-card"><div class="metric-label">Duração estimada <span class="mini-icon peach">◴</span></div><strong id="metricMinutes">—</strong><p>Minutos médios por sessão</p></article>
+          </section>
+          <div class="panel-grid grid-2" id="usage">
+            <section class="panel trend-panel" aria-labelledby="trendTitle"><div class="panel-head"><div><div class="eyebrow">UTILIZAÇÃO AO LONGO DO TEMPO</div><h2 id="trendTitle">Aulas registradas</h2></div><span class="panel-tag">por dia</span></div><div id="trendChart" class="trend-chart" role="img" aria-label="Gráfico de sessões por dia"></div><div class="chart-footer"><span><i class="legend-dot"></i> Sessões registradas</span><span id="chartPeriod">Últimos 30 dias</span></div></section>
+            <section class="panel" aria-labelledby="areasTitle"><div class="panel-head"><div><div class="eyebrow">ÁREAS CURRICULARES</div><h2 id="areasTitle">Onde a TV é utilizada?</h2></div></div><div class="area-layout"><div id="areaDonut" class="donut"><div><strong id="areaTotal">—</strong><span>sessões</span></div></div><div id="areaLegend" class="area-legend"></div></div><div class="panel-note">A distribuição reflete a disciplina selecionada ao iniciar a aula.</div></section>
+          </div>
+          <div class="panel-grid grid-2">
+            <section class="panel" aria-labelledby="disciplinesTitle"><div class="panel-head"><div><div class="eyebrow">PANORAMA PEDAGÓGICO</div><h2 id="disciplinesTitle">Disciplinas mais ativas</h2></div><span class="panel-tag">sessões</span></div><div id="disciplinesList" class="ranking"></div></section>
+            <section class="panel" aria-labelledby="toolsTitle"><div class="panel-head"><div><div class="eyebrow">ENGAJAMENTO COM O CATÁLOGO</div><h2 id="toolsTitle">Ferramentas mais abertas</h2></div><span class="panel-tag">aberturas</span></div><div id="toolsList" class="ranking"></div><div class="panel-note">Uma abertura de site externo não mede o tempo de permanência fora do portal.</div></section>
+          </div>
+          <section class="panel device-section" id="devices" aria-labelledby="devicesTitle"><div class="panel-head"><div><div class="eyebrow">INFRAESTRUTURA EM SALA</div><h2 id="devicesTitle">Desempenho por equipamento</h2></div><span class="panel-tag">TV TOUCH 01–03</span></div><div id="deviceCards" class="device-grid"></div></section>
+          <section class="panel network-section" id="quality" aria-labelledby="networkTitle"><div class="panel-head"><div><div class="eyebrow">QUALIDADE DE CONEXÃO</div><h2 id="networkTitle">Latência e falhas de requisição</h2></div><span class="panel-tag">requisições HTTP</span></div><div class="network-top"><div class="network-item"><span>Tempo médio de resposta</span><strong id="networkLatency">—</strong><small>Endpoint Supabase (HTTP)</small></div><div class="network-item"><span>Requisições de teste</span><strong id="networkAttempts">—</strong><small>Amostras de conectividade</small></div><div class="network-item"><span>Falhas de requisição</span><strong id="networkErrors">—</strong><small id="networkPercent">—</small></div><div class="network-item"><span>FPS / pico de toque</span><strong id="networkGraphics">—</strong><small>Testes executados manualmente</small></div></div><div id="networkStationRows" class="network-rows"></div><div class="network-disclaimer">O teste mede resposta HTTPS de aplicação. Não é ping ICMP nem medida de perda de pacotes na rede. Falhas incluem timeout, servidor indisponível e problemas de conexão.</div></section>
+
+          <section class="panel controls-panel" id="controls" aria-labelledby="controlsTitle">
+            <div class="panel-head"><div><div class="eyebrow">CONFIGURAÇÃO DA PLATAFORMA</div><h2 id="controlsTitle">Ferramentas e calibração</h2></div><span class="panel-tag">Gestão remota</span></div>
+            <p class="controls-help">Habilite ferramentas por área e ajuste os gestos de cada TV. Alterações salvas no Supabase serão aplicadas no portal ao atualizar a configuração.</p>
+            <p id="controlStatus" class="controls-status" role="status" aria-live="polite">Carregue o painel autenticado para gerenciar.</p>
+            <div class="control-grid">
+              <div class="control-group"><h3>Disponibilidade das ferramentas</h3><div id="featureToggles" class="toggle-list"></div></div>
+              <form id="calibrationForm" class="control-group">
+                <h3>Perfil de gestos da TV</h3>
+                <label for="profileStation">Equipamento</label>
+                <select id="profileStation" required><option value="TV TOUCH 01">TV TOUCH 01</option><option value="TV TOUCH 02">TV TOUCH 02</option><option value="TV TOUCH 03">TV TOUCH 03</option></select>
+                <label for="rotationSensitivity">Velocidade de rotação 3D <output id="rotationOut">1.00×</output></label>
+                <input id="rotationSensitivity" type="range" min="0.5" max="2" step="0.05" value="1">
+                <label for="dragThreshold">Distância mínima para arrastar <output id="dragOut">12 px</output></label>
+                <input id="dragThreshold" type="range" min="3" max="28" step="1" value="12">
+                <label for="brushSensitivity">Espessura relativa do pincel <output id="brushOut">1.00×</output></label>
+                <input id="brushSensitivity" type="range" min="0.5" max="2" step="0.05" value="1">
+                <button id="saveCalibration" class="btn primary" type="submit">Salvar perfil</button>
+                <p class="controls-help">Esses parâmetros ajustam os gestos do site, não o firmware, o controlador de toque ou a calibração física do Android.</p>
+              </form>
+            </div>
+          </section>
+          <footer class="footer"><span>TV TOUCH AGV • Indicadores agregados, sem identificação de alunos</span><span>Dados do portal sujeitos à autorização do docente e à política de retenção</span></footer>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/telemetria-config.js" defer></script>
+  <script src="js/admin.js" defer></script>
+  <script src="js/admin-controls.js" defer></script>
+</body>
+</html>

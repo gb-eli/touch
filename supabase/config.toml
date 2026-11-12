@@ -1,0 +1,4 @@
+# Função com endpoint público: autenticação e validações acontecem no código.
+# O banco só é acessado pela função, com chave de servidor.
+[functions.tv-touch-telemetry]
+verify_jwt = false
