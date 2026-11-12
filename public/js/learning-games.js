@@ -21,11 +21,11 @@
     movesOut.textContent='0';matchesOut.innerHTML='0 <small>/ 6 pares</small>';
     message.textContent='Toque em duas cartas para começar.';
     const cards=shuffle([...shapes,...shapes].map((s,i)=>({...s,uid:i})));
-    grid.innerHTML=cards.map(s=>`<button type="button" class="memory-card" data-pair="${s.id}" aria-label="Revelar carta" aria-pressed="false"><span class="memory-inner"><span class="memory-front" aria-hidden="true">✳</span><span class="memory-back" style="--card-color:${s.color}" aria-hidden="true"><span class="memory-glyph">${s.glyph}</span><span class="memory-name">${s.name}</span></span></span></button>`).join('');
+    grid.innerHTML=cards.map(s=>`<button type="button" class="memory-card" data-pair="${s.id}" aria-label="Carta ${cards.indexOf(s)+1} oculta; toque para revelar" aria-pressed="false"><span class="memory-inner"><span class="memory-front" aria-hidden="true">✳</span><span class="memory-back" style="--card-color:${s.color}" aria-hidden="true"><span class="memory-glyph">${s.glyph}</span><span class="memory-name">${s.name}</span></span></span></button>`).join('');
   }
   function flip(card){
     if(memory.locked||card.classList.contains('is-open')||card.classList.contains('is-matched'))return;
-    card.classList.add('is-open');card.setAttribute('aria-pressed','true');card.setAttribute('aria-label',card.querySelector('.memory-name').textContent);
+    card.classList.add('is-open');card.setAttribute('aria-pressed','true');card.setAttribute('aria-label','Carta '+([...grid.querySelectorAll('.memory-card')].indexOf(card)+1)+': '+card.querySelector('.memory-name').textContent);
     memory.selected.push(card);
     if(memory.selected.length!==2)return;
     memory.turns++;movesOut.textContent=String(memory.turns);
@@ -35,11 +35,11 @@
       memory.selected=[];memory.locked=false;
       matchesOut.innerHTML=`${memory.matched.size} <small>/ 6 pares</small>`;
       message.textContent=memory.matched.size===6?`Concluído em ${memory.turns} jogadas. Inicie outra rodada.`:'Par encontrado. Continue.';
-      if(memory.matched.size===6)window.dispatchEvent(new CustomEvent('tvt:tool-open',{detail:{id:'memoria-completed'}}));
+      if(memory.matched.size===6)window.dispatchEvent(new CustomEvent('tvt:activity-completed',{detail:{id:'memoria',moves:memory.turns}}));
     }else{
       message.textContent='Não combinam. Observe e tente novamente.';
       memory.pending=setTimeout(()=>{
-        for(const el of memory.selected){el.classList.remove('is-open');el.setAttribute('aria-pressed','false');el.setAttribute('aria-label','Revelar carta');}
+        for(const el of memory.selected){el.classList.remove('is-open');el.setAttribute('aria-pressed','false');el.setAttribute('aria-label','Carta '+([...grid.querySelectorAll('.memory-card')].indexOf(el)+1)+' oculta; toque para revelar');}
         memory.selected=[];memory.locked=false;memory.pending=null;
       },840);
     }

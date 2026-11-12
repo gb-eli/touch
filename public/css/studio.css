@@ -197,3 +197,10 @@ body[data-theme=light] .cosmos-panel,body[data-theme=light] .physics-panel,body[
 body[data-theme=colorful]{transition:background-color .3s,color .3s,--tvt-h1 7.5s ease,--tvt-h2 7.5s ease,--tvt-a 7.5s ease}
 .cosmos-hud{z-index:2}
 @media(prefers-reduced-motion:reduce){body[data-theme=colorful]{transition:none}}
+
+/* Audit 2.0.2: layout horizontal sem sobreposição do dock */
+.studio-context-note{display:block;max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.studio-home-active main#conteudo{padding-bottom:0}
+body.studio-home-active .footer{display:none}
+body.studio-home-active .studio-home{min-height:calc(100dvh - clamp(72px,8vh,116px) - clamp(95px,11vh,140px))}
+@media(max-width:980px){body.studio-home-active .studio-home{min-height:auto;padding-bottom:clamp(105px,17vh,150px)}}
