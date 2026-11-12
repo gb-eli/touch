@@ -8,9 +8,10 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/admin.css">
   <link rel="stylesheet" href="css/admin-controls.css">
+  <link rel="stylesheet" href="css/ux-shell.css?v=1.7.1">
   <title>TV TOUCH | Indicadores AGV</title>
 </head>
-<body>
+<body data-theme="dark">
   <a class="skip-link" href="#main">Pular para indicadores</a>
   <div class="layout">
     <aside class="side">
@@ -30,21 +31,21 @@
       <a class="side-link" href="index.html"><span>↗</span> Abrir atividades</a>
       <div class="side-foot">
         <div class="privacy"><span>◈</span><div><strong>Dados protegidos</strong><p>Sem cadastro de alunos. Relatórios acessíveis somente aos administradores autorizados.</p></div></div>
-        <span class="version">TV TOUCH • AGV / v1.4</span>
+        <span class="version">TV TOUCH • AGV / v1.7.1</span>
       </div>
     </aside>
     <div class="content-wrap">
       <header class="header">
         <div class="trail">AGV <span>/</span> TV TOUCH <span>/</span> <strong>Indicadores</strong></div>
-        <div class="header-actions"><span id="livePill" class="pill"><i></i> Aguardando conexão</span><a href="index.html" class="open-portal">Abrir portal <span>↗</span></a></div>
+        <div class="header-actions"><div class="ux-themes" id="uxThemeBar" role="group" aria-label="Modo visual"><button class="ux-theme active" type="button" data-ux-theme="dark" aria-pressed="true">Black</button><button class="ux-theme" type="button" data-ux-theme="light" aria-pressed="false">Claro</button><button class="ux-theme" type="button" data-ux-theme="colorful" aria-pressed="false">Colorido</button></div><button class="ux-pause" id="uxPause" type="button" hidden aria-pressed="false">Pausar cores</button><span id="livePill" class="pill"><i></i> Aguardando conexão</span><a href="index.html" class="open-portal">Abrir portal <span>↗</span></a></div>
       </header>
       <main id="main">
         <section id="authView" class="auth-view" aria-labelledby="authTitle">
           <div class="auth-card">
             <div class="auth-symbol">▥</div>
             <span class="eyebrow">TV TOUCH • ÁREA RESTRITA</span>
-            <h1 id="authTitle">Indicadores para decisões melhores.</h1>
-            <p class="auth-description">Acompanhe como os painéis interativos são utilizados, identifique os recursos de maior interesse e compare a qualidade técnica de cada equipamento.</p>
+            <h1 id="authTitle">Administração do TV TOUCH</h1>
+            <p class="auth-description">Acompanhe as três TVs, controle as ferramentas liberadas e ajuste os gestos de cada painel.</p>
             <form id="loginForm" class="auth-form" autocomplete="on">
               <label for="email">E-mail administrativo</label>
               <input id="email" name="email" type="email" autocomplete="username" placeholder="gestao@escola.edu.br" required>
@@ -118,6 +119,6 @@
   <script src="js/telemetria-config.js" defer></script>
   <script src="js/admin.js" defer></script>
   <script src="js/admin-controls.js" defer></script>
-  <script src="js/ux.js" defer></script>
+  <script src="js/ux.js?v=1.7.1" defer></script>
 </body>
 </html>
