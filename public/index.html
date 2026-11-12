@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/diagnostico.css">
   <link rel="stylesheet" href="css/telemetria.css">
   <link rel="stylesheet" href="css/governance.css">
-  <link rel="stylesheet" href="css/ux-shell.css?v=1.7.1">
+  <link rel="stylesheet" href="css/ux-shell.css?v=1.8.0">
   <title>TV TOUCH | AGV</title>
 </head>
 <body data-theme="dark">
@@ -21,21 +21,21 @@
     <aside class="sidebar" aria-label="Navegação principal">
       <a class="brand" href="#inicio" data-nav="inicio" aria-label="TV TOUCH, início">
         <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><rect x="4" y="7" width="40" height="29" rx="7" stroke="currentColor" stroke-width="3"/><path d="M17 42h14M24 36v6M14 22h20M24 12v20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span>
-        <span><strong>TV TOUCH</strong><small>AGV • Aprender explorando</small></span>
+        <span><strong>TV TOUCH</strong><small>AGV · Painel interativo</small></span>
       </a>
-      <div class="sidebar-label">NAVEGAR</div>
+      <div class="sidebar-label">FERRAMENTAS</div>
       <nav class="nav-items" id="mainNav">
         <button class="nav-item active" type="button" data-page="inicio" aria-current="page"><span>⌂</span> Início</button>
-        <button class="nav-item" type="button" data-page="biblioteca"><span>▦</span> Biblioteca de ferramentas</button>
+        <button class="nav-item" type="button" data-page="biblioteca"><span>▦</span> Biblioteca</button>
         <button class="nav-item" type="button" data-page="videos"><span>◎</span> Vídeos 360°</button>
-        <button class="nav-item" type="button" data-page="laboratorio"><span>⬡</span> Laboratório interativo</button>
-        <button class="nav-item" type="button" data-page="favoritos"><span>☆</span> Meus favoritos</button>
-        <button class="nav-item" type="button" data-page="guia"><span>ⓘ</span> Guia do professor</button>
+        <button class="nav-item" type="button" data-page="laboratorio"><span>⬡</span> Laboratório</button>
+        <button class="nav-item" type="button" data-page="favoritos"><span>☆</span> Favoritos</button>
+        <button class="nav-item" type="button" data-page="guia"><span>ⓘ</span> Guia</button>
         <button class="nav-item" type="button" data-page="diagnostico"><span>⚙</span> Diagnóstico da TV</button>
       </nav>
       <div class="sidebar-bottom"><a class="text-link" href="admin.html" target="_blank" rel="noopener" style="display:inline-flex;min-height:44px;align-items:center;margin-bottom:12px;">▥ Indicadores da gestão ↗</a>
-        <div class="helper-card"><span class="helper-icon">✦</span><strong>Pronto para a aula?</strong><p>Explore um recurso, lance um desafio e convide os estudantes para tocar na tela.</p><button type="button" class="text-link" data-go="guia">Ver sugestões de aula ↗</button></div>
-        <div class="sidebar-signature">TV TOUCH · v1.7.1</div>
+        <div class="helper-card"><span class="helper-icon">✦</span><strong>Toque para começar</strong><p>As atividades locais funcionam sem login.</p><button type="button" class="text-link" data-go="guia">Abrir guia ↗</button></div>
+        <div class="sidebar-signature">TV TOUCH · v1.8.0</div>
       </div>
     </aside>
 
@@ -47,23 +47,19 @@
 
       <main id="conteudo">
         <section id="page-inicio" class="page active" aria-labelledby="homeTitle">
-          <div class="hero">
-            <div class="hero-content"><span class="eyebrow"><span class="sparkle">✦</span> TV TOUCH · AGV · v1.7.1</span><h1 id="homeTitle">Aula pronta <span>para toque.</span></h1><p>Escolha a disciplina, abra uma ferramenta e use a tela na horizontal: toque, arraste, amplie e participe.</p><div class="hero-actions"><button type="button" class="button primary" data-go="laboratorio">Abrir laboratório</button><button type="button" class="button ghost" data-go="biblioteca">Abrir biblioteca →</button></div></div>
-            <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="hero-glow"></div><div class="hero-cube"><span class="face front">✦</span><span class="face back"></span><span class="face right"></span><span class="face left"></span><span class="face top"></span><span class="face bottom"></span></div><span class="float-mark mark-one">360°</span><span class="float-mark mark-two">3D</span><span class="float-mark mark-three">✳</span></div>
+          <div class="hero"><div class="hero-content"><span class="eyebrow">TV TOUCH · COLÉGIO ESTADUAL ALBERTO GOMES VEIGA</span><h1 id="homeTitle">O que vamos usar <span>na aula?</span></h1><p>Escolha uma atividade. Use o dedo, a caneta ou o mouse.</p></div><div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="hero-glow"></div><div class="hero-cube"><span class="face front">✦</span><span class="face back"></span><span class="face right"></span><span class="face left"></span><span class="face top"></span><span class="face bottom"></span></div><span class="float-mark mark-one">360°</span><span class="float-mark mark-two">3D</span><span class="float-mark mark-three">✳</span></div></div>
+          <div class="lesson-callout" id="lessonCallout"><div><strong>Disciplina da aula</strong><p id="lessonContextText">Não definida. Opcional para usar as atividades.</p></div><button class="button primary small" type="button" id="lessonOpen">Definir disciplina</button></div>
+          <div class="section-heading ux-home-heading"><div><span class="kicker">ACESSO RÁPIDO</span><h2>Abra uma atividade</h2></div></div>
+          <div class="quick-grid ux-home-tools">
+            <button class="quick-card q-cyan" data-tool="desenho" type="button"><span class="quick-icon">✎</span><strong>Quadro</strong><span>Escrever, desenhar e salvar em PNG.</span><em>Abrir quadro →</em></button>
+            <button class="quick-card q-violet" data-tool="solidos" type="button"><span class="quick-icon">⬡</span><strong>Sólidos 3D</strong><span>Girar e ampliar cubos, prismas e pirâmides.</span><em>Abrir 3D →</em></button>
+            <button class="quick-card q-orange" data-tool="encaixe" type="button"><span class="quick-icon">◈</span><strong>Encaixe</strong><span>Arrastar formas até o contorno certo.</span><em>Jogar →</em></button>
+            <button class="quick-card q-green" data-go="videos" type="button"><span class="quick-icon">◎</span><strong>Vídeos 360°</strong><span>Buscar visitas imersivas para a turma.</span><em>Buscar vídeos →</em></button>
           </div>
-          <div class="lesson-callout" id="lessonCallout"><div><strong>📘 Contexto da aula</strong><p id="lessonContextText">Escolha a disciplina para organizar o uso do TV TOUCH. O registro de métricas é opcional.</p></div><button class="button primary small" type="button" id="lessonOpen">Selecionar disciplina</button></div>
-          <div class="ux-actions" aria-label="Atalhos da aula"><button class="ux-action" type="button" data-ux-action="lesson"><small>01 · PREPARAR</small><strong>Definir aula</strong><span>Disciplina e painel utilizado.</span></button><button class="ux-action" type="button" data-ux-action="biblioteca"><small>02 · EXPLORAR</small><strong>Biblioteca</strong><span>Mapas, simulações e modelos.</span></button><button class="ux-action" type="button" data-ux-action="laboratorio"><small>02 · PRATICAR</small><strong>Laboratório</strong><span>Desenho, 3D e desafios.</span></button><button class="ux-action" type="button" data-ux-action="fullscreen"><small>03 · APRESENTAR</small><strong>Tela cheia</strong><span>Mais espaço para a turma.</span></button></div>
-          <div class="section-heading"><div><span class="kicker">COMECE POR AQUI</span><h2>O que você quer fazer hoje?</h2><p>Escolha uma experiência pronta para usar em sala de aula.</p></div></div>
-          <div class="quick-grid">
-            <button class="quick-card q-cyan" data-tool="desenho" type="button"><span class="quick-icon">✎</span><strong>Desenhar na tela</strong><span>Quadro digital com cores e pincéis</span><em>Abrir quadro →</em></button>
-            <button class="quick-card q-violet" data-tool="solidos" type="button"><span class="quick-icon">⬡</span><strong>Explorar sólidos 3D</strong><span>Gire, amplie e descubra as formas</span><em>Explorar 3D →</em></button>
-            <button class="quick-card q-orange" data-tool="encaixe" type="button"><span class="quick-icon">◈</span><strong>Encaixar formas</strong><span>Aprenda brincando com geometria</span><em>Começar jogo →</em></button>
-            <button class="quick-card q-green" data-go="videos" type="button"><span class="quick-icon">◎</span><strong>Viajar em 360°</strong><span>Visitas, portos, museus e espaço</span><em>Ver vídeos →</em></button>
-          </div>
-          <div class="section-heading compact"><div><span class="kicker">SELEÇÃO PARA PROFESSORES</span><h2>Plataformas para explorar</h2></div><button type="button" class="inline-action" data-go="biblioteca">Ver biblioteca completa →</button></div>
-          <div id="featuredCards" class="resource-grid"></div>
-          <div class="diag-home-banner"><div><strong>⚙ Conheça a sua TV</strong><p>Verifique toque, desempenho, navegador e compatibilidade para aproveitar melhor as aulas.</p></div><button type="button" class="button small" data-go="diagnostico">Testar dispositivo →</button></div>
-          <div class="lesson-banner"><div class="lesson-icon">💡</div><div><strong>Não sabe por onde começar?</strong><p>Use os roteiros de 10–15 minutos e convide os estudantes a participar.</p></div><button type="button" class="button small" data-go="guia">Ver guia docente →</button></div>
+          <details id="homeExtra" class="ux-extra"><summary><span><strong>Plataformas e orientações</strong><small>Google Earth, GeoGebra, PhET, guia e diagnóstico</small></span><span class="ux-extra-arrow" aria-hidden="true">⌄</span></summary>
+            <div class="ux-extra-content"><div class="section-heading compact"><div><span class="kicker">RECURSOS EXTERNOS</span><h2>Plataformas para explorar</h2></div><button type="button" class="inline-action" data-go="biblioteca">Biblioteca completa →</button></div><div id="featuredCards" class="resource-grid"></div>
+              <div class="ux-support-row"><div class="diag-home-banner"><div><strong>Diagnóstico da TV</strong><p>Toque, navegador, rede e desempenho.</p></div><button type="button" class="button small" data-go="diagnostico">Testar →</button></div><div class="lesson-banner"><div class="lesson-icon">▤</div><div><strong>Guia do professor</strong><p>Roteiros de aula de 10 a 15 minutos.</p></div><button type="button" class="button small" data-go="guia">Abrir guia →</button></div></div>
+            </div></details>
         </section>
 
         <section id="page-biblioteca" class="page" aria-labelledby="libraryTitle"><div class="page-intro"><span class="kicker">BIBLIOTECA DIGITAL</span><h1 id="libraryTitle">Ferramentas para cada aula<span class="gradient-dot">.</span></h1><p>Recursos externos selecionados com fonte identificada e uma ideia de atividade. Você sai do portal para acessar a plataforma original.</p></div><div class="toolbar"><label class="searchbox"><span>⌕</span><input type="search" id="resourceSearch" placeholder="Buscar ferramenta, tema ou disciplina..." autocomplete="off" aria-label="Buscar ferramentas"></label><div class="filter-scroll" id="libraryFilters" role="group" aria-label="Filtrar por área"></div></div><div id="libraryCount" class="results-line" aria-live="polite"></div><div id="libraryCards" class="resource-grid"></div></section>
@@ -128,7 +124,7 @@
   <script src="js/app.js" defer></script>
   <script src="js/diagnostico.js" defer></script>
   <script src="js/telemetria.js" defer></script>
-  <script src="js/ux.js?v=1.7.1" defer></script>
+  <script src="js/ux.js?v=1.8.0" defer></script>
   <div id="governanceNotice" role="status" aria-live="polite" class="governance-notice" hidden></div>
 </body>
 </html>

@@ -163,18 +163,8 @@
     const title=$('#authTitle');if(title)title.textContent='Administração do TV TOUCH.';
     const desc=$('.auth-description');if(desc)desc.textContent='Consulte os indicadores das três TVs, gerencie as ferramentas e ajuste a resposta de toque de cada equipamento.';
     const sub=$('.logo small');if(sub)sub.textContent='Administração';
-    const ver=$('.version');if(ver)ver.textContent='TV TOUCH · AGV / v1.7.1';
+    const ver=$('.version');if(ver)ver.textContent='TV TOUCH · AGV / v1.8.0';
   } else {
-    const title=$('#homeTitle');if(title)title.innerHTML='Aula pronta <span>para toque.</span>';
-    const hero=$('.hero-content>p');if(hero)hero.textContent='Escolha a disciplina, abra um recurso e use a TV na horizontal: toque, arraste, amplie e explore com a turma.';
-    const context=$('#lessonContextText');if(context&&!context.dataset.uxTouched)context.textContent='Defina a aula, escolha uma ferramenta e comece. As métricas são opcionais.';
-    const lesson=$('#lessonCallout');
-    if(lesson&&!$('.ux-actions')){
-      const grid=document.createElement('div');grid.className='ux-actions';
-      const entries=[['PASSO 1','Definir aula','Área, disciplina e equipamento.','lesson'],['PASSO 2','Biblioteca','Mapas, modelos 3D e simulações.','biblioteca'],['PASSO 2','Laboratório','Quadro, sólidos, encaixe e porto.','laboratorio'],['PASSO 3','Tela cheia','Mais espaço para trabalhar.','fullscreen']];
-      entries.forEach(([step,label,desc,target])=>{const b=document.createElement('button');b.type='button';b.className='ux-action';b.innerHTML='<small>'+step+'</small><strong>'+label+'</strong><span>'+desc+'</span>';b.addEventListener('click',()=>{if(target==='lesson')$('#lessonOpen')?.click();else if(target==='fullscreen')$('#fullscreenButton')?.click();else document.querySelector('[data-page="'+target+'"]')?.click()});grid.appendChild(b)});
-      lesson.insertAdjacentElement('afterend',grid);
-    }
-    const ver=$('.sidebar-signature');if(ver)ver.textContent='TV TOUCH · AGV / v1.7.1';
+    const ver=$('.sidebar-signature');if(ver)ver.textContent='TV TOUCH · AGV / v1.8.0';
   }
 })();
