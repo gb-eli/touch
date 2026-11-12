@@ -5,7 +5,8 @@
   const valid = /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(cfg.supabaseUrl || '') && typeof cfg.publishableKey === 'string' && cfg.publishableKey.length > 15;
   const STATIONS = ['TV TOUCH 01','TV TOUCH 02','TV TOUCH 03'];
   const DEFAULT_PROFILE = Object.freeze({rotation_sensitivity:1,brush_sensitivity:1,drag_threshold_px:12});
-  let station = localStorage.getItem('tvtouch:station-label:v1') || STATIONS[0];
+  let station = STATIONS[0];
+  try {station = localStorage.getItem('tvtouch:station-label:v1') || STATIONS[0];} catch {}
   let features = new Map();
   let profile = {...DEFAULT_PROFILE};
   let synced = false;
