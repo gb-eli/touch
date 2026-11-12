@@ -81,8 +81,16 @@ function openResource(id) {
 function closeMenu() { $('.sidebar').classList.remove('open'); $('#mobileOverlay').hidden=true; $('#menuButton').setAttribute('aria-expanded','false'); }
 function go(page, {hash=true}={}) {
   if (!pageTitles[page]) page='inicio';
+  const controlled=['videos','laboratorio','diagnostico','cosmos','memoria','fisica'];
+  if(controlled.includes(page)&&window.TVTouchGovernance?.available('module_'+page)===false){
+    const notice=document.getElementById('governanceNotice');
+    if(notice){notice.textContent='Atividade desativada pela administração.';notice.hidden=false;setTimeout(()=>{notice.hidden=true;},5000);}
+    page='inicio';
+  }
   if (currentPage !== 'atividade' && page === 'atividade') lastPage=currentPage;
   currentPage=page;
+  document.body.classList.toggle('studio-home-active',page==='inicio');
+  if(['cosmos','memoria','fisica'].includes(page))window.dispatchEvent(new CustomEvent('tvt:tool-open',{detail:{id:page}}));
   $$('.page').forEach(e=>e.classList.toggle('active',e.id === `page-${page}`));
   $$('.nav-item').forEach(e=>{ const active = e.dataset.page === page || (page==='atividade'&&e.dataset.page==='laboratorio'); e.classList.toggle('active',active); active?e.setAttribute('aria-current','page'):e.removeAttribute('aria-current'); });
   $('#breadcrumb').textContent=pageTitles[page];

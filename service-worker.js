@@ -1,4 +1,4 @@
-const CACHE='tvtouch-studio-v2.0.1';
+const CACHE='tvtouch-studio-v2.0.2';
 const ASSETS=['./','./index.html','./css/styles.css','./css/diagnostico.css','./css/telemetria.css','./css/governance.css','./css/studio.css','./css/ux-shell.css','./js/app.js','./js/diagnostico.js','./js/telemetria.js','./js/telemetria-config.js','./js/governance.js','./js/ux.js','./js/studio.js','./js/planetarium.js','./js/learning-games.js','./manifest.webmanifest','./assets/favicon.svg','./assets/icon-192.png','./assets/icon-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('tvtouch-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
@@ -7,5 +7,5 @@ self.addEventListener('fetch',event=>{
   if(!url.pathname.startsWith(new URL(self.registration.scope).pathname))return;
   if(url.pathname.match(/\/admin(?:\.html|-controls\.css|-controls\.js|\.css|\.js)$/)||url.pathname.includes('telemetria-config'))return;
   if(req.mode==='navigate'){event.respondWith(fetch(req).catch(()=>caches.match('./index.html')));return;}
-  event.respondWith(fetch(req).then(resp=>{if(resp.ok){const clone=resp.clone();caches.open(CACHE).then(c=>c.put(req,clone)).catch(()=>{});}return resp;}).catch(()=>caches.match(req)));
+  event.respondWith(fetch(req).then(resp=>{if(resp.ok){const clone=resp.clone();caches.open(CACHE).then(c=>c.put(req,clone)).catch(()=>{});}return resp;}).catch(()=>caches.match(req,{ignoreSearch:true})));
 });

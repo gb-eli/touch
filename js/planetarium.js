@@ -153,6 +153,12 @@
   });
   const release=e=>state.pointers.delete(e.pointerId);
   canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);canvas.addEventListener('lostpointercapture',release);
+  canvas.addEventListener('keydown',e=>{
+    const rotations={ArrowLeft:[0,-.13],ArrowRight:[0,.13],ArrowUp:[-.13,0],ArrowDown:[.13,0]};
+    if(rotations[e.key]){e.preventDefault();state.rotX=Math.max(-1.1,Math.min(1.1,state.rotX+rotations[e.key][0]));state.rotY+=rotations[e.key][1];renderOnce();}
+    else if(['+','=','-','_'].includes(e.key)){e.preventDefault();setZoom(state.zoom*(e.key==='+'||e.key==='='?1.08:.92));}
+    else if(e.key==='0'){e.preventDefault();state.rotX=-.16;state.rotY=.6;setZoom(1);}
+  });
   canvas.addEventListener('wheel',e=>{e.preventDefault();setZoom(state.zoom*(e.deltaY<0?1.07:.93));},{passive:false});
   zoomInput.addEventListener('input',()=>setZoom(Number(zoomInput.value)/100));
   motionButton.addEventListener('click',()=>{state.auto=!state.auto;motionButton.textContent=state.auto?'Pausar giro':'Girar automaticamente';});
