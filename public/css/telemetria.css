@@ -1,0 +1,19 @@
+
+.lesson-chip{border:1px solid rgba(125,178,228,.35);background:rgba(25,50,77,.9);border-radius:12px;padding:10px 14px;color:#e8f3ff;font-weight:700;cursor:pointer;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.lesson-chip:hover,.lesson-chip:focus-visible{outline:2px solid #66d8ec;outline-offset:2px}
+.lesson-callout{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin:24px 0;padding:20px 24px;border:1px solid rgba(106,197,221,.35);border-radius:18px;background:linear-gradient(120deg,rgba(35,76,111,.55),rgba(17,31,53,.8))}
+.lesson-callout strong{font-size:20px;color:#edf7ff}.lesson-callout p{margin:7px 0 0;color:#b4ccdb;line-height:1.45}
+.lesson-dialog{color:#f2f6fc;max-width:min(660px,calc(100vw - 32px));width:100%;max-height:90vh;overflow:auto;padding:28px;border:1px solid #47749b;border-radius:20px;background:#101d31;box-shadow:0 24px 88px #0009}
+.lesson-dialog::backdrop{background:rgba(0,8,18,.80)}
+.lesson-dialog h2{font-size:clamp(22px,2.4vw,30px);line-height:1.2;margin:8px 0}
+.lesson-dialog p{color:#c2d4e5;line-height:1.55}
+.lesson-head{display:flex;justify-content:space-between;align-items:center}.lesson-x{position:static}
+.lesson-fields{display:grid;gap:14px;margin:22px 0}.lesson-fields label{display:grid;gap:8px;color:#e0edfc;font-size:15px;font-weight:700}
+.lesson-fields select{width:100%;border-radius:12px;border:1px solid #527394;background:#1b2b42;color:#fff;padding:12px 16px;min-height:52px;font-size:17px}
+.lesson-fields select:focus-visible{outline:3px solid #65e3f0}
+.lesson-optin{display:flex;align-items:flex-start;gap:12px;border:1px solid rgba(118,180,203,.3);background:#15263c;border-radius:14px;padding:14px;cursor:pointer}
+.lesson-optin input{width:25px;height:25px;flex-shrink:0;accent-color:#67d9ee;margin:0}
+.lesson-optin span{display:grid;gap:7px}.lesson-optin strong{font-size:16px}.lesson-optin small{font-size:14px;line-height:1.5;color:#b4c9df}
+.lesson-state{font-size:14px;min-height:22px}.lesson-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-end;margin-top:20px}
+.lesson-net{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:13px;color:#b4c9df}
+@media(max-width:780px){.lesson-chip{font-size:12px;padding:8px;max-width:128px}.lesson-dialog{padding:18px}.lesson-actions .button{flex:1 1 180px}.lesson-callout{padding:16px}}

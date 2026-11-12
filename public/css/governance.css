@@ -1,0 +1,3 @@
+/* Controle de disponibilidade: feedback visível sem eliminar acesso ao conteúdo de apoio. */
+.tvt-disabled {opacity:.38!important;filter:grayscale(.8);cursor:not-allowed!important}
+.governance-notice {position:fixed;right:18px;bottom:18px;z-index:5000;max-width:460px;padding:18px 22px;border:1px solid #6bd9e8;background:#0b243a;color:#fff;border-radius:14px;box-shadow:0 14px 45px #0007;font-weight:650}
