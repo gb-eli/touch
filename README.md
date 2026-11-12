@@ -1,4 +1,4 @@
-# 📺 TV TOUCH AGV — v1.4
+# 📺 TV TOUCH AGV — v1.6
 
 Portal pedagógico interativo para três painéis Android de 86 polegadas do Colégio Estadual Alberto Gomes Veiga (Paranaguá/PR). HTML/CSS/JS estático, GitHub Pages e Supabase opcional.
 
@@ -25,3 +25,9 @@ O GitHub Pages executa automaticamente o workflow *gerenciado pelo GitHub* para 
 Não há Supabase ativo por padrão. As ferramentas locais funcionam sem backend; métricas reais e controles remotos dependem de projeto dedicado.
 
 Veja [arquitetura](docs/ARCHITECTURE.md) e [implantação](docs/DEPLOY.md).
+
+## Interface de toque (v1.6)
+
+O script `public/js/ux.js` adiciona temas **Black**, **Claro** e **Colorido** (com variação suave e aleatória de matiz e intensidade), preferência por navegador, botão para pausar a animação e atalhos de aula. O mesmo tema acompanha portal público e administração. Em telas sensíveis ao toque, os controles têm alvos ampliados.
+
+A publicação é pela branch `gh-pages` (raiz), sem workflow personalizado. A alteração em `main` **não publica** automaticamente: a branch `gh-pages` deve receber os novos arquivos. O build gerenciado do GitHub Pages continua existindo.
