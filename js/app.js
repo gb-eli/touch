@@ -31,15 +31,28 @@ const VIDEOS = [
   {id:'industrias360',name:'Indústrias em 360°',provider:'Pesquisa no YouTube',icon:'🏭',tone:'violet',type:'Busca de vídeo 360°',categories:['Tecnologia','Portos'],description:'Busque visitas por fábricas, armazéns e linhas de produção.',url:youtubeSearch('factory warehouse 360 VR tour'),lesson:'Mapeie entradas, processos, saídas, logística e pontos de melhoria operacional.'}
 ];
 const resourcesById = Object.fromEntries([...RESOURCES, ...VIDEOS].map(x => [x.id,x]));
-const pageTitles = {inicio:'Início',biblioteca:'Biblioteca de ferramentas',videos:'Vídeos 360°',laboratorio:'Laboratório interativo',favoritos:'Meus favoritos',guia:'Guia do professor',diagnostico:'Diagnóstico da TV',atividade:'Atividade'};
+const pageTitles = {inicio:'Início',biblioteca:'Biblioteca de ferramentas',videos:'Vídeos 360°',laboratorio:'Laboratório interativo',favoritos:'Meus favoritos',guia:'Guia do professor',diagnostico:'Diagnóstico da TV',atividade:'Atividade',cosmos:'Universo 3D',memoria:'Memória',fisica:'Física 2D'};
 const FAVORITE_KEY = 'tvtouch:favorite-resource-ids:v1';
 let favorites = new Set();
 try {const saved = JSON.parse(localStorage.getItem(FAVORITE_KEY) || '[]'); if (Array.isArray(saved)) favorites = new Set(saved.filter(id => resourcesById[id]));} catch { /* Navegadores com armazenamento restrito */ }
 let currentPage = 'inicio', activeCategory = 'Todos', activeTool = null, lastPage = 'laboratorio';
 
+function studioResourceIcon(resource) {
+  const symbols={
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c5 5 5 13 0 18M12 3c-5 5-5 13 0 18"/>',
+    cube:'<path d="m12 2 9 5v10l-9 5-9-5V7zM3 7l9 5 9-5M12 12v10"/>',
+    flask:'<path d="M9 2h6M10 2v7l-6 10a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3L14 9V2M7 17h10"/>',
+    image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m4 18 6-5 3 3 3-4 5 6"/>',
+    movie:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 6 3-6 3z"/>',
+    boxes:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'
+  };
+  const id=resource.id;
+  const type=['earth','earthmaps'].includes(id)?'globe':['geogebra','sketchfab','nasa'].includes(id)?'cube':['phet','phhtml'].includes(id)?'flask':['arts','arthistory','museus360','historia360'].includes(id)?'image':['polypad','geogeometry'].includes(id)?'boxes':'movie';
+  return `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${symbols[type]}</svg>`;
+}
 function card(resource) {
   const fav = favorites.has(resource.id);
-  return `<article class="resource-card"><div class="card-top"><div class="resource-icon ${html(resource.tone)}" aria-hidden="true">${resource.icon}</div><button class="star-button" type="button" data-favorite="${html(resource.id)}" aria-pressed="${fav}" aria-label="${fav?'Remover dos':'Adicionar aos'} favoritos: ${html(resource.name)}">${fav?'★':'☆'}</button></div><div class="resource-body"><span class="resource-origin">${html(resource.provider)}</span><h3>${html(resource.name)}</h3><p>${html(resource.description)}</p><div class="chips">${resource.categories.slice(0,3).map(cat=>`<span class="chip">${html(cat)}</span>`).join('')}</div></div><div class="card-bottom"><span class="card-type">${html(resource.type)}</span><button class="card-open" type="button" data-open-resource="${html(resource.id)}">Conhecer →</button></div></article>`;
+  return `<article class="resource-card"><div class="card-top"><div class="resource-icon ${html(resource.tone)}" aria-hidden="true">${studioResourceIcon(resource)}</div><button class="star-button" type="button" data-favorite="${html(resource.id)}" aria-pressed="${fav}" aria-label="${fav?'Remover dos':'Adicionar aos'} favoritos: ${html(resource.name)}">${fav?'★':'☆'}</button></div><div class="resource-body"><span class="resource-origin">${html(resource.provider)}</span><h3>${html(resource.name)}</h3><p>${html(resource.description)}</p><div class="chips">${resource.categories.slice(0,3).map(cat=>`<span class="chip">${html(cat)}</span>`).join('')}</div></div><div class="card-bottom"><span class="card-type">${html(resource.type)}</span><button class="card-open" type="button" data-open-resource="${html(resource.id)}">Conhecer →</button></div></article>`;
 }
 function renderLibrary() {
   const query = ($('#resourceSearch').value || '').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -61,7 +74,7 @@ function toggleFavorite(id) {
 function openResource(id) {
   const r = resourcesById[id]; if (!r) return;
   const isSearch = VIDEOS.some(v=>v.id===id);
-  $('#dialogContent').innerHTML = `<div class="dialog-header"><span class="resource-icon ${html(r.tone)}" aria-hidden="true">${r.icon}</span><div><p>${html(r.provider)} • ${html(r.type)}</p><h2 id="dialogTitle">${html(r.name)}</h2></div></div><p class="dialog-description">${html(r.description)}</p><div class="dialog-lesson"><strong>💡 Proposta para a aula</strong><p>${html(r.lesson)}</p></div><div class="dialog-actions"><a class="button primary" data-visit-resource="${html(r.id)}" href="${html(r.url)}" target="_blank" rel="noopener noreferrer">${isSearch?'Abrir pesquisa no YouTube ↗':'Abrir ferramenta ↗'}</a><button class="button ghost" type="button" data-favorite="${html(r.id)}">${favorites.has(r.id)?'★ Remover favorito':'☆ Salvar favorito'}</button></div><p class="dialog-note">${isSearch?'Pesquisas podem exibir vídeos que não são 360°. Verifique antes de usar.':'Você acessará o site original. Algumas funções podem exigir internet, conta ou navegador compatível.'}</p>`;
+  $('#dialogContent').innerHTML = `<div class="dialog-header"><span class="resource-icon ${html(r.tone)}" aria-hidden="true">${studioResourceIcon(r)}</span><div><p>${html(r.provider)} • ${html(r.type)}</p><h2 id="dialogTitle">${html(r.name)}</h2></div></div><p class="dialog-description">${html(r.description)}</p><div class="dialog-lesson"><strong>💡 Proposta para a aula</strong><p>${html(r.lesson)}</p></div><div class="dialog-actions"><a class="button primary" data-visit-resource="${html(r.id)}" href="${html(r.url)}" target="_blank" rel="noopener noreferrer">${isSearch?'Abrir pesquisa no YouTube ↗':'Abrir ferramenta ↗'}</a><button class="button ghost" type="button" data-favorite="${html(r.id)}">${favorites.has(r.id)?'★ Remover favorito':'☆ Salvar favorito'}</button></div><p class="dialog-note">${isSearch?'Pesquisas podem exibir vídeos que não são 360°. Verifique antes de usar.':'Você acessará o site original. Algumas funções podem exigir internet, conta ou navegador compatível.'}</p>`;
   const dialog = $('#resourceDialog');
   if (!dialog.open) dialog.showModal();
 }
@@ -79,6 +92,7 @@ function go(page, {hash=true}={}) {
   if (page==='favoritos') renderFavorites();
   if (page==='atividade' && activeTool==='solidos') requestAnimationFrame(drawSolid);
   if (page==='atividade' && activeTool==='desenho') requestAnimationFrame(resizeDrawingCanvas);
+  window.dispatchEvent(new CustomEvent('tvt:page-change',{detail:{page}}));
 }
 function launchTool(tool) {
   if (!['desenho','solidos','encaixe','porto'].includes(tool)) return;
