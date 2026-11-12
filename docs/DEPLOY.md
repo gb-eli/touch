@@ -1,20 +1,33 @@
-# TV TOUCH | Implantação
+# TV TOUCH | Implantação e atualização sem workflow personalizado
 
-1. Criar um projeto Supabase **dedicado** ao TV TOUCH. Não usar banco do AGV+, IBC ou outros produtos.
-2. No SQL Editor, executar nesta ordem `supabase/sql/01_setup.sql`, `03_admin_dashboard.sql` e `05_governance.sql`. `02_relatorios.sql` e `04_validacao_admin.sql` são opcionais.
-3. Implantar Edge Function `tv-touch-telemetry` e configurar variáveis secretas exigidas no seu README (o token público nunca deve ser usado como segredo).
-4. Em Supabase Auth, desabilitar signup aberto para o admin, criar usuário administrador e inserir seu `user_id` em `public.tvt_admins` via console administrativo.
-5. Editar `public/js/telemetria-config.js` com `supabaseUrl` e `publishableKey` somente; nunca inserir secret key.
-6. Configurar `Settings → Pages → Build and deployment → Source = GitHub Actions`, caso o plano do repositório permita.
-7. Validar primeiro branch de homologação/PR; após aprovação mesclar na `main`. A action publica somente conteúdo de `public/`.
-8. Confirmar o endereço de Pages em `Settings → Pages`, e testar em TV TOUCH 01, 02 e 03: desenhos, multitoque, vídeo 360°, bloqueio remoto, rotação e dashboard.
+## Publicação do site
 
-## Critérios de GO
+1. Código-fonte e backend ficam na branch `main`.
+2. Branch `gh-pages` contém somente o **conteúdo** de `main/public/` na raiz (incluindo `.nojekyll`).
+3. No GitHub, abrir **Settings → Pages → Build and deployment**.
+4. Selecionar **Deploy from a branch**, **gh-pages**, **/(root)**, **Save**.
+5. Conferir `https://gb-eli.github.io/touch/` e `https://gb-eli.github.io/touch/admin.html`.
+6. Não reativar `.github/workflows/pages.yml` se o objetivo é evitar runners personalizados.
+7. Quando `main/public/` mudar, revisar e atualizar a branch `gh-pages` manualmente; fazer push nela para publicar. **Push apenas na main não atualiza o site.**
 
-- [ ] `index.html` funciona mesmo quando Supabase falha.
-- [ ] `admin.html` não lê ou altera dados sem usuário Auth autorizado.
-- [ ] usuário anônimo não pode escrever configurações, nem ler telemetria.
-- [ ] liberar/bloquear uma ferramenta reflete na TV após recarregar/voltar à aba.
-- [ ] perfis de gesto são aplicados por TV sem manipular hardware.
-- [ ] nenhuma chave secreta está no GitHub Pages, banco separado e sem dados de estudantes.
-- [ ] GitHub Pages responde HTTP 200, workflow concluído e testes no Android 14 documentados.
+**Observação de cobrança:** GitHub Pages usa um workflow de implantação *gerenciado pelo GitHub* mesmo com publicação pela branch. Em repositório privado, consulte o consumo do plano. Esse método evita o workflow personalizado, mas não garante zero minutos. Para realmente não executar GitHub Actions, hospedar em provedor externo, por exemplo Cloudflare Pages.
+
+## Backend Supabase (ainda não ativado)
+
+1. Criar projeto Supabase **dedicado** ao TV TOUCH. Não usar AGV+, IBC ou outro banco.
+2. No SQL Editor executar, na ordem, `supabase/sql/01_setup.sql`, `03_admin_dashboard.sql` e `05_governance.sql`; `02_relatorios.sql` e `04_validacao_admin.sql` são consultas auxiliares.
+3. Implantar Edge Function `tv-touch-telemetry` e configurar as variáveis secretas exclusivamente no backend.
+4. Em Supabase Auth, restringir cadastro administrativo; criar usuário autorizado e cadastrá-lo em `public.tvt_admins`.
+5. Preencher **somente valores públicos** em `main/public/js/telemetria-config.js`; replicar o arquivo à branch `gh-pages`. Jamais incluir `service_role` ou secret key no frontend.
+6. Testar admin sem sessão e com sessão não autorizada: nenhum dado privado deverá estar acessível.
+
+## GO / NO-GO
+
+- [ ] O site público funciona mesmo sem Supabase.
+- [ ] O admin não lê ou altera dados sem autenticação/autorização.
+- [ ] Acesso anônimo não pode escrever configurações nem ler telemetria.
+- [ ] Ativar/desativar ferramenta reflete na TV após atualização.
+- [ ] Perfis de gesto funcionam por TV sem alegar calibração física do hardware.
+- [ ] Nenhuma chave secreta é publicada ou exposta.
+- [ ] Branch `gh-pages` contém somente conteúdo web sem pastas SQL privadas.
+- [ ] GitHub Pages responde e testes reais nas três TVs Android 14 são documentados.

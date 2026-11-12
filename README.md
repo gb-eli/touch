@@ -1,32 +1,27 @@
 # 📺 TV TOUCH AGV — v1.4
 
-Portal pedagógico interativo para três painéis Android de 86 polegadas do Colégio Estadual Alberto Gomes Veiga (Paranaguá/PR). HTML, CSS e JavaScript puro, com GitHub Pages e Supabase opcional.
+Portal pedagógico interativo para três painéis Android de 86 polegadas do Colégio Estadual Alberto Gomes Veiga (Paranaguá/PR). HTML/CSS/JS estático, GitHub Pages e Supabase opcional.
 
-## Áreas
+## Estrutura
 
-- **Público**: `public/index.html` — biblioteca, vídeos 360°, atividades 2D/3D, desenho, encaixe, diagnósticos e escolha de disciplina sem login.
-- **Admin**: `public/admin.html` — acesso com Supabase Auth + `tvt_admins`; métricas de uso, rede, FPS, testes de toque, ativar/desativar recursos e ajustar gestos por TV.
+- `main/public/`: código-fonte do site (portal e admin)
+- `main/supabase/`: SQL, regras de acesso e funções do backend; **não publicar**
+- `main/docs/`: documentação técnica e implantação
+- `gh-pages/`: **somente** os arquivos estáticos de `main/public/`, na raiz, sem SQL nem workflows
 
-## Pastas
+## Ambientes
 
-```
-public/
-  index.html             Portal público
-  admin.html             Gestão protegida
-  js/                    Experiências, diagnóstico, governança, telemetria, gestão
-  css/                   Estilos da interface pública e administrativa
-  assets/                Ícones
-  service-worker.js      Cache offline do portal público
-supabase/
-  functions/             Edge Function de telemetria
-  sql/                   Scripts 01–05 (incluindo governança)
-docs/
-  ARCHITECTURE.md        Fronteiras, segurança, dados e gestos
-  DEPLOY.md              Implantação e checklist GO/NO-GO
-.github/workflows/
-  pages.yml              GitHub Actions publica `public/` da main
-```
+- **Público**: `index.html` — ferramentas, vídeos 360°, laboratório 2D/3D, diagnóstico e seleção de disciplina sem login.
+- **Admin**: `admin.html` — Supabase Auth e autorização via `tvt_admins`; métricas, bloqueio/liberação de recursos e ajustes de gestos por TV.
 
-Não há configuração Supabase ativa por padrão. Ferramentas locais funcionam sem backend; o painel de gestão real exige banco, políticas e conta administrativa.
+## Publicação com menor uso de GitHub Actions
+
+Não há workflow personalizado de publicação na `main`. Em **Settings → Pages → Build and deployment**, escolher **Deploy from a branch**, branch **gh-pages**, pasta **/(root)**.
+
+O GitHub Pages executa automaticamente o workflow *gerenciado pelo GitHub* para publicar a branch: isso não equivale a **zero minutos garantidos**, especialmente em repositório privado. A exclusão do workflow personalizado evita nossas execuções próprias de build e deploy.
+
+**Atualizações não são automáticas:** depois de aprovar mudanças em `main/public/`, sincronizar esses arquivos com a raiz de `gh-pages` e fazer push nessa branch. Não copiar as pastas `supabase/`, `docs/` ou segredos para `gh-pages`. Para não usar nenhum GitHub Actions, hospedar fora do GitHub Pages (por exemplo, Cloudflare Pages), mantendo o repositório no GitHub.
+
+Não há Supabase ativo por padrão. As ferramentas locais funcionam sem backend; métricas reais e controles remotos dependem de projeto dedicado.
 
 Veja [arquitetura](docs/ARCHITECTURE.md) e [implantação](docs/DEPLOY.md).
