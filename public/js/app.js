@@ -190,12 +190,13 @@ function initDrawing(){
 
 /* SOLIDOS 3D: projeção perspectiva implementada com Canvas 2D, sem WebGL ou CDN. */
 const solidCanvas=$('#solidCanvas'),sctx=solidCanvas.getContext('2d');
-const solidState={shape:'cubo',rotX:-.30,rotY:.54,zoom:1,auto:false,pointers:new Map(),lastFrame:0};
+const solidState={shape:'cubo',rotX:-.30,rotY:.54,zoom:1,auto:false,pointers:new Map(),lastFrame:0,material:'ceramic',quality:'balanced',raf:0};
 const FORMATIONS={
   cubo:{name:'Cubo',facts:['6 faces','12 arestas','8 vértices'],text:'Todas as faces são quadrados congruentes.',question:'Quais faces você não consegue ver desta posição?'},
   prisma:{name:'Prisma retangular',facts:['6 faces','12 arestas','8 vértices'],text:'As faces são retângulos; um cubo é um caso particular.',question:'Quais dimensões podem ser diferentes em um prisma retangular?'},
   piramide:{name:'Pirâmide quadrangular',facts:['5 faces','8 arestas','5 vértices'],text:'Uma base quadrada e quatro faces triangulares.',question:'Por que a pirâmide tem menos vértices que o cubo?'},
-  cilindro:{name:'Cilindro',facts:['2 bases circulares','1 superfície lateral curva','Não é poliedro'],text:'O cilindro não possui faces poligonais como um cubo.',question:'Por que um cilindro pode rolar e um cubo não?'}
+  cilindro:{name:'Cilindro',facts:['2 bases circulares','1 superfície lateral curva','Não é poliedro'],text:'O cilindro não possui faces poligonais como um cubo.',question:'Por que um cilindro pode rolar e um cubo não?'},
+  esfera:{name:'Esfera',facts:['1 superfície curva','0 arestas','0 vértices'],text:'Uma esfera não tem faces planas, arestas ou vértices.',question:'Por que a esfera rola em qualquer direção?'}
 };
 function solidGeometry(shape){
   if(shape==='cubo'||shape==='prisma'){
@@ -203,11 +204,28 @@ function solidGeometry(shape){
     return {vertices:[[-x,-y,-z],[x,-y,-z],[x,y,-z],[-x,y,-z],[-x,-y,z],[x,-y,z],[x,y,z],[-x,y,z]],faces:[[0,1,2,3],[4,5,6,7],[0,4,7,3],[1,5,6,2],[3,2,6,7],[0,1,5,4]]};
   }
   if(shape==='piramide')return {vertices:[[-1.1,-1,-1.1],[1.1,-1,-1.1],[1.1,-1,1.1],[-1.1,-1,1.1],[0,1.25,0]],faces:[[0,1,2,3],[0,1,4],[1,2,4],[2,3,4],[3,0,4]]};
+  if(shape==='esfera'){
+    const segments=14,rings=9,vertices=[[0,1.1,0]],faces=[];
+    for(let row=1;row<rings;row++)for(let col=0;col<segments;col++){
+      const theta=row*Math.PI/rings,phi=col*Math.PI*2/segments;
+      vertices.push([1.1*Math.sin(theta)*Math.cos(phi),1.1*Math.cos(theta),1.1*Math.sin(theta)*Math.sin(phi)]);
+    }
+    const bottom=vertices.length;vertices.push([0,-1.1,0]);
+    for(let i=0;i<segments;i++)faces.push([0,1+i,1+(i+1)%segments]);
+    for(let row=0;row<rings-2;row++){
+      const a=1+row*segments,b=1+(row+1)*segments;
+      for(let i=0;i<segments;i++)faces.push([a+i,b+i,b+(i+1)%segments,a+(i+1)%segments]);
+    }
+    const last=1+(rings-2)*segments;
+    for(let i=0;i<segments;i++)faces.push([last+i,bottom,last+(i+1)%segments]);
+    return {vertices,faces};
+  }
   const n=24,vertices=[],faces=[];for(let i=0;i<n;i++){const a=Math.PI*2*i/n;vertices.push([Math.cos(a),-1,Math.sin(a)]);}for(let i=0;i<n;i++){const a=Math.PI*2*i/n;vertices.push([Math.cos(a),1,Math.sin(a)]);}faces.push(Array.from({length:n},(_,i)=>i));faces.push(Array.from({length:n},(_,i)=>n+i));for(let i=0;i<n;i++)faces.push([i,(i+1)%n,n+(i+1)%n,n+i]);return{vertices,faces};
 }
 function projectPoint(v,cx,cy,scale){const [x,y,z]=v;const y1=y*Math.cos(solidState.rotX)-z*Math.sin(solidState.rotX),z1=y*Math.sin(solidState.rotX)+z*Math.cos(solidState.rotX);const x2=x*Math.cos(solidState.rotY)+z1*Math.sin(solidState.rotY),z2=-x*Math.sin(solidState.rotY)+z1*Math.cos(solidState.rotY);const k=4.9/(4.9-z2);return{x:cx+x2*scale*k,y:cy+y1*scale*k,z:z2};}
 function renderSolid(){
   if($('#tool-solidos').hidden)return;
+  if(window.TVTouchGeometry){window.TVTouchGeometry.render(sctx,solidCanvas,{shape:solidState.shape,rotX:solidState.rotX,rotY:solidState.rotY,zoom:solidState.zoom,material:solidState.material,quality:solidState.quality});return;}
   const rect=solidCanvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),w=Math.round(rect.width*dpr),h=Math.round(rect.height*dpr);if(w<2||h<2)return;
   if(solidCanvas.width!==w||solidCanvas.height!==h){solidCanvas.width=w;solidCanvas.height=h;}
   sctx.clearRect(0,0,w,h);const cx=w/2,cy=h/2,scale=Math.min(w,h)*.29*solidState.zoom;
@@ -221,52 +239,229 @@ function renderSolid(){
   if(solidState.shape!=='cilindro')for(const p of points){sctx.beginPath();sctx.arc(p.x,p.y,3.7*dpr,0,Math.PI*2);sctx.fillStyle='#e6feff';sctx.fill();}
 }
 function drawSolid(time=0){
-  if(currentPage!=='atividade'||activeTool!=='solidos')return;
-  if(solidState.auto && solidState.lastFrame){solidState.rotY+=(Math.min(40,time-solidState.lastFrame)||0)*.00065;}
-  solidState.lastFrame=time;renderSolid();if(solidState.auto)requestAnimationFrame(drawSolid);
+  solidState.raf=0;
+  if(currentPage!=='atividade'||activeTool!=='solidos'||document.hidden)return;
+  if(solidState.auto&&solidState.lastFrame){
+    const delta=Math.max(0,Math.min(40,time-solidState.lastFrame));
+    solidState.rotY+=delta*.00065;
+  }
+  solidState.lastFrame=time;renderSolid();
+  if(solidState.auto)solidState.raf=requestAnimationFrame(drawSolid);
 }
-function updateSolidInfo(){const s=FORMATIONS[solidState.shape];$('#modelFacts').innerHTML=`<div class="stats">${s.facts.map(f=>`<span class="stat">${html(f)}</span>`).join('')}</div><strong>${s.name}:</strong> ${s.text}`;$('#modelQuestion').textContent=s.question;$$('[data-shape]').forEach(b=>b.classList.toggle('active',b.dataset.shape===solidState.shape));}
+function updateSolidInfo(){const s=FORMATIONS[solidState.shape];$('#modelFacts').innerHTML=`<div class="stats">${s.facts.map(f=>`<span class="stat">${html(f)}</span>`).join('')}</div><strong>${s.name}:</strong> ${s.text}`;$('#modelQuestion').textContent=s.question;$$('[data-shape]').forEach(b=>{const active=b.dataset.shape===solidState.shape;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});}
 function initSolids(){
   updateSolidInfo();
-  $$('[data-shape]').forEach(button=>button.addEventListener('click',()=>{solidState.shape=button.dataset.shape;updateSolidInfo();renderSolid();}));
-  $('#modelZoom').addEventListener('input',e=>{solidState.zoom=Number(e.target.value)/100;$('#zoomOut').textContent=`${e.target.value}%`;renderSolid();});
-  $('#rotateModel').onclick=()=>{solidState.auto=!solidState.auto;$('#rotateModel').textContent=solidState.auto?'Ⅱ Parar rotação':'⟳ Girar automaticamente';solidState.lastFrame=0;requestAnimationFrame(drawSolid);};
-  $('#resetModel').onclick=()=>{solidState.rotX=-.3;solidState.rotY=.54;solidState.zoom=1;solidState.auto=false;solidState.lastFrame=0;$('#modelZoom').value=100;$('#zoomOut').textContent='100%';$('#rotateModel').textContent='⟳ Girar automaticamente';renderSolid();};
-  solidCanvas.addEventListener('pointerdown',e=>{e.preventDefault();solidCanvas.setPointerCapture(e.pointerId);solidState.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});});
+  $$('[data-shape]').forEach(button=>button.addEventListener('click',()=>{
+    solidState.shape=button.dataset.shape;updateSolidInfo();renderSolid();
+  }));
+  $$('[data-material]').forEach(button=>button.addEventListener('click',()=>{
+    solidState.material=button.dataset.material;
+    $$('[data-material]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    $('#modelMaterialName').textContent=window.TVTouchGeometry?.MATERIALS[solidState.material]?.label||'Cerâmica';
+    renderSolid();
+  }));
+  $$('[data-graphics-quality]').forEach(button=>button.addEventListener('click',()=>{
+    solidState.quality=button.dataset.graphicsQuality;
+    $$('[data-graphics-quality]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    renderSolid();
+  }));
+  $('#modelZoom').addEventListener('input',e=>{
+    solidState.zoom=Number(e.target.value)/100;
+    $('#zoomOut').textContent=e.target.value+'%';
+    renderSolid();
+  });
+  const stopAuto=()=>{
+    solidState.auto=false;solidState.lastFrame=0;
+    cancelAnimationFrame(solidState.raf);solidState.raf=0;
+    $('#rotateModel').textContent='Girar automaticamente';
+  };
+  $('#rotateModel').onclick=()=>{
+    if(solidState.auto){stopAuto();return;}
+    solidState.auto=true;solidState.lastFrame=0;
+    $('#rotateModel').textContent='Parar rotação';
+    if(!document.hidden)solidState.raf=requestAnimationFrame(drawSolid);
+  };
+  $('#resetModel').onclick=()=>{
+    stopAuto();solidState.rotX=-.3;solidState.rotY=.54;solidState.zoom=1;
+    $('#modelZoom').value=100;$('#zoomOut').textContent='100%';
+    renderSolid();
+  };
+  solidCanvas.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    e.preventDefault();try{solidCanvas.setPointerCapture(e.pointerId);}catch{}
+    solidState.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  });
   solidCanvas.addEventListener('pointermove',e=>{
-    if(!solidState.pointers.has(e.pointerId))return;e.preventDefault();const prev=solidState.pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;
-    if(solidState.pointers.size===1){const scale=window.TVTouchCalibration?.rotation() ?? 1;solidState.rotY+=dx*.008*scale;solidState.rotX+=dy*.008*scale;}
-    else if(solidState.pointers.size===2){const others=[...solidState.pointers.entries()].filter(([id])=>id!==e.pointerId);const o=others[0][1],before=Math.hypot(prev.x-o.x,prev.y-o.y),after=Math.hypot(e.clientX-o.x,e.clientY-o.y);if(before>8)solidState.zoom=Math.min(1.8,Math.max(.65,solidState.zoom*after/before));$('#modelZoom').value=Math.round(solidState.zoom*100);$('#zoomOut').textContent=`${Math.round(solidState.zoom*100)}%`;}
+    if(!solidState.pointers.has(e.pointerId))return;
+    e.preventDefault();const prev=solidState.pointers.get(e.pointerId),dx=e.clientX-prev.x,dy=e.clientY-prev.y;
+    if(solidState.pointers.size===1){
+      const factor=window.TVTouchCalibration?.rotation()??1;
+      solidState.rotY+=dx*.008*factor;
+      solidState.rotX=Math.min(1.52,Math.max(-1.52,solidState.rotX+dy*.008*factor));
+    } else if(solidState.pointers.size===2){
+      const other=[...solidState.pointers.entries()].find(([id])=>id!==e.pointerId)?.[1];
+      if(other){const before=Math.hypot(prev.x-other.x,prev.y-other.y);
+        const after=Math.hypot(e.clientX-other.x,e.clientY-other.y);
+        if(before>8)solidState.zoom=Math.min(1.8,Math.max(.65,solidState.zoom*after/before));
+        $('#modelZoom').value=Math.round(solidState.zoom*100);
+        $('#zoomOut').textContent=Math.round(solidState.zoom*100)+'%';
+      }
+    }
     solidState.pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});renderSolid();
   });
-  const release=e=>solidState.pointers.delete(e.pointerId);solidCanvas.addEventListener('pointerup',release);solidCanvas.addEventListener('pointercancel',release);solidCanvas.addEventListener('lostpointercapture',release);
-  solidCanvas.addEventListener('wheel',e=>{e.preventDefault();solidState.zoom=Math.min(1.8,Math.max(.65,solidState.zoom*(e.deltaY<0?1.06:.94)));$('#modelZoom').value=Math.round(solidState.zoom*100);$('#zoomOut').textContent=`${Math.round(solidState.zoom*100)}%`;renderSolid();},{passive:false});
+  const release=e=>solidState.pointers.delete(e.pointerId);
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])solidCanvas.addEventListener(type,release);
+  solidCanvas.addEventListener('wheel',e=>{
+    e.preventDefault();solidState.zoom=Math.min(1.8,Math.max(.65,solidState.zoom*(e.deltaY<0?1.06:.94)));
+    $('#modelZoom').value=Math.round(solidState.zoom*100);
+    $('#zoomOut').textContent=Math.round(solidState.zoom*100)+'%';renderSolid();
+  },{passive:false});
+  solidCanvas.addEventListener('keydown',e=>{
+    const step=.13* (window.TVTouchCalibration?.rotation()??1);
+    if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','-','='].includes(e.key)){
+      e.preventDefault();
+      if(e.key==='ArrowLeft')solidState.rotY-=step;
+      if(e.key==='ArrowRight')solidState.rotY+=step;
+      if(e.key==='ArrowUp')solidState.rotX=Math.min(1.52,solidState.rotX+step);
+      if(e.key==='ArrowDown')solidState.rotX=Math.max(-1.52,solidState.rotX-step);
+      if(e.key==='+'||e.key==='=')solidState.zoom=Math.min(1.8,solidState.zoom*1.08);
+      if(e.key==='-')solidState.zoom=Math.max(.65,solidState.zoom*.92);
+      $('#modelZoom').value=Math.round(solidState.zoom*100);
+      $('#zoomOut').textContent=Math.round(solidState.zoom*100)+'%';
+      renderSolid();
+    }
+  });
   if('ResizeObserver' in window)new ResizeObserver(()=>requestAnimationFrame(renderSolid)).observe($('.model-stage'));
+  window.addEventListener('tvt:page-change',event=>{
+    if(event.detail?.page!=='atividade'||activeTool!=='solidos'){stopAuto();solidState.pointers.clear();}
+    else renderSolid();
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(solidState.raf);solidState.raf=0;solidState.pointers.clear();}else if(solidState.auto&&currentPage==='atividade'&&activeTool==='solidos'){solidState.lastFrame=0;solidState.raf=requestAnimationFrame(drawSolid);}});
 }
 
-/* ENCAIXE: suporte a toque+arrastar e alternativa toque-peça / toque-alvo. */
+/* ENCAIXE: níveis progressivos e interação multi-pointer sem dependências. */
 const PIECES=[
-  {id:'circle',name:'Círculo',color:'#6ddce5',clip:'circle(50% at 50% 50%)'},
-  {id:'square',name:'Quadrado',color:'#ffb788',clip:'inset(0 0 0 0 round 5px)'},
-  {id:'triangle',name:'Triângulo',color:'#c2abff',clip:'polygon(50% 0,100% 100%,0 100%)'},
-  {id:'diamond',name:'Losango',color:'#a2e9b3',clip:'polygon(50% 0,100% 50%,50% 100%,0 50%)'},
-  {id:'hexagon',name:'Hexágono',color:'#f7d97c',clip:'polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)'}
+  {id:'circle',name:'Círculo',color:'#49b3c5',clip:'circle(48% at 50% 50%)'},
+  {id:'square',name:'Quadrado',color:'#e4ab5a',clip:'inset(0 0 0 0 round 5px)'},
+  {id:'triangle',name:'Triângulo',color:'#b58de3',clip:'polygon(50% 0,100% 100%,0 100%)'},
+  {id:'diamond',name:'Losango',color:'#62b990',clip:'polygon(50% 0,100% 50%,50% 100%,0 50%)'},
+  {id:'hexagon',name:'Hexágono',color:'#d69457',clip:'polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)'},
+  {id:'pentagon',name:'Pentágono',color:'#64a7b7',clip:'polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%)'},
+  {id:'trapezoid',name:'Trapézio',color:'#cd7e82',clip:'polygon(28% 0,72% 0,100% 100%,0 100%)'},
+  {id:'octagon',name:'Octógono',color:'#8e9ec8',clip:'polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)'}
 ];
-let puzzleStarted=false,puzzleMatched=new Set(),puzzleSelected=null,ghost=null,activePointer=null,pointerStart=null;
-function shapeMarkup(p){return `<span class="piece-shape" style="--piece-color:${p.color};--clip:${p.clip}" aria-hidden="true"></span>`;}
-function resetPuzzle(){puzzleStarted=true;puzzleMatched=new Set();puzzleSelected=null;const shuffled=[...PIECES].sort(()=>Math.random()-.5);$('#puzzleSlots').innerHTML=PIECES.map(p=>`<button type="button" class="puzzle-slot" data-slot="${p.id}" aria-label="Encaixar ${p.name}">${shapeMarkup(p)}<span>${p.name}</span></button>`).join('');$('#puzzlePieces').innerHTML=shuffled.map(p=>`<button type="button" class="puzzle-piece" data-piece="${p.id}" aria-label="Mover ${p.name}">${shapeMarkup(p)}</button>`).join('');updatePuzzle('Escolha uma peça para começar.');}
-function updatePuzzle(message){$('#puzzleProgress').textContent=`${puzzleMatched.size} / ${PIECES.length}`;$('#puzzleMessage').textContent=message;$$('[data-piece]').forEach(p=>p.classList.toggle('active',p.dataset.piece===puzzleSelected));$$('[data-slot]').forEach(p=>p.classList.toggle('selected',!!puzzleSelected && p.dataset.slot===puzzleSelected));}
-function attemptMatch(pieceId,slotId){if(!pieceId||!slotId)return;const slot=$(`[data-slot="${slotId}"]`);if(puzzleMatched.has(slotId))return;if(pieceId===slotId){puzzleMatched.add(pieceId);$(`[data-piece="${pieceId}"]`)?.remove();slot?.classList.add('matched');puzzleSelected=null;updatePuzzle(puzzleMatched.size===PIECES.length?'🎉 Desafio concluído! Todas as formas foram encaixadas.':'✓ Excelente! Forma encaixada. Continue!');}else{updatePuzzle('Tente outra vez! Observe o contorno e o nome da forma.');}}
-function initPuzzle(){
-  $('#resetPuzzle').onclick=resetPuzzle;
-  $('#puzzleSlots').addEventListener('click',e=>{const slot=e.target.closest('[data-slot]');if(slot && puzzleSelected)attemptMatch(puzzleSelected,slot.dataset.slot);});
-  $('#puzzlePieces').addEventListener('click',e=>{const p=e.target.closest('[data-piece]');if(!p)return;puzzleSelected=p.dataset.piece;updatePuzzle(`Peça selecionada: ${PIECES.find(x=>x.id===puzzleSelected).name}. Toque no espaço correspondente.`);});
-  $('#puzzlePieces').addEventListener('pointerdown',e=>{const p=e.target.closest('[data-piece]');if(!p || (e.pointerType==='mouse'&&e.button!==0))return;activePointer=e.pointerId;pointerStart={x:e.clientX,y:e.clientY,id:p.dataset.piece};});
-  document.addEventListener('pointermove',e=>{if(activePointer!==e.pointerId||!pointerStart)return;const moved=Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>(window.TVTouchCalibration?.drag() ?? 12);if(!moved && !ghost)return;if(!ghost){const p=PIECES.find(x=>x.id===pointerStart.id);ghost=document.createElement('div');ghost.className='piece-ghost';ghost.innerHTML=shapeMarkup(p);document.body.appendChild(ghost);}ghost.style.left=`${e.clientX}px`;ghost.style.top=`${e.clientY}px`;});
-  document.addEventListener('pointerup',e=>{if(activePointer!==e.pointerId||!pointerStart)return;const hadGhost=!!ghost;ghost?.remove();ghost=null;activePointer=null;const id=pointerStart.id;pointerStart=null;if(!hadGhost)return;const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');if(slot)attemptMatch(id,slot.dataset.slot);else{puzzleSelected=id;updatePuzzle('Arraste a peça até um dos espaços pontilhados, ou toque no espaço.');}});
-  document.addEventListener('pointercancel',e=>{if(activePointer===e.pointerId){activePointer=null;pointerStart=null;ghost?.remove();ghost=null;}});
+const PUZZLE_LEVELS=[
+  {id:1,name:'Primeiros encaixes',ids:['circle','square','triangle','hexagon']},
+  {id:2,name:'Mais formas',ids:['circle','square','triangle','diamond','hexagon','pentagon']},
+  {id:3,name:'Sem pistas escritas',ids:PIECES.map(p=>p.id)}
+];
+let puzzleStarted=false,puzzleLevel=1,puzzleMatched=new Set(),puzzleSelected=null;
+let puzzleMistakes=0,puzzleDone=false,puzzleSuppressClickUntil=0,puzzleHintTimer=0;
+const puzzleDrags=new Map();
+const puzzlePiecesForLevel=()=>PUZZLE_LEVELS[puzzleLevel-1].ids.map(id=>PIECES.find(p=>p.id===id));
+function puzzleShuffle(items){const out=[...items];for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
+function shapeMarkup(p){return '<span class="piece-shape" style="--piece-color:'+p.color+';--clip:'+p.clip+'" aria-hidden="true"></span>';}
+function cancelPuzzleDrag(id){
+  const drag=puzzleDrags.get(id);if(!drag)return;
+  drag.ghost?.remove();puzzleDrags.delete(id);
 }
-
+function cancelPuzzleDrags(){for(const id of [...puzzleDrags.keys()])cancelPuzzleDrag(id);}
+function resetPuzzle(){
+  cancelPuzzleDrags();clearTimeout(puzzleHintTimer);puzzleHintTimer=0;puzzleStarted=true;puzzleMatched=new Set();puzzleSelected=null;puzzleMistakes=0;puzzleDone=false;
+  const pieces=puzzlePiecesForLevel(),hard=puzzleLevel===3;
+  $('#puzzleSlots').innerHTML=puzzleShuffle(pieces).map(p=>
+    '<button type="button" class="puzzle-slot" data-slot="'+p.id+'" aria-label="Encaixar '+p.name+'">'+shapeMarkup(p)+
+    '<span>'+(hard?'':p.name)+'</span></button>').join('');
+  $('#puzzlePieces').innerHTML=puzzleShuffle(pieces).map(p=>
+    '<button type="button" class="puzzle-piece" data-piece="'+p.id+'" aria-label="Mover '+p.name+'">'+shapeMarkup(p)+
+    '<span class="piece-caption">'+p.name+'</span></button>').join('');
+  $('#puzzleSlots').style.setProperty('--puzzle-columns',String(Math.min(pieces.length,4)));
+  $('#puzzlePieces').style.setProperty('--puzzle-columns',String(Math.min(pieces.length,4)));
+  $('#puzzleLevelName').textContent=PUZZLE_LEVELS[puzzleLevel-1].name;
+  $('#puzzleNext').disabled=true;
+  $$('[data-puzzle-level]').forEach(b=>{const active=Number(b.dataset.puzzleLevel)===puzzleLevel;b.setAttribute('aria-pressed',String(active));b.classList.toggle('active',active);});
+  updatePuzzle('Escolha uma peça e toque na sombra correspondente, ou arraste até ela.');
+}
+function updatePuzzle(message){
+  const total=puzzlePiecesForLevel().length;
+  $('#puzzleProgress').textContent=puzzleMatched.size+' / '+total;
+  $('#puzzleMistakes').textContent=String(puzzleMistakes);
+  $('#puzzleMessage').textContent=message;
+  $$('[data-piece]').forEach(el=>el.classList.toggle('active',el.dataset.piece===puzzleSelected));
+  $$('[data-slot]').forEach(el=>el.classList.toggle('selected',!!puzzleSelected&&el.dataset.slot===puzzleSelected));
+}
+function attemptMatch(pieceId,slotId){
+  if(!pieceId||!slotId||puzzleMatched.has(slotId)||puzzleMatched.has(pieceId)||!puzzlePiecesForLevel().some(x=>x.id===pieceId))return false;
+  const slot=$('[data-slot="'+slotId+'"]');
+  if(pieceId!==slotId){
+    puzzleMistakes++;
+    updatePuzzle('Essa peça não corresponde à sombra. Compare o número de lados e tente novamente.');
+    return false;
+  }
+  puzzleMatched.add(pieceId);$('[data-piece="'+pieceId+'"]')?.remove();
+  slot?.classList.add('matched');slot?.setAttribute('aria-label',PIECES.find(x=>x.id===slotId).name+' encaixado');
+  puzzleSelected=null;
+  if(puzzleMatched.size===puzzlePiecesForLevel().length&&!puzzleDone){
+    puzzleDone=true;$('#puzzleNext').disabled=puzzleLevel===3;
+    updatePuzzle(puzzleLevel===3?'Todas as formas encaixadas. Você concluiu os três níveis.':'Nível completo. Continue para o próximo desafio.');
+    window.dispatchEvent(new CustomEvent('tvt:activity-completed',{detail:{id:'encaixe',level:puzzleLevel,errors:puzzleMistakes}}));
+  }else updatePuzzle('Encaixe correto. Continue com outra forma.');
+  return true;
+}
+function initPuzzle(){
+  $('#resetPuzzle').addEventListener('click',resetPuzzle);
+  $$('[data-puzzle-level]').forEach(button=>button.addEventListener('click',()=>{
+    puzzleLevel=Number(button.dataset.puzzleLevel)||1;resetPuzzle();
+  }));
+  $('#puzzleNext').addEventListener('click',()=>{if(!puzzleDone||puzzleLevel>=3)return;puzzleLevel++;resetPuzzle();});
+  $('#puzzleHint').addEventListener('click',()=>{
+    const p=puzzlePiecesForLevel().find(x=>!puzzleMatched.has(x.id));if(!p)return;
+    puzzleSelected=p.id;updatePuzzle('Dica: '+p.name+'. Procure uma sombra com o mesmo contorno.');
+    $('[data-slot="'+p.id+'"]')?.classList.add('hint');
+    clearTimeout(puzzleHintTimer);puzzleHintTimer=setTimeout(()=>$('[data-slot="'+p.id+'"]')?.classList.remove('hint'),1600);
+  });
+  $('#puzzleSlots').addEventListener('click',e=>{
+    const target=e.target.closest('[data-slot]');if(target&&puzzleSelected)attemptMatch(puzzleSelected,target.dataset.slot);
+  });
+  $('#puzzlePieces').addEventListener('click',e=>{
+    if(Date.now()<puzzleSuppressClickUntil){e.preventDefault();return;}
+    const p=e.target.closest('[data-piece]');if(!p)return;
+    puzzleSelected=p.dataset.piece;
+    updatePuzzle('Peça: '+PIECES.find(x=>x.id===puzzleSelected).name+'. Toque na sombra que combina.');
+  });
+  $('#puzzlePieces').addEventListener('pointerdown',e=>{
+    const p=e.target.closest('[data-piece]');if(!p||(e.pointerType==='mouse'&&e.button!==0)||puzzleMatched.has(p.dataset.piece))return;
+    puzzleDrags.set(e.pointerId,{x:e.clientX,y:e.clientY,piece:p.dataset.piece,ghost:null});
+    try{p.setPointerCapture(e.pointerId);}catch{}
+  });
+  document.addEventListener('pointermove',e=>{
+    const drag=puzzleDrags.get(e.pointerId);if(!drag)return;
+    const moved=Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>(window.TVTouchCalibration?.drag()??12);
+    if(!moved&&!drag.ghost)return;
+    e.preventDefault();
+    if(!drag.ghost){
+      const p=PIECES.find(x=>x.id===drag.piece);
+      const ghost=document.createElement('div');ghost.className='piece-ghost';ghost.innerHTML=shapeMarkup(p);
+      document.body.appendChild(ghost);drag.ghost=ghost;
+    }
+    drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+  },{passive:false});
+  document.addEventListener('pointerup',e=>{
+    const drag=puzzleDrags.get(e.pointerId);if(!drag)return;
+    const dragged=!!drag.ghost;
+    cancelPuzzleDrag(e.pointerId);
+    if(!dragged)return;
+    puzzleSuppressClickUntil=Date.now()+350;
+    const slot=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');
+    if(slot)attemptMatch(drag.piece,slot.dataset.slot);
+    else{puzzleSelected=drag.piece;updatePuzzle('Escolha uma sombra para a peça selecionada.');}
+  });
+  document.addEventListener('pointercancel',e=>cancelPuzzleDrag(e.pointerId));
+  document.addEventListener('lostpointercapture',e=>cancelPuzzleDrag(e.pointerId));
+  window.addEventListener('tvt:page-change',e=>{
+    if(e.detail?.page!=='atividade'||activeTool!=='encaixe'){cancelPuzzleDrags();clearTimeout(puzzleHintTimer);puzzleHintTimer=0;}
+  });
+}
 /* QUIZ PORTUÁRIO: situações fictícias, não substituem treinamento normativo. */
 const QUIZ=[
   {q:'Antes de iniciar uma atividade no cais, um trabalhador observa alguém sem o EPI exigido. Qual atitude é mais adequada?',options:['Ignorar porque a tarefa está atrasada.','Orientar a interromper a exposição ao risco e comunicar o responsável.','Permitir o trabalho e registrar apenas no fim do turno.'],correct:1,explain:'Segurança vem antes da produtividade. Os EPIs aplicáveis dependem da atividade, da análise de riscos e das normas locais.'},

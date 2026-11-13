@@ -1,6 +1,14 @@
-# TV TOUCH / Studio 2.2 — AGV
+# TV TOUCH / Studio 2.4 — geometria e encaixe (piloto) — AGV
 
 Portal educacional para os painéis interativos Samsung WA86F de 86 polegadas, Android 14, uso horizontal. O código estático funciona no GitHub Pages sem framework ou workflow personalizado.
+
+## Piloto Studio 2.4 — geometria e encaixe
+- Cinco sólidos (cubo, prisma, pirâmide, cilindro, esfera); projeção 3D com iluminação de superfície e materiais procedurais de cerâmica, metal, madeira e pedra por Canvas 2D, sem bibliotecas externas.
+- Qualidade ECO, Equilibrada e Detalhada com limites de pixels e quantidade de faces, adaptável à Samsung WA86F.
+- Giro por toque, zoom com pinça, acessibilidade por setas do teclado, ampliação por controle e interrupção da animação ao sair.
+- Jogo de encaixe com 3 níveis (4, 6 e 8 peças), dicas, contagem de tentativas, progresso, suporte a mais de um toque e alternativa selecionar peça e destino.
+- Desenho e memória não são modificados. Nenhuma mudança no Supabase ou políticas de acesso.
+- **PR de testes, ainda sem publicação nem homologação na TV**. Materiais Canvas 2D são aproximações procedurais; não são materiais PBR nem modelos 3D fotogramétricos.
 
 ## Revisão visual Studio 2.2
 
