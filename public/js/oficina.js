@@ -424,7 +424,7 @@
   }
   function renderPuzzle(){
     const n=state.n,image=state.img;
-    const grid=document.createElement('div');grid.className='oficina-puzzle';grid.style.setProperty('--n',String(n));
+    const grid=document.createElement('div');grid.className='oficina-puzzle';grid.style.setProperty('--n',String(n));grid.style.setProperty('--slice-size',(n*100)+'%');
     grid.setAttribute('role','group');grid.setAttribute('aria-label','Quebra-cabeça de '+n*n+' peças');
     state.order.forEach((tile,i)=>{
       const item=document.createElement('button');item.type='button';
