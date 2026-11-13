@@ -113,7 +113,7 @@
   function frame(now){
     raf=0;
     if(doc.hidden)return;
-    const interval=doc.querySelector('.arcade-shell')?90:34;
+    const interval=doc.querySelector('.arcade-shell, .oficina-shell')?90:34;
     if(!last||now-last>=interval){draw(now);last=now}
     raf=window.requestAnimationFrame(frame);
   }
