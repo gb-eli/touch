@@ -135,7 +135,7 @@ function go(page, {hash=true}={}) {
   if (page==='favoritos') renderFavorites();
   if (page==='atividade' && activeTool==='solidos') requestAnimationFrame(drawSolid);
   if (page==='atividade' && activeTool==='desenho') requestAnimationFrame(resizeDrawingCanvas);
-  window.dispatchEvent(new CustomEvent('tvt:page-change',{detail:{page}}));
+  window.dispatchEvent(new CustomEvent('tvt:page-change',{detail:{page,tool:page==='atividade'?activeTool:null}}));
 }
 function launchTool(tool) {
   if (!['desenho','solidos','encaixe','porto'].includes(tool)) return;
@@ -521,3 +521,18 @@ function initQuizNextHandler(){ /* substitui o handler reatribuído ao terminar 
 function finishQuiz(){ $('#quizStep').textContent='DESAFIO CONCLUÍDO';$('#quizQuestion').textContent=`Você acertou ${quizCorrect} de ${QUIZ.length} situações!`;$('#quizAnswers').innerHTML='<p style="color:#b9cad8">Discuta com a turma quais decisões aumentam a segurança e a eficiência operacional.</p>';$('#quizFeedback').hidden=true;$('#quizNext').textContent='↺ Jogar novamente';$('#quizNext').hidden=false;$('#quizNext').onclick=()=>{resetQuiz();initQuizNextHandler();}; }
 
 startShell();initDrawing();initSolids();initPuzzle();initQuiz();
+window.TVTouchNavigation=Object.freeze({
+  go:(page)=>go(page),
+  tool:(tool)=>launchTool(tool),
+  current:()=>currentPage,
+  activeTool:()=>activeTool
+});
+try{
+  const tool=new URLSearchParams(location.search).get('tool');
+  if(['desenho','solidos','encaixe','porto'].includes(tool)){
+    requestAnimationFrame(()=>{
+      launchTool(tool);
+      history.replaceState(null,'',location.pathname+'#atividade');
+    });
+  }
+}catch{}
