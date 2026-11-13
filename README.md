@@ -70,3 +70,9 @@ A publicação por branch ainda pode criar uma execução gerenciada do Pages, e
 `node --check public/js/*.js`, inspeção de referências e testes de navegador em resoluções horizontais. As interações WebGL/IR multitouch devem ser verificadas na Samsung WA86F real antes de homologação final.
 
 As experiências astronômicas e físicas são modelos didáticos ilustrativos, não simuladores científicos em escala.
+
+## Piloto Studio 2.7 — Abertura interativa e Arcade (PR isolada)
+
+Entrada de primeira visita por sessão com player oficial e visível do trailer Dolby Atmos: Unfold; desafio rápido de toque com categorias aleatórias (frutas, esportes, formas) e quatro minijogos (Snake, Pong, Basquete, Sinuca). Alternância entre 2D e 3D visual; mecânicas continuam bidimensionais. Áudio não foi extraído do YouTube, pode exigir um segundo toque e necessita internet.
+
+Nenhuma mudança em notas, dados pessoais, autenticação, Supabase ou administração. **Não publicar sem teste na Samsung WA86F.** Ver docs/QA_ARCADE_EXPERIENCIA_2_7.md.

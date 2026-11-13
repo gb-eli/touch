@@ -46,7 +46,7 @@
   $('tvtTourOpenTop')?.addEventListener('click',()=>open(true));
   window.addEventListener('load',()=>{
     if(location.hash&&location.hash!=='#inicio')return;
-    setTimeout(()=>{if(!document.hidden)open(false);},650);
+    setTimeout(()=>{if(!document.hidden&&document.documentElement.dataset.tvtIntro!=='active')open(false);},650);
   },{once:true});
   window.TVTouchTutorial=Object.freeze({open:()=>open(true)});
 })();
