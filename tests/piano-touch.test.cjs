@@ -18,6 +18,7 @@ class FakeElement {
   setPointerCapture(id){this.pointerId=id}
   hasPointerCapture(id){return this.pointerId===id}
   releasePointerCapture(id){if(this.pointerId===id)this.pointerId=null}
+  contains(el){return this.id==='pianoKeys'&&!!el?.dataset?.midi}
 }
 function setup({audio=true}={}){
   const ids=['pianoKeys','pianoLed','pianoNow','pianoVolume','pianoVolumeValue','pianoMute','pianoAudioStatus','pianoGoalName','pianoGoalHint','pianoGoalList','pianoFeedback','pianoGoalNext','pianoGoalReset'];
@@ -81,5 +82,27 @@ test('sem Web Audio: tecla e missão continuam visuais',()=>{
   assert.equal(p.stats.starts,0);
   assert.equal(p.emissions.length,1);
   assert.match(p.els.get('pianoAudioStatus').textContent,/indisponível/);
+  p.instance.unmount();
+});
+
+test('deslize entre teclas transfere o som sem duplicar contatos',()=>{
+  const p=setup();
+  p.down(60,88);
+  assert.equal(p.stats.starts,1);
+  p.doc.elementFromPoint=()=>p.keys.get(62);
+  p.els.get('pianoKeys').handlers.pointermove({pointerId:88,clientX:70,clientY:100,preventDefault(){}});
+  assert.equal(p.stats.starts,2);
+  assert.equal(p.stats.stops,1);
+  assert.equal(p.els.get('pianoNow').textContent,'Ré 4');
+  p.up(88);
+  assert.equal(p.stats.stops,2);
+  p.instance.unmount();
+});
+test('teclado físico produz e encerra nota por keydown/keyup',()=>{
+  const p=setup();
+  p.listeners.get('window:keydown')({key:'a',code:'KeyA',target:{tagName:'BODY'},repeat:false,ctrlKey:false,altKey:false,metaKey:false,preventDefault(){}});
+  assert.equal(p.stats.starts,1);
+  p.listeners.get('window:keyup')({code:'KeyA'});
+  assert.equal(p.stats.stops,1);
   p.instance.unmount();
 });

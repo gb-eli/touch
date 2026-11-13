@@ -15,6 +15,8 @@
   4. ativação de mute: nenhuma voz nova;
   5. visibilitychange: vozes encerradas;
   6. unmount: AudioContext fechado, interface desmontada.
+- Testes adicionais: deslize entre teclas encerra nota anterior sem duplicar voz; teclado físico dispara e solta a nota corretamente.
+- **5/5** cenários simulados passaram com DOM e Web Audio substituídos por mocks; não é ensaio físico.
 - Teste de navegador real na Samsung WA86F: **pendente**.
 - Integração Supabase: não realizada; política do Laboratório respeitada no acesso à rota.
 - Pacote do piano e host pré-armazenados pelo PWA (poucos KB) para funcionar após instalação offline, sem carregar execução Web Audio na home.
