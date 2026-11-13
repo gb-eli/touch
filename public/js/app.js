@@ -31,11 +31,11 @@ const VIDEOS = [
   {id:'industrias360',name:'Indústrias em 360°',provider:'Pesquisa no YouTube',icon:'🏭',tone:'violet',type:'Busca de vídeo 360°',categories:['Tecnologia','Portos'],description:'Busque visitas por fábricas, armazéns e linhas de produção.',url:youtubeSearch('factory warehouse 360 VR tour'),lesson:'Mapeie entradas, processos, saídas, logística e pontos de melhoria operacional.'}
 ];
 const resourcesById = Object.fromEntries([...RESOURCES, ...VIDEOS].map(x => [x.id,x]));
-const pageTitles = {inicio:'Início',biblioteca:'Biblioteca de ferramentas',videos:'Vídeos 360°',laboratorio:'Laboratório interativo',favoritos:'Meus favoritos',guia:'Guia do professor',diagnostico:'Diagnóstico da TV',atividade:'Atividade',cosmos:'Universo 3D',memoria:'Memória',fisica:'Física 2D'};
+const pageTitles = {inicio:'Início',biblioteca:'Biblioteca de ferramentas',videos:'Vídeos 360°',laboratorio:'Laboratório interativo',favoritos:'Meus favoritos',guia:'Guia do professor',diagnostico:'Diagnóstico da TV',atividade:'Atividade',cosmos:'Universo 3D',memoria:'Memória',fisica:'Física 2D',mais:'Mais opções'};
 const FAVORITE_KEY = 'tvtouch:favorite-resource-ids:v1';
 let favorites = new Set();
 try {const saved = JSON.parse(localStorage.getItem(FAVORITE_KEY) || '[]'); if (Array.isArray(saved)) favorites = new Set(saved.filter(id => resourcesById[id]));} catch { /* Navegadores com armazenamento restrito */ }
-let currentPage = 'inicio', activeCategory = 'Todos', activeTool = null, lastPage = 'laboratorio';
+let currentPage = 'inicio', activeCategory = 'Todos', activeVideoTopic = 'Todos', activeTool = null, lastPage = 'laboratorio';
 
 function studioResourceIcon(resource) {
   const symbols={
@@ -50,7 +50,42 @@ function studioResourceIcon(resource) {
   const type=['earth','earthmaps'].includes(id)?'globe':['geogebra','sketchfab','nasa'].includes(id)?'cube':['phet','phhtml'].includes(id)?'flask':['arts','arthistory','museus360','historia360'].includes(id)?'image':['polypad','geogeometry'].includes(id)?'boxes':'movie';
   return `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${symbols[type]}</svg>`;
 }
+
+const VIDEO_TOPICS=Object.freeze({porto360:'Portos',navio360:'Portos',oceano360:'Natureza',historia360:'Cultura',espaco360:'Ciência',museus360:'Cultura',natureza360:'Natureza',industrias360:'Tecnologia'});
+const VIDEO_SCENES=Object.freeze({porto360:'port',navio360:'ship',oceano360:'sea',historia360:'history',espaco360:'space',museus360:'museum',natureza360:'forest',industrias360:'industry'});
+const VIDEO_SHORT=Object.freeze({
+  porto360:'Navios, guindastes e operações no cais',
+  navio360:'Convés, embarcações e rotas marítimas',
+  oceano360:'Vida subaquática, corais e ecossistemas',
+  historia360:'Sítios históricos e reconstruções',
+  espaco360:'Planetas, astronautas e estações espaciais',
+  museus360:'Obras de arte e espaços culturais',
+  natureza360:'Florestas, montanhas e biodiversidade',
+  industrias360:'Fábricas, processos e logística'
+});
+const TOPIC_CLASSES=Object.freeze({Portos:'portos',Natureza:'natureza',Cultura:'cultura','Ciência':'ciencia',Tecnologia:'tecnologia'});
+function videoCard(r){
+  const fav=favorites.has(r.id),topic=VIDEO_TOPICS[r.id],scene=VIDEO_SCENES[r.id];
+  return [
+    '<article class="discovery-card discovery-topic-',TOPIC_CLASSES[topic],'">',
+    '<div class="discovery-poster"><svg viewBox="0 0 600 340" role="img" aria-label="Ilustração do tema ',html(r.name),'; não é miniatura de um vídeo"><use href="assets/immersive-scenes.svg#',scene,'"/></svg>',
+    '<span class="discovery-topic-label">',html(topic),'</span>',
+    '<button type="button" class="star-button discovery-favorite" data-favorite="',html(r.id),'" aria-pressed="',fav,'" aria-label="',fav?'Remover dos':'Adicionar aos',' favoritos: ',html(r.name),'">',fav?'★':'☆','</button></div>',
+    '<div class="discovery-card-content"><div class="discovery-card-kicker">BUSCA ORIENTADA <span aria-hidden="true">/</span> YOUTUBE</div>',
+    '<h3>',html(r.name),'</h3><p>',html(VIDEO_SHORT[r.id]||r.description),'</p>',
+    '<div class="discovery-card-actions"><button type="button" data-open-resource="',html(r.id),'" class="discovery-lesson">Roteiro da aula</button>',
+    '<a data-visit-resource="',html(r.id),'" href="',html(r.url),'" target="_blank" rel="noopener noreferrer" class="discovery-search">Pesquisar <span aria-hidden="true">↗</span></a>',
+    '</div></div></article>'
+  ].join('');
+}
+function renderVideos(){
+  const visible=activeVideoTopic==='Todos'?VIDEOS:VIDEOS.filter(r=>VIDEO_TOPICS[r.id]===activeVideoTopic);
+  $('#videoCards').innerHTML=visible.map(videoCard).join('');
+  $('#videoCount').textContent=visible.length+' '+(visible.length===1?'tema disponível':'temas disponíveis')+' · Pesquisas externas, não vídeos homologados';
+  $$('[data-video-filter]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.videoFilter===activeVideoTopic)));
+}
 function card(resource) {
+  if(VIDEO_TOPICS[resource.id])return videoCard(resource);
   const fav = favorites.has(resource.id);
   return `<article class="resource-card"><div class="card-top"><div class="resource-icon ${html(resource.tone)}" aria-hidden="true">${studioResourceIcon(resource)}</div><button class="star-button" type="button" data-favorite="${html(resource.id)}" aria-pressed="${fav}" aria-label="${fav?'Remover dos':'Adicionar aos'} favoritos: ${html(resource.name)}">${fav?'★':'☆'}</button></div><div class="resource-body"><span class="resource-origin">${html(resource.provider)}</span><h3>${html(resource.name)}</h3><p>${html(resource.description)}</p><div class="chips">${resource.categories.slice(0,3).map(cat=>`<span class="chip">${html(cat)}</span>`).join('')}</div></div><div class="card-bottom"><span class="card-type">${html(resource.type)}</span><button class="card-open" type="button" data-open-resource="${html(resource.id)}">Conhecer →</button></div></article>`;
 }
@@ -69,7 +104,7 @@ function toggleFavorite(id) {
   if (!resourcesById[id]) return;
   favorites.has(id) ? favorites.delete(id) : favorites.add(id);
   try {localStorage.setItem(FAVORITE_KEY, JSON.stringify([...favorites]));} catch { /* funcional nesta sessão */ }
-  renderLibrary(); renderFavorites(); $('#featuredCards').innerHTML = RESOURCES.slice(0,3).map(card).join(''); $('#videoCards').innerHTML = VIDEOS.map(card).join('');
+  renderLibrary(); renderFavorites(); $('#featuredCards').innerHTML = RESOURCES.slice(0,3).map(card).join(''); renderVideos();
 }
 function openResource(id) {
   const r = resourcesById[id]; if (!r) return;
@@ -92,7 +127,7 @@ function go(page, {hash=true}={}) {
   document.body.classList.toggle('studio-home-active',page==='inicio');
   if(['cosmos','memoria','fisica'].includes(page))window.dispatchEvent(new CustomEvent('tvt:tool-open',{detail:{id:page}}));
   $$('.page').forEach(e=>e.classList.toggle('active',e.id === `page-${page}`));
-  $$('.nav-item').forEach(e=>{ const active = e.dataset.page === page || (page==='atividade'&&e.dataset.page==='laboratorio'); e.classList.toggle('active',active); active?e.setAttribute('aria-current','page'):e.removeAttribute('aria-current'); });
+  $$('.nav-item').forEach(e=>{ const active = e.dataset.page === page || (page==='atividade'&&e.dataset.page==='laboratorio') || (e.dataset.page==='mais'&&['favoritos','guia','diagnostico'].includes(page)); e.classList.toggle('active',active); active?e.setAttribute('aria-current','page'):e.removeAttribute('aria-current'); });
   $('#breadcrumb').textContent=pageTitles[page];
   closeMenu();
   if (hash) history.replaceState(null,'',`#${page}`);
@@ -120,12 +155,16 @@ function startShell() {
   const connection=()=>{ const online=navigator.onLine;$('#connectionText').textContent=online?'Rede ativa':'Sem rede';$('#connectionDot').classList.toggle('offline',!online);};
   connection();window.addEventListener('online',connection);window.addEventListener('offline',connection);
   $('#featuredCards').innerHTML=RESOURCES.slice(0,3).map(card).join('');
-  $('#videoCards').innerHTML=VIDEOS.map(card).join('');
+  renderVideos();
   $('#libraryFilters').innerHTML=CATEGORIES.map(c=>`<button type="button" class="filter-button ${c==='Todos'?'active':''}" data-category="${html(c)}" aria-pressed="${c==='Todos'}">${html(c)}</button>`).join('');
   renderLibrary();renderFavorites();
   document.addEventListener('click',e=>{
     const outbound=e.target.closest('[data-visit-resource]');
     if(outbound) window.dispatchEvent(new CustomEvent('tvt:resource-open', {detail:{id:outbound.dataset.visitResource}}));
+    const videoScroll=e.target.closest('[data-video-scroll]');if(videoScroll){document.getElementById(videoScroll.dataset.videoScroll)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});return;}
+    const colorPause=e.target.closest('[data-more-color-pause]');if(colorPause){document.querySelector('[data-color-pause]')?.click();return;}
+    const videoFilter=e.target.closest('[data-video-filter]');if(videoFilter){activeVideoTopic=videoFilter.dataset.videoFilter;renderVideos();return;}
+    const full=e.target.closest('[data-more-fullscreen]');if(full){$('#fullscreenButton').click();return;}
     const goBtn=e.target.closest('[data-go]');if(goBtn){go(goBtn.dataset.go);return;}
     const nav=e.target.closest('[data-page]');if(nav){go(nav.dataset.page);return;}
     const tool=e.target.closest('[data-tool]');if(tool){launchTool(tool.dataset.tool);return;}
@@ -133,6 +172,7 @@ function startShell() {
     const fav=e.target.closest('[data-favorite]');if(fav){const id=fav.dataset.favorite;toggleFavorite(id);if($('#resourceDialog').open)openResource(id);return;}
     const filter=e.target.closest('[data-category]');if(filter){activeCategory=filter.dataset.category;$$('[data-category]').forEach(btn=>{const active=btn===filter;btn.classList.toggle('active',active);btn.setAttribute('aria-pressed',active);});renderLibrary();}
   });
+  $('#moreTutorial')?.addEventListener('click',()=>document.getElementById('tvtTourOpenTop')?.click());
   $('#resourceSearch').addEventListener('input',renderLibrary);
   $('#backToLab').addEventListener('click',()=>go(lastPage));
   $('#menuButton').addEventListener('click',()=>{const open=$('.sidebar').classList.toggle('open');$('#mobileOverlay').hidden=!open;$('#menuButton').setAttribute('aria-expanded',String(open));});
