@@ -28,9 +28,9 @@ export function mount({root,signal,emit=()=>{}}){
   root.innerHTML='<div class="piano-layout">'+
     '<section class="piano-instrument" aria-label="Instrumento musical interativo">'+
       '<div class="piano-bar"><div class="piano-mark"><span class="piano-led" id="pianoLed"></span><span>PIANO TOUCH / 24 NOTAS</span></div><div class="piano-now">Nota: <strong id="pianoNow">—</strong></div></div>'+
-      '<div class="piano-keys" id="pianoKeys" role="group" aria-label="Teclado musical de duas oitavas; toque em várias notas para fazer um acorde">'+
+      '<div class="piano-key-scroll"><div class="piano-keys" id="pianoKeys" role="group" aria-label="Teclado musical de duas oitavas; toque em várias notas para fazer um acorde">'+
         '<div class="piano-white-row">'+whiteKeys.join('')+'</div>'+blackKeys.join('')+
-      '</div>'+
+      '</div></div>'+
       '<div class="piano-footer"><span><strong>1 dedo</strong> toca uma nota</span><span><strong>2 ou mais</strong> fazem acordes</span><span><strong>A–J</strong> também funcionam no teclado físico</span></div>'+
     '</section>'+
     '<aside class="piano-panel" aria-label="Controles e desafio do piano">'+

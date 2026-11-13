@@ -14,7 +14,7 @@
     root.replaceChildren();
     const box=document.createElement('div');box.className='piano-loading';box.setAttribute('role','alert');
     const text=document.createElement('p');text.textContent=message;
-    const retry=document.createElement('button');retry.type='button';retry.className='piano-next';retry.textContent='Tentar novamente';retry.addEventListener('click',()=>open('piano'));
+    const retry=document.createElement('button');retry.type='button';retry.className='piano-next';retry.textContent='Tentar novamente';retry.addEventListener('click',()=>open('piano',true));
     box.append(text,retry);root.append(box);
   }
   function close(){
@@ -25,13 +25,13 @@
     try{prev.instance?.unmount?.();}catch(err){console.warn('Falha ao encerrar experiência',err);}
     prev.root?.replaceChildren();
   }
-  async function open(id){
+  async function open(id,force=false){
     if(!ENTRY[id])return;
     if(!allowed(id)){
       document.querySelector('[data-page="inicio"]')?.click();
       return;
     }
-    if(current?.id===id)return;
+    if(current?.id===id&&!force)return;
     close();
     const root=document.getElementById('pianoMount'),controller=new AbortController();
     const token=revision;
