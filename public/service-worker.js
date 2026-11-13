@@ -1,5 +1,5 @@
-const CACHE='tvtouch-studio-v2.2.0';
-const ASSETS=['./','./index.html','./css/styles.css','./css/diagnostico.css','./css/telemetria.css','./css/governance.css','./css/studio.css','./css/identity.css','./css/tutorial.css','./css/ux-shell.css','./js/app.js','./js/diagnostico.js','./js/telemetria.js','./js/telemetria-config.js','./js/governance.js','./js/ux.js','./js/studio.js','./js/tutorial.js','./js/planetarium.js','./js/learning-games.js','./manifest.webmanifest','./assets/favicon.svg','./assets/icon-192.png','./assets/icon-512.png'];
+const CACHE='tvtouch-studio-v2.4.0-geometry-rc';
+const ASSETS=['./','./index.html','./css/styles.css','./css/diagnostico.css','./css/telemetria.css','./css/governance.css','./css/studio.css','./css/identity.css','./css/geometry-activities.css','./css/tutorial.css','./css/ux-shell.css','./js/app.js','./js/geometry-lab.js','./js/diagnostico.js','./js/telemetria.js','./js/telemetria-config.js','./js/governance.js','./js/ux.js','./js/studio.js','./js/tutorial.js','./js/planetarium.js','./js/learning-games.js','./manifest.webmanifest','./assets/favicon.svg','./assets/icon-192.png','./assets/icon-512.png'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('tvtouch-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
