@@ -1,0 +1,279 @@
+/* AGV TOUCH Studio 3.0 — UX/UI transversal: contexto, descoberta, acessibilidade, atividades */
+:root{
+  --agv-focus:#fff17a;
+  --agv-ease:cubic-bezier(.19,.75,.25,1);
+  --agv-touch:56px;
+  --agv-panel:linear-gradient(145deg,#191027ed,#0e0b1de8);
+}
+html{scroll-padding-top:16px}
+body{overscroll-behavior-x:none;-webkit-tap-highlight-color:transparent}
+button,a,summary,input,select,textarea{font-family:inherit}
+button:not(:disabled),a,summary{touch-action:manipulation}
+button:disabled,[aria-disabled=true]{cursor:not-allowed;opacity:.5}
+button:focus-visible,a:focus-visible,[role=button]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{
+  outline:3px solid var(--agv-focus) !important;outline-offset:3px
+}
+.agv-pressed:not(:disabled){filter:brightness(1.17);transform:scale(.986)}
+.agv-dev-credit{z-index:10005}
+.agv-experience-bar{
+  position:relative;z-index:18;display:flex;align-items:center;justify-content:space-between;
+  gap:clamp(14px,1.8vw,32px);min-height:clamp(66px,7vh,100px);
+  margin:0 0 clamp(16px,2vw,32px);
+  padding:clamp(12px,1.2vw,22px) clamp(15px,2.1vw,38px);
+  background:linear-gradient(110deg,#160e24f2,#0b0a17f1 75%,#1c102bf0);
+  border:1px solid #7c55a4a3;border-radius:14px;
+  box-shadow:0 13px 35px #0005,inset 0 1px #f4d1ff17;
+}
+.agv-experience-bar::before{
+  content:"";position:absolute;inset:0 auto 0 0;width:4px;border-radius:14px 0 0 14px;
+  background:linear-gradient(#ffad6e,#ff5a30 48%,#a446ff);pointer-events:none
+}
+.agv-context-copy{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px clamp(10px,1vw,20px);min-width:0;flex:1}
+.agv-context-copy>span{
+  color:#ff9a69;text-transform:uppercase;letter-spacing:.12em;
+  font-size:clamp(10px,.72vw,14px);font-weight:850;white-space:nowrap
+}
+.agv-context-copy>strong{
+  color:#fffaf8;font-weight:880;letter-spacing:-.035em;
+  font-size:clamp(20px,1.6vw,33px);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+.agv-context-copy>small{
+  display:block;flex-basis:100%;color:#d6c7df;line-height:1.35;font-size:clamp(12px,.87vw,17px)
+}
+.agv-context-actions{display:flex;gap:8px;align-items:center;justify-content:end;flex-wrap:wrap;flex-shrink:0}
+.agv-command-button{border:1px solid #825c9d;border-radius:9px;background:#251734;color:#fff9fe;font-size:clamp(13px,.92vw,17px);font-weight:850;padding:12px 17px;min-height:var(--agv-touch);transition:background .2s,border-color .2s,transform .12s}
+.agv-command-button:hover{border-color:#ffa16b;background:#382145}
+.agv-command-button.agv-context-primary{border-color:#ffaf83;color:#230c09;background:linear-gradient(125deg,#ff9e67,#ff6332);box-shadow:0 8px 24px #ff6a3822}
+.agv-command-button.agv-context-primary:hover{background:linear-gradient(125deg,#ffc39b,#ff7645)}
+.agv-experience-bar button[hidden]{display:none}
+.agv-global-find{order:10;border-color:#ff9a72;background:#2c172f}
+body.studio-ui #conteudo>.page{scroll-margin-top:18px}
+body.studio-ui :is(.page-intro,.experience-heading,.more-header,.activity-bar){position:relative;isolation:isolate}
+body.studio-ui :is(.page-intro,.experience-heading,.more-header) h1{
+  letter-spacing:-.06em;font-weight:890;line-height:1.07;
+  text-wrap:balance
+}
+body.studio-ui :is(.page-intro,.experience-heading,.more-header) p{max-width:78ch;line-height:1.52}
+body.studio-ui .page-intro h1 .gradient-dot{color:#ff7942}
+body.studio-ui :is(.studio-back,.back-button,.more-grid button,.home-shortcuts button,.home-lesson,
+  .lab-card,.resource-card .card-open,.filter-button,.video-filter,.tool-toggle,
+  .puzzle-actions button,.puzzle-levels button,.model-panel button,.tool-toolbar button,
+  .cosmos-actions button,.planet-button,.memory-panel button,.physics-panel button,
+  .lesson-actions button,.dialog-actions button,.tvt-tour-open-top,
+  .tvt-tour-primary,.tvt-tour-secondary){min-height:var(--agv-touch);touch-action:manipulation}
+body.studio-ui .studio-back,body.studio-ui .back-button{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 22px;border-radius:8px;border:1px solid #8d5a9e;
+  background:#21132e;color:#fff;box-shadow:0 7px 20px #0003;
+}
+body.studio-ui .studio-back:hover,body.studio-ui .back-button:hover{border-color:#ffad79;background:#39213d}
+body.studio-ui .home-shortcuts{gap:clamp(8px,.7vw,13px)}
+body.studio-ui .home-shortcuts button,body.studio-ui .tvt-arcade-link{
+  border:1px solid #a466a9;border-radius:9px;
+  background:linear-gradient(135deg,#291933,#171125);
+  color:#fff;box-shadow:inset 0 1px #ffffff0c;
+  transition:background .2s,border-color .2s,transform .15s;
+}
+body.studio-ui .home-shortcuts button:hover,body.studio-ui .tvt-arcade-link:hover{background:#47254a;border-color:#ff985f;transform:translateY(-2px)}
+body.studio-ui .studio-tile{transition:transform .22s var(--agv-ease),border-color .22s,box-shadow .22s}
+body.studio-ui .studio-tile:hover .tile-cta,body.studio-ui .studio-tile:focus-visible .tile-cta{
+  background:#ff754037;border-color:#ffab84
+}
+body.studio-ui .studio-tile:active{transform:scale(.986)}
+body.studio-ui :is(.lab-card,.resource-card,.mini-tile,.more-grid button,.step-card,.idea-card,.discovery-card){
+  border-radius:12px;transition:border-color .24s,box-shadow .24s,transform .20s var(--agv-ease);
+}
+body.studio-ui :is(.lab-card,.resource-card,.mini-tile,.more-grid button,.discovery-card):hover{
+  transform:translateY(-3px);border-color:#ff8c5a;box-shadow:0 17px 42px #0007,0 0 26px #ff542018
+}
+body.studio-ui .toolbar,.filter-scroll{scrollbar-color:#a35dc9 #1a1226}
+body.studio-ui .searchbox{border:1px solid #8e5aaa;background:#180f25}
+body.studio-ui :is(.searchbox input,.lesson-fields select,.filter-scroll button,.shape-option,.tool-toggle){
+  color:#fff
+}
+body.studio-ui .searchbox input::placeholder{color:#cbbbd5}
+body.studio-ui :is(.filter-button.active,.shape-option.active,.tool-toggle.active,.puzzle-levels button.active){
+  color:#210b0b;background:linear-gradient(110deg,#ffab7b,#ff693c);border-color:#ffb48b
+}
+body.studio-ui .empty-state{border:1px dashed #936daa;background:#191028;color:#f8effa;border-radius:12px}
+body.studio-ui .empty-state p{color:#d8c8e1}
+body.studio-ui .resource-dialog,body.studio-ui .lesson-dialog,body.studio-ui .tvt-tour{
+  border:1px solid #9d69be;background:linear-gradient(148deg,#1d112d,#100b1b);
+  color:#fdf8ff;box-shadow:0 24px 90px #000b
+}
+body.studio-ui .resource-dialog::backdrop,body.studio-ui .lesson-dialog::backdrop,body.studio-ui .tvt-tour::backdrop{
+  background:#030308db;backdrop-filter:blur(6px)
+}
+body.studio-ui .resource-dialog .dialog-description,body.studio-ui .dialog-note,
+body.studio-ui .lesson-dialog p{color:#e5d7ed}
+body.studio-ui .lesson-fields :is(input,select),body.studio-ui .lesson-dialog input{
+  background:#21142d;border:1px solid #9164a6;color:#fff
+}
+body.studio-ui .lesson-dialog input[type=checkbox]{accent-color:#ff7046}
+body.studio-ui .lesson-dialog button,body.studio-ui .resource-dialog button{min-height:52px}
+body.studio-ui .studio-experience .experience-heading{margin-bottom:clamp(18px,2vw,33px)}
+body.studio-ui .studio-experience :is(.cosmos-panel,.memory-panel,.physics-panel,.piano-section){
+  background:linear-gradient(143deg,#22132f,#120e1f);border:1px solid #8d609f;
+  box-shadow:0 12px 35px #0005;color:#fff
+}
+body.studio-ui .cosmos-panel :is(label,h2,p),body.studio-ui .physics-panel :is(label,h2,p),
+body.studio-ui .memory-panel :is(label,h2,p){color:#f3e8f6}
+body.studio-ui .cosmos-panel button.active,body.studio-ui .planet-button.active{background:#ff7a44;color:#2b1008;border-color:#ffb68c}
+body.studio-ui .cosmos-viewport,body.studio-ui .physics-viewport,
+body.studio-ui .memory-grid{border-color:#8556a9;box-shadow:0 20px 44px #0007}
+/* Laboratório: preserva a física e os materiais das simulações */
+body.studio-ui #tool-solidos,body.studio-ui #tool-encaixe{
+  --work-surface:#160f27;--work-panel:#21142f;--work-line:#885bad;--work-fg:#fff8ff;
+  border-color:#9569b0;background:#150d25
+}
+body.studio-ui #tool-solidos .model-stage{border-color:#8959a7;background:#100e20}
+body.studio-ui #tool-solidos .model-panel{background:#221530;border-color:#8357a8;scrollbar-color:#d56bcb #1b1231}
+body.studio-ui #tool-solidos .shape-option{background:#2e1a40;border-color:#8d5fad;color:#fff}
+body.studio-ui #tool-solidos .shape-option.active{background:#ff814a;border-color:#ffa66a;color:#210b08}
+body.studio-ui #tool-solidos .material-options button{border-color:#795598;background:#291938;color:#fff}
+body.studio-ui #tool-solidos .material-options button[aria-pressed=true]{border-color:#ff965b}
+body.studio-ui #tool-encaixe .puzzle-piece,body.studio-ui #tool-encaixe .puzzle-slot{border-color:#7955ac}
+body.studio-ui #tool-desenho .canvas-outer{border:2px solid #9472bb;box-shadow:0 18px 50px #0009}
+body.studio-ui #tool-desenho :is(.tool-section,.tool-toolbar){border-color:#8f62ae;background:#191128}
+body.studio-ui .tool-toolbar select,body.studio-ui .tool-toolbar input{accent-color:#ff6735}
+/* Piano: superfície coerente; teclas brancas/pretas conservam contraste musical */
+body.studio-ui .piano-instrument{background:linear-gradient(135deg,#1d122c,#100b1e);
+  border-color:#986ab6;box-shadow:0 20px 45px #0007}
+body.studio-ui .piano-layout{max-width:2400px}
+body.studio-ui .piano-section{background:#23152f;border-color:#8960a8}
+body.studio-ui .piano-mark{color:#f4daf1}
+body.studio-ui .piano-led.active{background:#ff784b;box-shadow:0 0 16px #ff6b3a83}
+body.studio-ui .piano-now,body.studio-ui .piano-footer{color:#ded0e5}
+body.studio-ui .piano-now strong,body.studio-ui .piano-section h2{color:#fff}
+body.studio-ui .piano-keys{border-color:#502e60;box-shadow:0 12px 0 #0c0713,0 25px 38px #0009}
+body.studio-ui .piano-white.playing{background:#ffba8e;border-color:#e68a5f}
+body.studio-ui .piano-black.playing{background:#8a3d99}
+body.studio-ui .piano-timbres button,body.studio-ui .piano-actions button,body.studio-ui .piano-next{
+  border-color:#9669b4;min-height:var(--agv-touch)
+}
+/* Arcade: melhorar orientação sem sacrificar área do Canvas */
+body:has(.arcade-shell) .arcade-header{gap:clamp(12px,2vw,32px)}
+body:has(.arcade-shell) .arcade-intro{margin:clamp(20px,2.2vw,38px) 0}
+body:has(.arcade-shell) .arcade-game{
+  min-height:clamp(92px,7vw,132px);padding:clamp(14px,1.1vw,24px)
+}
+body:has(.arcade-shell) .arcade-panel-top h2{letter-spacing:-.05em}
+body:has(.arcade-shell) .arcade-message{box-shadow:0 12px 36px #0009;border-color:#b07abb}
+body:has(.arcade-shell) :is(.arcade-actions button,.arcade-keypad button,.arcade-view button){min-height:var(--agv-touch)}
+body:has(.arcade-shell) .arcade-note{color:#d9c5e0;font-size:clamp(13px,.82vw,17px)}
+body:has(.arcade-shell) .agv-global-find{min-height:56px;white-space:nowrap}
+/* Admin: contraste nos formulários e indicadores; fluxo de login intacto */
+body:has(.content-wrap) .agv-global-find{min-height:56px}
+body:has(.content-wrap) .panel,body:has(.content-wrap) .metric-card,body:has(.content-wrap) .auth-card{
+  border-radius:13px;box-shadow:0 12px 35px #0005
+}
+body:has(.content-wrap) :is(input,select,textarea){min-height:48px;color:#fff;background:#26192f;border:1px solid #9a6caa}
+body:has(.content-wrap) :is(.btn,.side-link,.filter button,.control-group button){min-height:52px}
+body:has(.content-wrap) :is(.metric-card p,.panel-note,.controls-help,.side-foot){color:#e2d4e6}
+body:has(.content-wrap) .controls-status{background:#271637;color:#f7edf9;border-color:#9969ab}
+body:has(.content-wrap) .control-group{background:#1a102a;border-color:#825eab}
+body:has(.content-wrap) .control-group :is(label,h3){color:#fff}
+body:has(.content-wrap) .control-group :is(select,input){background:#2a193a;color:#fff;border-color:#9169b5}
+/* Busca global (dialog nativo, foco e rolagem administrados pelo navegador) */
+.agv-command-dialog{
+  position:fixed;inset:0;box-sizing:border-box;margin:auto;
+  width:min(780px,calc(100vw - 26px));max-width:780px;max-height:min(87dvh,930px);
+  overflow:hidden;padding:0;
+  border:1px solid #a975c4;border-radius:18px;
+  color:#fffafc;background:linear-gradient(135deg,#1a102c,#0d0918 66%,#1e112a);
+  box-shadow:0 38px 110px #000d,0 0 65px #7946d12b;
+}
+.agv-command-dialog::backdrop{background:#020208d9;backdrop-filter:blur(11px)}
+.agv-command-head{display:flex;align-items:start;justify-content:space-between;gap:14px;padding:clamp(22px,3vw,38px) clamp(22px,3vw,38px) 18px}
+.agv-command-kicker{color:#ff9771;font-size:clamp(10px,.75vw,13px);font-weight:850;letter-spacing:.16em}
+.agv-command-head h2{color:#fff;font-weight:900;font-size:clamp(25px,2.5vw,40px);line-height:1.12;letter-spacing:-.05em;margin:10px 0 0}
+.agv-command-head>button{flex:none;width:52px;height:52px;border:1px solid #8b629e;border-radius:9px;color:#fff;background:#281936;font-size:22px}
+.agv-command-head>button:hover{background:#402343}
+.agv-command-search{display:flex;align-items:center;gap:15px;margin:0 clamp(20px,3vw,38px) 12px;
+ border:2px solid #8d5fae;border-radius:11px;background:#120d20;padding:0 16px;min-height:64px}
+.agv-command-search:focus-within{border-color:#ff9b69;box-shadow:0 0 0 3px #ff81552d}
+.agv-command-search>span{font-size:34px;color:#ff9257;line-height:1}
+.agv-command-search input{width:100%;min-width:0;border:0!important;background:transparent!important;color:#fff!important;outline:none!important;
+ font-size:clamp(16px,1.3vw,22px);font-weight:600;height:59px}
+.agv-command-search input::placeholder{color:#ac9bb9}
+.agv-command-list{padding:4px clamp(20px,3vw,38px) 15px;max-height:52dvh;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:#9756b4 #171024}
+.agv-command-group{padding:16px 4px 9px;color:#ff966c;letter-spacing:.16em;font-size:11px;font-weight:880}
+.agv-command-option{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 10px;text-align:left;
+  width:100%;min-height:68px;border:1px solid transparent;border-radius:9px;padding:11px 16px;
+  background:#ffffff07;color:#fff;transition:background .15s,border-color .15s;cursor:pointer
+}
+.agv-command-option+ .agv-command-option{margin-top:4px}
+.agv-command-option strong{grid-column:1;font-size:clamp(15px,1.04vw,19px)}
+.agv-command-option small{grid-column:1;color:#c5b3d0;font-size:clamp(12px,.85vw,15px)}
+.agv-command-option>span{grid-column:2;grid-row:1/3;color:#ff9968;font-size:24px}
+.agv-command-option:hover,.agv-command-option:focus-visible{border-color:#a669bb;background:#39204b}
+.agv-command-empty{padding:20px 10px;color:#e5d4e8}
+.agv-command-footer{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px clamp(20px,3vw,38px) 20px;
+ border-top:1px solid #6e4b82;color:#c2b0d1;font-size:12px}
+.agv-command-footer button{min-height:45px;padding:8px 15px;border:1px solid #9364a4;border-radius:8px;background:#281733;color:#fff;font-weight:730}
+.agv-command-footer button[aria-pressed=true]{background:#422b46;border-color:#f4b178;color:#fff}
+.agv-quiet-mode #agvSynapseField,.agv-quiet-mode #agvCrystalBackdrop{display:none!important}
+.agv-quiet-mode.studio-ui .page.active{animation:none!important}
+.agv-quiet-mode :is(.studio-tile,.resource-card,.nav-item,.agv-command-option){transition:none!important}
+@media(pointer:coarse){:root{--agv-touch:62px}
+ .agv-command-option{min-height:72px}
+ .agv-command-button{padding:14px 20px}
+}
+@media(min-width:1900px){
+ .agv-command-dialog{max-width:880px}
+ .agv-experience-bar{padding:22px 40px}
+ body.studio-ui .home-lead h1{font-size:clamp(62px,3.4vw,91px)}
+ body.studio-ui .piano-instrument{padding:clamp(24px,2.1vw,55px)}
+ body.studio-ui #tool-solidos .shape-option{min-height:72px}
+}
+@media(max-width:1050px){
+ .agv-experience-bar{flex-wrap:wrap;justify-content:start}
+ .agv-context-actions{width:100%;justify-content:flex-start}
+ .agv-context-copy>small{flex-basis:auto}
+ .agv-command-button{min-height:52px}
+ body.studio-ui .studio-home:before{opacity:.06}
+}
+@media(max-width:700px){
+ :root{--agv-touch:48px}
+ .agv-experience-bar{padding:13px;gap:11px;border-radius:11px;margin:0 0 13px}
+ .agv-context-copy{gap:2px 10px}
+ .agv-context-copy>span{font-size:10px}
+ .agv-context-copy>strong{font-size:clamp(18px,5.5vw,27px)}
+ .agv-context-copy>small{font-size:12px;flex-basis:100%}
+ .agv-context-actions{display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:6px}
+ .agv-context-actions .agv-command-button{min-width:0;padding:10px 5px;font-size:11px;min-height:46px}
+ .agv-context-actions button[hidden]{display:none}
+ .agv-experience-bar[data-page=inicio] .agv-context-actions{grid-template-columns:1fr}
+ .agv-experience-bar[data-page=inicio] .agv-context-actions .agv-context-primary{width:100%}
+ body.studio-ui .page-intro h1,body.studio-ui .experience-heading h1{font-size:clamp(32px,8vw,53px)}
+ body.studio-ui .studio-experience .experience-heading{margin:10px 0 18px}
+ body.studio-ui #tool-solidos .model-panel{max-height:none}
+ body.studio-ui .piano-layout{grid-template-columns:minmax(0,1fr)}
+ body.studio-ui .piano-panel{display:grid;grid-template-columns:minmax(0,1fr)}
+ body.studio-ui .piano-instrument{padding:14px}
+ body.studio-ui .piano-keys{min-width:660px}
+ body:has(.arcade-shell) .arcade-header{gap:10px}
+ body:has(.arcade-shell) .arcade-global-find{order:6}
+ body:has(.arcade-shell) .agv-global-find{flex:1;min-height:48px}
+ body:has(.arcade-shell) .arcade-intro{margin:19px 0}
+ body:has(.arcade-shell) .arcade-game{min-height:88px}
+ .agv-command-dialog{width:calc(100vw - 16px);max-height:91dvh;border-radius:13px}
+ .agv-command-list{max-height:51dvh}
+ .agv-command-head{padding:18px 17px 12px}
+ .agv-command-search{margin:0 17px 8px}
+ .agv-command-list{padding:5px 17px 12px}
+ .agv-command-footer{padding:12px 17px 16px}
+ .agv-command-head>button{width:46px;height:46px}
+ .agv-command-search{min-height:54px}
+ .agv-command-search input{height:52px}
+}
+@media(max-width:400px){
+ .agv-context-actions{grid-template-columns:1fr 1fr}
+ .agv-context-primary{grid-column:span 2}
+ .agv-command-head h2{font-size:24px}
+ .agv-command-footer>span:last-child{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .agv-experience-bar,.agv-command-option,.agv-pressed,body.studio-ui .page.active{animation:none!important;transition:none!important}
+}
