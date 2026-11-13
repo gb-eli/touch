@@ -13,6 +13,8 @@
   <script src="js/arcade.js?v=3.0.0" defer></script>
   <script src="js/site-synapses.js?v=3.1.0" defer></script>
   <script src="js/platform-ux.js?v=3.1.0" defer></script>
+  <link rel="stylesheet" href="css/agv-design-system.css?v=3.2.0">
+  <script src="js/agv-touch-feedback.js?v=3.2.0" defer></script>
 </head>
 <body>
   <a class="skip" href="#arcadeStage">Pular para o jogo</a>
@@ -26,7 +28,7 @@
       </div>
     </header>
     <section class="arcade-intro">
-      <div><span class="arcade-eyebrow">JOGOS CLÁSSICOS · REINVENTADOS PARA O TOQUE</span><h1>Escolha seu próximo <em>desafio.</em></h1></div>
+      <div><span class="arcade-eyebrow">JOGOS CLÁSSICOS · REINVENTADOS PARA O TOQUE</span><h1>Jogue, reaja e <em>supere sua marca.</em></h1></div>
       <p>Quatro jogos interativos. Toque, arraste, experimente e compartilhe a tela com a turma. Sem cadastro, notas ou placar público.</p>
     </section>
     <nav class="arcade-games" aria-label="Selecionar minijogo">
@@ -46,7 +48,7 @@
         <div class="arcade-message" id="arcadeMessage" role="status" aria-live="polite">Toque em Jogar para começar.</div>
       </div>
       <div class="arcade-toolbar">
-        <div class="arcade-actions"><button type="button" class="arcade-primary" id="arcadePlay">▶ Jogar</button><button type="button" id="arcadeRestart">↻ Reiniciar</button><button type="button" id="arcadeFullscreen">⛶ Tela cheia</button></div>
+        <div class="arcade-actions"><button type="button" class="arcade-primary" id="arcadePlay">▶ Jogar</button><button type="button" id="arcadeRestart">↻ Reiniciar</button><button type="button" id="arcadeSound" aria-pressed="false" aria-label="Ativar efeitos sonoros dos jogos">♫ Som desligado</button><button type="button" id="arcadeFullscreen">⛶ Tela cheia</button></div>
         <div class="arcade-keypad" id="arcadeKeypad" aria-label="Controles do jogo">
           <button type="button" data-direction="up" aria-label="Mover para cima">↑</button><button type="button" data-direction="left" aria-label="Mover para esquerda">←</button><button type="button" data-direction="down" aria-label="Mover para baixo">↓</button><button type="button" data-direction="right" aria-label="Mover para direita">→</button>
         </div>

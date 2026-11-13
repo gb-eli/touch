@@ -1,0 +1,459 @@
+/* AGV TOUCH Studio 3.2 — camada final de identidade compartilhada.
+   Carregada após os estilos legados. Superfícies com contraste alto,
+   acentos cristalinos e feedback pontual, sem efeitos caros em tela inteira. */
+:root{
+  --agv32-bg:#06050b;
+  --agv32-elevated:#171026;
+  --agv32-panel:#120d20;
+  --agv32-raised:#241637;
+  --agv32-line:#654785;
+  --agv32-line-active:#b16bfa;
+  --agv32-ink:#fffaf9;
+  --agv32-muted:#dccde7;
+  --agv32-coral:#ff6436;
+  --agv32-coral-bright:#ff9e68;
+  --agv32-cyan:#70e8ff;
+  --agv32-violet:#b16bfa;
+  --agv32-focus:#ffe184;
+  --agv32-ease:cubic-bezier(.2,.78,.25,1);
+  --agv32-tap:56px;
+}
+body.studio-ui{
+  --brand-accent:var(--agv32-coral);
+  --studio-line:rgba(181,112,246,.36);
+  --ui-border:var(--agv32-line);
+  --muted:var(--agv32-muted);
+  --surface:var(--agv32-panel);
+  --surface2:var(--agv32-elevated);
+  --surface3:var(--agv32-raised);
+  --stroke:var(--agv32-line);
+}
+body.studio-ui .nav-item.active{
+  color:#17080a;
+  background:linear-gradient(115deg,#ffb080,#ff6535 75%);
+  border-color:#ffc398;
+  box-shadow:0 4px 22px #ff66352e;
+}
+body.studio-ui .nav-item:not(.active):hover,
+body.studio-ui .nav-item:not(.active):focus-visible{
+  background:#352044;color:#fff;border-color:#b16bfa;
+}
+body.studio-ui .agv-experience-bar,
+body.studio-ui .topbar,
+body.studio-ui .sidebar{
+  border-color:var(--agv32-line);
+}
+body.studio-ui .agv-experience-bar{
+  background:linear-gradient(110deg,#1a1028eb,#110c1dea);
+}
+body.studio-ui .agv-context-copy small{color:var(--agv32-muted)}
+body.studio-ui .studio-tile,
+body.studio-ui .resource-card,
+body.studio-ui .lab-card,
+body.studio-ui .discovery-card{
+  border-color:rgba(158,99,207,.48);
+  box-shadow:0 15px 38px #0005,inset 0 1px 0 #ffffff17;
+}
+body.studio-ui .resource-card,
+body.studio-ui .lab-card,
+body.studio-ui .discovery-card{
+  background:linear-gradient(145deg,#221431,#120d22 72%);
+  color:var(--agv32-ink);
+}
+body.studio-ui .studio-tile:focus-visible,
+body.studio-ui .resource-card:focus-within,
+body.studio-ui .lab-card:focus-within,
+body.studio-ui .discovery-card:focus-within{
+  border-color:var(--agv32-coral-bright);
+}
+body.studio-ui .resource-body p,
+body.studio-ui .lab-card>span,
+body.studio-ui .discovery-card p{
+  color:var(--agv32-muted);
+}
+body.studio-ui .agv-oficina-shortcut,
+body.studio-ui .card-open,
+body.studio-ui .discovery-search{
+  border-color:#ff9a63;
+}
+body.studio-ui .filter-button[aria-pressed="true"],
+body.studio-ui .discovery-filters button[aria-pressed="true"],
+body.studio-ui .shape-option[aria-pressed="true"],
+body.studio-ui [data-graphics-quality][aria-pressed="true"]{
+  border-color:#ffa56b;
+  box-shadow:inset 0 0 0 1px #ffb183;
+}
+body.studio-ui .piano-panel,
+body.studio-ui .piano-instrument,
+body.studio-ui .piano-section{
+  background:linear-gradient(155deg,#20142f,#110d21);
+  border-color:var(--agv32-line);
+  color:var(--agv32-ink);
+}
+body.studio-ui .piano-section :is(h2,p),
+body.studio-ui .piano-bar :is(h2,p){color:var(--agv32-ink)}
+body.studio-ui .piano-key-scroll{scrollbar-color:#a06bce #1a112b}
+body.studio-ui .piano-volume input{accent-color:var(--agv32-coral)}
+body.studio-ui .memory-card:focus-visible,
+body.studio-ui .quiz-answer:focus-visible{outline-color:var(--agv32-focus)}
+body.studio-ui .quiz-answer.correct{box-shadow:inset 0 0 0 2px #70f7ce}
+body.studio-ui .quiz-answer.wrong{box-shadow:inset 0 0 0 2px #ff7a78}
+body.studio-ui .lab-card em,
+body.studio-ui .discovery-lesson{color:#ffb08a}
+
+/* Aplicação standalone: mesma direção cromática sem apagar controles do jogo */
+body:has(.arcade-shell),
+body.oficina-body{
+  background:
+    radial-gradient(circle at 76% 16%,#41215d6e 0%,transparent 36%),
+    radial-gradient(circle at 13% 66%,#a32f3929 0%,transparent 40%),
+    #06050b;
+  color:var(--agv32-ink);
+}
+.arcade-shell,.oficina-shell{position:relative;isolation:isolate}
+.arcade-header,.oficina-header{
+  border-bottom:1px solid rgba(183,118,243,.43);
+  padding-bottom:clamp(12px,1.25vw,26px);
+}
+.arcade-game,.oficina-choices button{
+  background:linear-gradient(148deg,#281834,#141020);
+  border-color:rgba(170,102,216,.58);
+  color:#fffaf9;
+}
+.arcade-game.active,.arcade-game[aria-pressed="true"],
+.oficina-choices button[aria-pressed="true"]{
+  background:linear-gradient(135deg,#59304b,#2c1839 88%);
+  border:2px solid var(--agv32-coral-bright);
+  box-shadow:0 0 0 1px #ff8a5736,0 12px 30px #0006;
+}
+.arcade-game small,.oficina-choices small{color:#e3cee9}
+.arcade-panel,.oficina-panel{
+  background:linear-gradient(145deg,#1b112a,#0b0a19 74%);
+  border:1px solid var(--agv32-line);
+  box-shadow:0 25px 65px #0008,inset 0 1px 0 #ffffff18;
+}
+.arcade-panel-top p,.oficina-panel-head p{color:var(--agv32-muted)}
+.arcade-metrics,.oficina-status{background:#261730;color:#fff3fc}
+.arcade-scene{border:1px solid #8c60b9;background:#090817}
+.arcade-home,.oficina-back,
+.arcade-actions button,.oficina-panel-actions button{
+  border-color:#9570b7;background:#271a39;color:#fffaf9;
+}
+.arcade-primary,.arcade-actions .arcade-primary{
+  background:linear-gradient(120deg,#ffb086,#ff673c);
+  border-color:#ffc69f;color:#210d16;
+  font-weight:900;
+}
+.arcade-view button[aria-pressed="true"]{
+  background:linear-gradient(120deg,#9aeeff,#66c9ec);
+  color:#081627;
+}
+.oficina-tools button[aria-pressed="true"],
+.oficina-tools button.active{
+  background:linear-gradient(125deg,#ffae83,#ff7042);
+  color:#1d0b13;
+}
+.oficina-grid3 button,.oficina-dama button,.oficina-puzzle button{
+  -webkit-tap-highlight-color:transparent;
+}
+.oficina-grid3 button:focus-visible,.oficina-puzzle button:focus-visible,
+.oficina-dama button:focus-visible{
+  outline:4px solid var(--agv32-focus);
+  outline-offset:-4px;z-index:2;
+}
+.oficina-panel-head h2,.arcade-panel-top h2{text-wrap:balance}
+.oficina-status,.arcade-message{line-height:1.5}
+.arcade-note,.oficina-footer{color:#dfcaec}
+
+/* Administração: o tema padrão ganha acabamento escuro, sem ocultar dados,
+   autenticação, formulários nem os avisos de privacidade. */
+body:has(.content-wrap):not([data-theme="light"]){
+  --background:var(--agv32-bg);
+  --navy:#100c1b;
+  --navy-2:#261935;
+  --ink:var(--agv32-ink);
+  --muted:var(--agv32-muted);
+  --border:#684b83;
+  --teal:#70e8ff;
+  --teal-soft:#183248;
+  --purple:#a46dff;
+  color:var(--agv32-ink);
+  background:var(--agv32-bg);
+}
+body:has(.content-wrap):not([data-theme="light"]) :is(.side,.header,.auth-card,.panel,.metric-card,.device-card){
+  border-color:var(--agv32-line);
+  color:var(--agv32-ink);
+}
+body:has(.content-wrap):not([data-theme="light"]) .side{
+  background:linear-gradient(180deg,#1d122c,#0b0915);
+}
+body:has(.content-wrap):not([data-theme="light"]) :is(.header,.auth-card,.panel,.metric-card,.device-card){
+  background:linear-gradient(145deg,#21152f,#130f22);
+}
+body:has(.content-wrap):not([data-theme="light"]) :is(.header,.auth-card,.panel,.metric-card,.device-card) :is(h1,h2,h3,strong){
+  color:var(--agv32-ink);
+}
+body:has(.content-wrap):not([data-theme="light"]) :is(.intro p,.auth-description,.metric-card p,.area-summary,.area-row-head small,.device-card p,.panel-tag,.filter label,.updated,.area-legend){
+  color:var(--agv32-muted);
+}
+body:has(.content-wrap):not([data-theme="light"]) :is(input,select,.filter select){
+  border-color:#845ba2;color:#fffaf9;background:#241835;
+}
+body:has(.content-wrap):not([data-theme="light"]) :is(.side-link.selected,.btn.primary){
+  background:#ff7042;border-color:#ffa37c;color:#210d16;
+}
+body:has(.content-wrap):not([data-theme="light"]) .side-link.selected{box-shadow:inset 3px 0 #ffdbab}
+body:has(.content-wrap):not([data-theme="light"]) .btn.outline{
+  background:#241735;border-color:#986cbe;color:#fffaf9;
+}
+body:has(.content-wrap):not([data-theme="light"]) .area-track,
+body:has(.content-wrap):not([data-theme="light"]) .rank-track{background:#40304a}
+body:has(.content-wrap):not([data-theme="light"]) .pill{
+  background:#342647;color:#f6e8fb;
+}
+body:has(.content-wrap):not([data-theme="light"]) :is(.intro h1,.panel h2,.auth-card h1,.metric-card>strong,.area-row-head,.area-summary strong){
+  color:#fffaf9;
+}
+/* Tema claro permanece opcional, porém com superfícies neutras e sem pastéis. */
+body:has(.content-wrap)[data-theme="light"]{
+  --background:#f5f5f7;--navy:#141020;--ink:#1a1325;
+  --border:#b4a1c6;--teal:#6c2ba1;
+}
+body:has(.content-wrap)[data-theme="light"] .side{background:#141020}
+body:has(.content-wrap)[data-theme="light"] .btn.primary{
+  background:#7b2ea3;border-color:#7b2ea3;color:#fff;
+}
+
+/* Feedback visual comum e não invasivo: nenhuma captura de toques extra. */
+.agv32-touchable{
+  position:relative;
+  isolation:isolate;
+}
+.agv32-touch-wave{
+  position:absolute;pointer-events:none;z-index:4;
+  width:48px;height:48px;border-radius:50%;
+  left:var(--wave-x,50%);top:var(--wave-y,50%);
+  background:radial-gradient(circle,#a5f4ff7d 0%,#ff915c44 40%,transparent 72%);
+  transform:translate(-50%,-50%) scale(.25);
+  animation:agv32-wave .44s ease-out forwards;
+  mix-blend-mode:screen;
+}
+@keyframes agv32-wave{
+  0%{opacity:.96;transform:translate(-50%,-50%) scale(.25)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(3.3)}
+}
+@media(pointer:fine){
+  :is(.arcade-game,.oficina-choices button,.arcade-actions button,.oficina-panel-actions button,
+      .oficina-links a,.arcade-home,.oficina-back):not(:disabled){
+    transition:background .2s var(--agv32-ease),border-color .2s var(--agv32-ease),
+               transform .22s var(--agv32-ease),box-shadow .22s var(--agv32-ease);
+  }
+  :is(.arcade-game,.oficina-choices button,.arcade-actions button,.oficina-panel-actions button,
+      .oficina-links a,.arcade-home,.oficina-back):not(:disabled):hover{
+    border-color:var(--agv32-coral-bright);
+    box-shadow:0 0 0 1px #ff7c444d,0 13px 32px #0008;
+  }
+}
+@media(pointer:coarse){
+  .agv32-touchable:active{filter:brightness(1.12)}
+  :is(.arcade-game,.oficina-choices button,.oficina-grid3 button){min-height:64px}
+}
+@media(max-width:780px){
+  .arcade-intro,.oficina-intro{margin-block:24px 19px;gap:13px}
+  .arcade-panel-top,.oficina-panel-head{align-items:flex-start}
+  .arcade-game,.oficina-choices button{min-height:78px}
+  .arcade-header,.oficina-header{gap:10px}
+  .arcade-identity strong,.oficina-brand{letter-spacing:-.045em}
+  .arcade-panel,.oficina-panel{border-radius:15px}
+  body.studio-ui .agv-experience-bar{margin-bottom:10px}
+}
+@media(max-width:480px){
+  .arcade-shell,.oficina-shell{padding-inline:12px}
+  .arcade-panel,.oficina-panel{padding:13px}
+  .arcade-intro h1{font-size:clamp(27px,7.3vw,38px)}
+  .arcade-game strong,.oficina-choices strong{font-size:14px}
+  .arcade-panel-top p,.oficina-panel-head p{line-height:1.45}
+}
+@media(min-width:1900px){
+  :root{--agv32-tap:64px}
+  .arcade-game,.oficina-choices button{min-height:118px}
+  .arcade-panel-top h2,.oficina-panel-head h2{letter-spacing:-.035em}
+  .arcade-actions button,.oficina-panel-actions button{min-height:66px}
+}
+@media(prefers-reduced-motion:reduce){
+  .agv32-touch-wave{animation:none;display:none}
+  .agv32-touchable{transition:none}
+  :is(.arcade-game,.oficina-choices button){transition:none!important}
+}
+.agv-quiet-mode .agv32-touch-wave{display:none}
+
+/* Microinterações de jogos: resultado tem começo, impacto e repouso. */
+.arcade-game,.oficina-choices button{position:relative;overflow:hidden}
+.arcade-game[aria-pressed="true"]::after,
+.oficina-choices button[aria-pressed="true"]::after{
+  content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;
+  background:linear-gradient(90deg,#ff7549,#a76aff,#6ce8ff);
+  box-shadow:0 0 16px #ff764866;
+}
+.oficina-grid3 button.agv32-last-mark{
+  animation:agv32-mark-arrive .27s var(--agv32-ease) both;
+}
+.oficina-dama .piece{animation:none}
+.oficina-dama .piece.just-moved{
+  animation:agv32-piece-land .32s var(--agv32-ease) both;
+}
+.oficina-puzzle button.selected{
+  box-shadow:0 0 0 3px #fff39d,0 0 22px #ffaf6180;
+}
+.oficina-status.success{
+  animation:agv32-status-confirm .55s var(--agv32-ease) both;
+}
+.arcade-message:not([hidden]){
+  animation:agv32-message-enter .32s var(--agv32-ease) both;
+}
+@keyframes agv32-mark-arrive{
+  0%{opacity:.35;transform:scale(.83)}
+  65%{opacity:1;transform:scale(1.045)}
+  100%{opacity:1;transform:scale(1)}
+}
+@keyframes agv32-piece-land{
+  0%{transform:translateY(-12%) scale(.92);filter:brightness(1.7)}
+  70%{transform:translateY(2%) scale(1.025)}
+  100%{transform:none;filter:none}
+}
+@keyframes agv32-status-confirm{
+  0%{filter:brightness(1.45)}
+  100%{filter:brightness(1)}
+}
+@keyframes agv32-message-enter{
+  0%{opacity:0;translate:0 9px}
+  100%{opacity:1;translate:0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .oficina-grid3 button.agv32-last-mark,
+  .oficina-dama .piece.just-moved,
+  .oficina-status.success,.arcade-message:not([hidden]){
+    animation:none!important;
+  }
+}
+.agv-quiet-mode :is(.oficina-grid3 button,.oficina-dama .piece.just-moved,.oficina-status.success,.arcade-message){
+  animation:none!important;
+}
+
+/* O tema Claro mantém contraste editorial sem tons pastel. */
+body.studio-ui[data-theme="light"]{
+  --surface:#ffffff;--surface2:#f5f5f7;--surface3:#ecebf0;
+  --stroke:#8d779c;--text:#211526;--muted:#514458;--dim:#61536a;
+  --ui-card:#fff;--ui-secondary:#43364f;--ui-quiet:#60536d;
+  --brand-accent:#b43b18;
+}
+body.studio-ui[data-theme="light"] :is(.resource-card,.lab-card,.discovery-card){
+  background:linear-gradient(145deg,#ffffff,#f8f7fa);
+  color:#211526;border-color:#a18bab;
+}
+body.studio-ui[data-theme="light"] :is(.resource-body p,.lab-card>span,.discovery-card p){
+  color:#43364f;
+}
+body.studio-ui[data-theme="light"] .agv-experience-bar{
+  background:#f6f3fa;
+  border-color:#9480a7;
+}
+body.studio-ui[data-theme="light"] .agv-context-copy small{color:#54465d}
+body.studio-ui[data-theme="light"] :is(.piano-panel,.piano-instrument,.piano-section){
+  color:#fffaf9;background:linear-gradient(155deg,#20142f,#110d21);
+}
+body.studio-ui[data-theme="light"] .nav-item.active{
+  color:#210d16;background:linear-gradient(115deg,#ffd0b1,#ff8b5e 75%);
+}
+body:has(.content-wrap)[data-theme="light"] :is(.auth-card,.panel,.metric-card,.device-card,.header){
+  border-color:#aca0b5;
+  background:#fff;color:#1a1325;
+}
+body:has(.content-wrap)[data-theme="light"] :is(.pill,.filter select){
+  background:#efedf2;color:#261934;
+}
+@media(prefers-reduced-motion:reduce){
+  body.studio-ui .page.active{animation:none!important}
+}
+
+/* A arte da abertura é decorativa e pode ultrapassar visualmente sua área,
+   mas não deve aumentar a largura rolável do documento no Android. */
+@media(max-width:700px){
+  .tvt-entry{
+    contain:paint;
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+  /* Os jogos ficam acessíveis sem rolagem vertical excessiva no celular. */
+  .oficina-intro{margin:16px 0 13px;gap:7px}
+  .oficina-intro h1{font-size:clamp(36px,9.8vw,54px);line-height:.97;margin:9px 0 0}
+  .oficina-intro p{font-size:13px;line-height:1.42;max-width:42ch}
+  .oficina-choices{
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scroll-snap-type:x proximity;
+    gap:8px;
+    padding:2px 2px 12px;
+    scrollbar-color:#9561c8 #1d112c;
+  }
+  .oficina-choices button{
+    flex:0 0 clamp(148px,43vw,176px);
+    min-height:73px;
+    scroll-snap-align:start;
+    padding:9px;
+  }
+  .oficina-panel-head{gap:10px;margin-bottom:16px}
+  .oficina-panel-head h2{font-size:clamp(25px,7vw,32px)}
+  .oficina-panel-head p{margin-top:5px}
+  .oficina-panel-actions{gap:7px}
+  .oficina-tools{gap:7px;margin-bottom:12px}
+  .oficina-palette{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
+    width:100%;
+    min-width:0;
+  }
+  .oficina-palette button{
+    min-width:0;
+    width:100%;
+    min-height:63px;
+    padding:6px 1px;
+    font-size:10px;
+  }
+  .oficina-palette .oficina-swatch{width:35px;height:27px}
+  .oficina-goal{font-size:11px;padding:8px 10px}
+}
+@media(max-width:360px){
+  .oficina-palette{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+/* A geometria da cena móvel precisa permanecer dentro da área visível.
+   Clipping apenas na arte decorativa, não na rolagem do portal. */
+@media(max-width:700px){
+  .tvt-entry .tvt-scene-art{
+    right:0;
+    width:100vw;
+    max-width:100vw;
+    overflow:hidden;
+    clip-path:inset(0);
+    opacity:.34;
+    -webkit-mask-image:linear-gradient(90deg,transparent 3%,#000 36%);
+    mask-image:linear-gradient(90deg,transparent 3%,#000 36%);
+  }
+}
+
+/* O cristal sutil da home também é decorativo: seu right negativo
+   contribuía para a largura rolável do portal móvel. */
+@media(max-width:700px){
+  body.studio-ui .studio-home:before{
+    right:0;
+    width:min(70vw,290px);
+    max-width:100%;
+  }
+}
+
+/* Em 4K, o cristal da home também deve caber no painel. */
+body.studio-ui .studio-home:before{right:0}
