@@ -56,3 +56,9 @@ A publicação por branch ainda pode criar uma execução gerenciada do Pages, e
 `node --check public/js/*.js`, inspeção de referências e testes de navegador em resoluções horizontais. As interações WebGL/IR multitouch devem ser verificadas na Samsung WA86F real antes de homologação final.
 
 As experiências astronômicas e físicas são modelos didáticos ilustrativos, não simuladores científicos em escala.
+
+## Piloto Studio 2.6 — Entrada e Arcade (branch isolada)
+
+Experiência inicial por clique com player oficial visível do trailer Dolby Atmos: Unfold, teste rápido de toque com temas aleatórios e quatro jogos (Snake, Pong, Basquete, Sinuca). Alternância 2D/3D visual durante o jogo; mecânicas permanecem 2D. O áudio não foi extraído do YouTube. Sem dados escolares, login, banco ou telemetria nova.
+
+**Não publicar sem teste físico na Samsung WA86F.** Detalhes e limites no arquivo docs/QA_ARCADE_EXPERIENCIA_2_6.md.
