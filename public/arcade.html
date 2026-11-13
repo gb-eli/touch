@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071020">
+  <meta name="description" content="Arcade educativo TV TOUCH: Pong, Snake, Basquete e Sinuca para telas interativas.">
+  <title>TV TOUCH Arcade | AGV</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/arcade.css?v=2.6.0">
+  <script src="js/arcade.js?v=2.6.0" defer></script>
+</head>
+<body>
+  <a class="skip" href="#arcadeStage">Pular para o jogo</a>
+  <main class="arcade-shell">
+    <header class="arcade-header">
+      <a class="arcade-home" href="index.html#inicio" aria-label="Voltar ao portal TV TOUCH">← Portal TV TOUCH</a>
+      <div class="arcade-identity"><span>AGV / LABORATÓRIO INTERATIVO</span><strong>ARCADE <em>TOUCH</em></strong></div>
+      <div class="arcade-view" role="group" aria-label="Estilo de visualização">
+        <button type="button" id="arcade2d" aria-pressed="true">2D</button>
+        <button type="button" id="arcade3d" aria-pressed="false">3D visual</button>
+      </div>
+    </header>
+    <section class="arcade-intro">
+      <div><span class="arcade-eyebrow">JOGOS CLÁSSICOS · REINVENTADOS PARA O TOQUE</span><h1>Escolha seu próximo <em>desafio.</em></h1></div>
+      <p>Quatro jogos interativos. Toque, arraste, experimente e compartilhe a tela com a turma. Sem cadastro, notas ou placar público.</p>
+    </section>
+    <nav class="arcade-games" aria-label="Selecionar minijogo">
+      <button type="button" class="arcade-game active" data-game="snake" aria-pressed="true"><span>🐍</span><strong>Snake</strong><small>Raciocínio e direção</small></button>
+      <button type="button" class="arcade-game" data-game="pong" aria-pressed="false"><span>🏓</span><strong>Pong</strong><small>Reflexo e precisão</small></button>
+      <button type="button" class="arcade-game" data-game="basket" aria-pressed="false"><span>🏀</span><strong>Basquete</strong><small>Trajetória e força</small></button>
+      <button type="button" class="arcade-game" data-game="pool" aria-pressed="false"><span>🎱</span><strong>Sinuca</strong><small>Ângulos e colisões</small></button>
+    </nav>
+    <section class="arcade-panel" aria-label="Jogo ativo">
+      <div class="arcade-panel-top">
+        <div><span id="arcadeCategory">ESTRATÉGIA</span><h2 id="arcadeTitle">Snake</h2><p id="arcadeHelp">Use as setas ou deslize o dedo para conduzir a cobra.</p></div>
+        <div class="arcade-metrics"><span id="arcadeScoreLabel">Pontuação</span><strong id="arcadeScore" aria-live="polite">0</strong></div>
+      </div>
+      <div class="arcade-scene" id="arcadeStage">
+        <canvas id="arcadeCanvas" width="960" height="540" tabindex="0" aria-label="Área do minijogo. Use teclado, toque ou os botões abaixo."></canvas>
+        <div class="arcade-message" id="arcadeMessage" role="status" aria-live="polite">Toque em Jogar para começar.</div>
+      </div>
+      <div class="arcade-toolbar">
+        <div class="arcade-actions"><button type="button" class="arcade-primary" id="arcadePlay">▶ Jogar</button><button type="button" id="arcadeRestart">↻ Reiniciar</button><button type="button" id="arcadeFullscreen">⛶ Tela cheia</button></div>
+        <div class="arcade-keypad" id="arcadeKeypad" aria-label="Controles do jogo">
+          <button type="button" data-direction="up" aria-label="Mover para cima">↑</button><button type="button" data-direction="left" aria-label="Mover para esquerda">←</button><button type="button" data-direction="down" aria-label="Mover para baixo">↓</button><button type="button" data-direction="right" aria-label="Mover para direita">→</button>
+        </div>
+      </div>
+    </section>
+    <p class="arcade-note"><strong>Sobre o modo 3D:</strong> aplica profundidade e iluminação visual aos elementos. As regras e a física dos quatro jogos continuam em 2D. Recursos offline funcionam após o cache do portal; o vídeo de abertura precisa de internet.</p>
+    <footer>TV TOUCH · Colégio Estadual Alberto Gomes Veiga · Experiências educativas sem coleta de dados pessoais</footer>
+  </main>
+</body>
+</html>
