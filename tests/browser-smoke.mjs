@@ -142,8 +142,10 @@ try{
         });
         note('tv-3840 Arcade canvas buffer','pass',JSON.stringify(buffer));
       }
-      await page.screenshot({path:path.join(out,profile.name+'-'+pageName+'.png'),
-        animations:'disabled',fullPage:false,timeout:12000});
+      const large=profile.smokeOnly===true;
+      await page.screenshot({path:path.join(out,profile.name+'-'+pageName+(large?'.jpg':'.png')),
+        type:large?'jpeg':'png',quality:large?78:undefined,
+        animations:'disabled',fullPage:false,timeout:large?45000:12000});
       console.log('SMOKE SCREENSHOT',profile.name,pageName);
       if(errors.length)report.issues.push({pageName,profile:profile.name,type:'runtime-errors',errors});
       await page.close();
