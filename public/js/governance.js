@@ -18,7 +18,7 @@
   function classify(el) {
     const tool=el.closest('[data-tool]'); if(tool) return 'tool_'+tool.dataset.tool;
     const resource=el.closest('[data-visit-resource],[data-open-resource]'); if(resource) return 'resource_'+(resource.dataset.visitResource||resource.dataset.openResource);
-    const nav=el.closest('[data-page],[data-go]'); if(nav){const page=nav.dataset.page||nav.dataset.go;return ['videos','laboratorio','diagnostico','cosmos','memoria','fisica'].includes(page)?'module_'+page:null;}
+    const nav=el.closest('[data-page],[data-go]'); if(nav){const page=nav.dataset.page||nav.dataset.go;if(page==='piano'&&!available('module_laboratorio'))return 'module_laboratorio';return ['videos','laboratorio','diagnostico','cosmos','memoria','fisica','piano'].includes(page)?'module_'+page:null;}
     return null;
   }
   async function fetchTable(table,columns,query='') {
@@ -54,7 +54,7 @@
       if('disabled' in el)el.disabled=blocked;
     });
     const current=document.querySelector('.page.active')?.id.replace('page-','');
-    if(['videos','laboratorio','diagnostico','cosmos','memoria','fisica'].includes(current)&&!available('module_'+current)){
+    if(['videos','laboratorio','diagnostico','cosmos','memoria','fisica','piano'].includes(current) && (!available('module_'+current) || (current==='piano'&&!available('module_laboratorio')))){
       document.querySelector('[data-page="inicio"]')?.click();
     }
   }

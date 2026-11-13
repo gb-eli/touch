@@ -1,6 +1,20 @@
-# TV TOUCH / Studio 2.2 — AGV
+# TV TOUCH / Studio 2.6 — AGV
 
 Portal educacional para os painéis interativos Samsung WA86F de 86 polegadas, Android 14, uso horizontal. O código estático funciona no GitHub Pages sem framework ou workflow personalizado.
+
+## Studio 2.6 — versão integrada para publicação
+
+A revisão consolidada inclui as três melhorias anteriores:
+
+- **Piano multitoque:** 24 notas, três timbres sintetizados, acordes e desafios, com áudio interrompido ao sair.
+- **Sólidos e encaixe:** cinco formas, quatro materiais ilustrativos, três qualidades gráficas e três níveis de encaixe (4, 6, 8 peças).
+- **Interface 360 e mobile:** capas SVG próprias por assunto, filtros funcionais, layout de uma coluna no celular, menu de cinco destinos + Mais, tipografia e contraste revisados.
+- **Preservados:** home, biblioteca de ferramentas, desenho, memória, simulador de física, universo, atividades portuárias, tutoriais, diagnóstico, modo Black/Claro/Vivo e acesso administrativo existente.
+- As opções de 360 graus continuam **pesquisas orientadas no YouTube**; vídeo individual só será anunciado como verificado após curadoria real.
+- O material de aparência cerâmica/aço/madeira/pedra usa Canvas2D ilustrativo e não fotogrametria/PBR.
+- Sem CDN extra, credenciais no frontend, alterações no Supabase ou workflow personalizado.
+- Atualização de cache: `tvtouch-studio-v2.6.0-unified`, todos os recursos públicos novos pré-armazenados.
+- QA da integração: 14/14 testes automatizados de lógica aprovados; testes de hardware físico ainda não realizados.
 
 ## Revisão visual Studio 2.2
 
