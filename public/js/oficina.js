@@ -79,7 +79,7 @@
   // === MATERIAIS E CONSTRUÇÃO ===
   const goals=[[2,3,4,2,1,3,1,2],[1,2,3,4,4,3,2,1],[3,1,3,1,3,1,3,1],[2,2,2,2,2,2,2,2]];
   function initializeBlocks(){
-    state={columns:Array.from({length:8},()=>[]),material:'grass',source:null,dragMaterial:null,mode:'free',goal:goals[rand(goals.length)],history:[],suppress:false};
+    state={columns:Array.from({length:8},()=>[]),material:'grass',source:null,dragFrom:null,dragMaterial:null,mode:'free',goal:goals[rand(goals.length)],history:[],suppress:false};
     button('Construção livre',()=>{state.mode='free';state.source=null;renderBlocks()},true);
     button('Desafio de alturas',()=>{state.mode='goal';state.goal=goals[rand(goals.length)];renderBlocks()});
     button('↶ Desfazer',()=>{
@@ -102,7 +102,7 @@
     document.addEventListener('pointerup',e=>{
       if(game!=='blocks'||!state.dragMaterial)return;
       const column=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('[data-column]');
-      if(column&&palette.contains(e.target)){
+      if(column){
         state.material=state.dragMaterial;addBlock(Number(column.dataset.column));state.suppress=true;setTimeout(()=>{if(state)state.suppress=false},0);
       }
       state.dragMaterial=null;
@@ -112,17 +112,17 @@
       if(!tile)return;
       const col=Number(tile.closest('[data-column]').dataset.column);
       if(Number(tile.dataset.row)!==state.columns[col].length-1)return;
-      state.source=col;state.suppress=false;
+      state.dragFrom=col;state.suppress=false;
       board.classList.add('oficina-grabbing');
     },{signal});
     board.addEventListener('pointerup',e=>{
-      if(state.source===null)return;
+      if(state.dragFrom===null)return;
       const col=e.target.closest('[data-column]');
-      if(col&&Number(col.dataset.column)!==state.source){
-        moveBlock(state.source,Number(col.dataset.column));state.suppress=true;
+      if(col&&Number(col.dataset.column)!==state.dragFrom){
+        moveBlock(state.dragFrom,Number(col.dataset.column));state.suppress=true;
         setTimeout(()=>{if(state)state.suppress=false},0);
       }
-      board.classList.remove('oficina-grabbing');
+      state.dragFrom=null;board.classList.remove('oficina-grabbing');
     },{signal});
     board.addEventListener('click',e=>{
       if(state.suppress)return;
@@ -219,6 +219,7 @@
     board.querySelectorAll('[data-dot]').forEach(b=>b.classList.toggle('active',used.includes(Number(b.dataset.dot))));
   }
   function previewPattern(){
+    if(thinkingTimer)clearTimeout(thinkingTimer);
     state.trace=[];state.preview=true;state.locked=true;drawPattern();
     setStatus('Observe a sequência iluminada. Ela desaparecerá para você repetir o desenho.');
     const token=asyncId;
