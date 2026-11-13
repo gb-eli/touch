@@ -10,9 +10,9 @@ test('UX/UI Studio 3.0 em todos os três HTML de entrada',()=>{
   for(const file of ['public/index.html','public/arcade.html','public/admin.html']){
     const html=read(file);
     assert.match(html,/css\/agv-identity\.css\?v=2\.9\.0/);
-    assert.match(html,/css\/agv-ux\.css\?v=3\.0\.0/);
+    assert.match(html,/css\/agv-ux\.css\?v=3\.1\.0/);
     assert.match(html,/js\/site-synapses\.js\?v=3\.0\.0/);
-    assert.match(html,/js\/platform-ux\.js\?v=3\.0\.0/);
+    assert.match(html,/js\/platform-ux\.js\?v=3\.1\.0/);
     assert.match(html,/Desenvolvido por <strong>Gabriel Elienai<\/strong>/);
   }
 });
@@ -78,7 +78,7 @@ test('Som ao clicar e motor Arcade 4K preservados',()=>{
 
 test('Assets offline e scripts compilam',()=>{
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.0\.0-full-platform-ux/);
+  assert.match(sw,/tvtouch-studio-v3\.1\.0-synaptic-playground/);
   for(const file of ['agv-ux.css','platform-ux.js','agv-synapse-crystal.svg','arcade.js'])
     assert.ok(sw.includes(file),file);
   for(const file of ['public/js/platform-ux.js','public/js/site-synapses.js','public/js/app.js','public/js/arcade.js','public/service-worker.js'])
