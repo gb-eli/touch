@@ -43,10 +43,10 @@
 .tvt-cal-stage{position:fixed;inset:0;z-index:9;pointer-events:none}
 .tvt-cal-target{position:fixed;z-index:12;display:grid;place-items:center;width:clamp(86px,9vw,148px);height:clamp(86px,9vw,148px);font-weight:950;font-size:clamp(42px,5vw,82px);border:3px solid #ffe6aa;border-radius:18px;color:#110408;background:#ff5a24;box-shadow:0 0 0 12px #ff4f251a,0 0 70px #ff57267d;pointer-events:auto;animation:tvt-target-breathe .9s ease-in-out infinite alternate}
 .tvt-cal-target.tvt-hit{background:#f4ff56;box-shadow:0 0 120px #d6ff35}
-.tvt-cal-top{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(490px,74vw);text-align:center;pointer-events:none;opacity:.24}
-.tvt-cal-top strong{font-size:clamp(18px,2vw,30px)}
-.tvt-cal-top p{display:none}
-.tvt-entry-progress{position:relative;width:min(360px,65vw);height:5px;background:#5c455c;margin:12px auto;border-radius:99px;overflow:hidden}
+.tvt-cal-top{position:fixed;top:20%;left:clamp(24px,5.5vw,108px);width:min(570px,50vw);text-align:left;pointer-events:none;opacity:1}
+.tvt-cal-top strong{font-size:clamp(28px,4vw,76px);line-height:.95;letter-spacing:-.07em;font-weight:950;color:#fff}
+.tvt-cal-top p{display:block;margin:16px 0;color:#f3d7cf;font-size:clamp(14px,1.2vw,20px);font-weight:550}
+.tvt-entry-progress{position:relative;width:min(360px,65vw);height:5px;background:#5c455c;margin:20px 0;border-radius:99px;overflow:hidden}
 .tvt-entry-progress-fill{height:100%;background:#ff5b29;transition:width .2s ease}
 .tvt-cal-bottom{position:fixed;z-index:15;bottom:clamp(80px,10vh,110px);left:clamp(24px,5.5vw,108px);pointer-events:auto;display:flex;align-items:center;gap:15px}
 .tvt-cal-bottom button{min-height:50px;padding:12px 20px;border:1px solid #ff873b;background:#1d0c12;color:#fff;border-radius:3px;font-weight:900}
@@ -77,7 +77,7 @@
 .tvt-sound-toggle,.tvt-local-file{flex:1;min-width:0;padding:11px 8px;font-size:10px}
 .tvt-entry-status{left:22px;bottom:85px;max-width:calc(100% - 44px);font-size:10px}
 .tvt-cal-target{width:76px;height:76px;font-size:40px}
-.tvt-cal-top{display:none}
+.tvt-cal-top{top:19%;left:24px;width:calc(100% - 48px)}.tvt-cal-top strong{font-size:clamp(28px,8vw,42px)}.tvt-cal-top p{font-size:14px;max-width:320px}
 .tvt-cal-bottom{left:24px;bottom:100px;gap:8px}.tvt-cal-bottom button{min-height:44px;padding:8px 12px;font-size:11px}
 .tvt-cal-result{margin:18px 0;gap:0}.tvt-cal-stat{font-size:9px;padding:14px 8px 12px 0}.tvt-cal-stat strong{font-size:clamp(24px,7vw,38px)}
 }
