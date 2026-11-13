@@ -339,3 +339,39 @@ body:has(.content-wrap)[data-theme="light"] .btn.primary{
 .agv-quiet-mode :is(.oficina-grid3 button,.oficina-dama .piece.just-moved,.oficina-status.success,.arcade-message){
   animation:none!important;
 }
+
+/* O tema Claro mantém contraste editorial sem tons pastel. */
+body.studio-ui[data-theme="light"]{
+  --surface:#ffffff;--surface2:#f5f5f7;--surface3:#ecebf0;
+  --stroke:#8d779c;--text:#211526;--muted:#514458;--dim:#61536a;
+  --ui-card:#fff;--ui-secondary:#43364f;--ui-quiet:#60536d;
+  --brand-accent:#b43b18;
+}
+body.studio-ui[data-theme="light"] :is(.resource-card,.lab-card,.discovery-card){
+  background:linear-gradient(145deg,#ffffff,#f8f7fa);
+  color:#211526;border-color:#a18bab;
+}
+body.studio-ui[data-theme="light"] :is(.resource-body p,.lab-card>span,.discovery-card p){
+  color:#43364f;
+}
+body.studio-ui[data-theme="light"] .agv-experience-bar{
+  background:#f6f3fa;
+  border-color:#9480a7;
+}
+body.studio-ui[data-theme="light"] .agv-context-copy small{color:#54465d}
+body.studio-ui[data-theme="light"] :is(.piano-panel,.piano-instrument,.piano-section){
+  color:#fffaf9;background:linear-gradient(155deg,#20142f,#110d21);
+}
+body.studio-ui[data-theme="light"] .nav-item.active{
+  color:#210d16;background:linear-gradient(115deg,#ffd0b1,#ff8b5e 75%);
+}
+body:has(.content-wrap)[data-theme="light"] :is(.auth-card,.panel,.metric-card,.device-card,.header){
+  border-color:#aca0b5;
+  background:#fff;color:#1a1325;
+}
+body:has(.content-wrap)[data-theme="light"] :is(.pill,.filter select){
+  background:#efedf2;color:#261934;
+}
+@media(prefers-reduced-motion:reduce){
+  body.studio-ui .page.active{animation:none!important}
+}
