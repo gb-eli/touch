@@ -71,7 +71,7 @@
   function placeTarget() {
     if (!overlay) return;
     const positions = window.innerWidth < 700
-      ? [{x:.08,y:.22},{x:.68,y:.22},{x:.08,y:.54},{x:.24,y:.73}]
+      ? [{x:.08,y:.22},{x:.68,y:.22},{x:.08,y:.54},{x:.08,y:.73}]
       : [{x:.08,y:.20},{x:.78,y:.20},{x:.12,y:.68},{x:.58,y:.56}];
     const spot = points[current];
     const entry = theme.items[current % theme.items.length];
@@ -99,7 +99,8 @@
   function beginCalibration() {
     cleanTimers();
     current=0;times=[];startedAt=performance.now();
-    theme=themes[Math.floor(Math.random()*themes.length)];
+    const selected=themes[Math.floor(Math.random()*themes.length)];
+    theme={name:selected.name,items:shuffle(selected.items)};
     points=shuffle([0,1,2,3]);
     overlay.innerHTML='<div class="tvt-cal-stage" id="tvtCalStage"><div class="tvt-cal-top"><strong>🎯 Toque nos alvos que aparecerem</strong><p>Categoria aleatória: '+theme.name+' · Teste visual de resposta ao toque</p><div class="tvt-entry-progress"><div class="tvt-entry-progress-fill" id="tvtCalProgress" style="width:0%"></div></div></div><div class="tvt-cal-bottom"><span class="tvt-cal-counter" id="tvtCalCounter">0 / '+maxTargets+'</span><button type="button" id="tvtCalSkip">Pular teste</button></div></div>';
     $('tvtCalSkip').addEventListener('click',complete);
