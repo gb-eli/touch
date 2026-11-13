@@ -58,5 +58,5 @@
     window.dispatchEvent(new CustomEvent('tvt:page-change', {detail:{page}}));
   });
   setTheme(read() || 'dark');
-  window.TVTouchStudio = Object.freeze({ version: '2.1.0-rc1', theme: () => state.theme });
+  window.TVTouchStudio = Object.freeze({ version: '2.1.0', theme: () => state.theme });
 })();
