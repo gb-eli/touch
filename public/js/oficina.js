@@ -79,7 +79,7 @@
   // === MATERIAIS E CONSTRUÇÃO ===
   const goals=[[2,3,4,2,1,3,1,2],[1,2,3,4,4,3,2,1],[3,1,3,1,3,1,3,1],[2,2,2,2,2,2,2,2]];
   function initializeBlocks(){
-    state={columns:Array.from({length:8},()=>[]),material:'grass',source:null,dragFrom:null,dragMaterial:null,mode:'free',goal:goals[rand(goals.length)],history:[],suppress:false};
+    state={columns:Array.from({length:8},()=>[]),material:'grass',source:null,dragFrom:null,dragMaterial:null,mode:'free',goal:goals[rand(goals.length)],history:[],suppressUntil:0,dragPointerId:null};
     button('Construção livre',()=>{state.mode='free';state.source=null;renderBlocks()},true);
     button('Desafio de alturas',()=>{state.mode='goal';state.goal=goals[rand(goals.length)];renderBlocks()});
     button('↶ Desfazer',()=>{
@@ -97,35 +97,49 @@
     }
     tools.appendChild(palette);
     const target=document.createElement('div');target.id='oficinaBlockGoal';target.className='oficina-goal';tools.appendChild(target);
-    controller=new AbortController();
     const signal=controller.signal;
     document.addEventListener('pointerup',e=>{
       if(game!=='blocks'||!state.dragMaterial)return;
-      const column=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('[data-column]');
+      const hit=typeof document.elementFromPoint==='function'?
+        document.elementFromPoint(e.clientX,e.clientY):e.target;
+      const column=hit?.closest?.('[data-column]');
       if(column){
-        state.material=state.dragMaterial;addBlock(Number(column.dataset.column));state.suppress=true;setTimeout(()=>{if(state)state.suppress=false},0);
+        state.material=state.dragMaterial;
+        state.suppressUntil=Date.now()+380;
+        addBlock(Number(column.dataset.column));
       }
       state.dragMaterial=null;
+    },{signal});
+    document.addEventListener('pointercancel',()=>{
+      if(game!=='blocks')return;
+      state.dragMaterial=null;state.dragFrom=null;state.dragPointerId=null;
+      board.classList.remove('oficina-grabbing');
     },{signal});
     board.addEventListener('pointerdown',e=>{
       const tile=e.target.closest('.oficina-cube');
       if(!tile)return;
       const col=Number(tile.closest('[data-column]').dataset.column);
       if(Number(tile.dataset.row)!==state.columns[col].length-1)return;
-      state.dragFrom=col;state.suppress=false;
+      state.dragFrom=col;
+      state.dragPointerId=e.pointerId;
       board.classList.add('oficina-grabbing');
     },{signal});
     board.addEventListener('pointerup',e=>{
-      if(state.dragFrom===null)return;
-      const col=e.target.closest('[data-column]');
+      if(state.dragFrom===null||e.pointerId!==state.dragPointerId)return;
+      // Em Android a captura implícita mantém e.target na origem;
+      // a coluna real é a que está sob o dedo na hora de soltar.
+      const hit=typeof document.elementFromPoint==='function'?
+        document.elementFromPoint(e.clientX,e.clientY):e.target;
+      const col=hit?.closest?.('[data-column]');
       if(col&&Number(col.dataset.column)!==state.dragFrom){
-        moveBlock(state.dragFrom,Number(col.dataset.column));state.suppress=true;
-        setTimeout(()=>{if(state)state.suppress=false},0);
+        state.suppressUntil=Date.now()+380;
+        moveBlock(state.dragFrom,Number(col.dataset.column));
       }
-      state.dragFrom=null;board.classList.remove('oficina-grabbing');
+      state.dragFrom=null;state.dragPointerId=null;
+      board.classList.remove('oficina-grabbing');
     },{signal});
     board.addEventListener('click',e=>{
-      if(state.suppress)return;
+      if(Date.now()<state.suppressUntil)return;
       const c=e.target.closest('[data-column]');if(!c)return;
       const col=Number(c.dataset.column);
       if(state.source!==null&&state.source!==col){moveBlock(state.source,col);return}
@@ -262,15 +276,20 @@
       else setStatus((outcome.winner==='X'?'X':'O')+' venceu esta rodada!','success');
       animate();playTone(930,'triangle');return;
     }
-    state.turn=state.turn==='X'?'O':'X';renderTtt();
+    state.turn=state.turn==='X'?'O':'X';
     if(state.mode==='cpu'&&state.turn==='O'){
-      state.thinking=true;setStatus('A máquina está avaliando suas possibilidades…');
+      state.thinking=true;
+      renderTtt();
+      setStatus('A máquina está avaliando suas possibilidades…');
       const token=asyncId;thinkingTimer=setTimeout(()=>{
         if(token!==asyncId||game!=='ttt'||state.over)return;
         state.thinking=false;const move=chooseTtt();
         if(move!==null){state.cells[move]='O';playTone(540);finishTtt();}
       },400+rand(510));
-    }else setStatus('Vez de '+state.turn+'. Escolha uma casa.');
+    }else{
+      renderTtt();
+      setStatus('Vez de '+state.turn+'. Escolha uma casa.');
+    }
   }
   function chooseTtt(){
     const free=state.cells.map((x,i)=>x===null?i:-1).filter(i=>i>=0);
