@@ -11,7 +11,7 @@ test('UX/UI Studio 3.0 em todos os três HTML de entrada',()=>{
     const html=read(file);
     assert.match(html,/css\/agv-identity\.css\?v=2\.9\.0/);
     assert.match(html,/css\/agv-ux\.css\?v=3\.1\.0/);
-    assert.match(html,/js\/site-synapses\.js\?v=3\.0\.0/);
+    assert.match(html,/js\/site-synapses\.js\?v=3\.1\.0/);
     assert.match(html,/js\/platform-ux\.js\?v=3\.1\.0/);
     assert.match(html,/Desenvolvido por <strong>Gabriel Elienai<\/strong>/);
   }
