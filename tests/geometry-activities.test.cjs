@@ -70,12 +70,12 @@ test('malhas de cinco sólidos com índices válidos nos três níveis',()=>{
     }
   assert.equal(engine.geometry('esfera','balanced').faces.length,286);
 });
-test('60 combinações de material/forma/qualidade respeitam orçamento de pixels',()=>{
+test('165 combinações de material/forma/qualidade respeitam orçamento de pixels',()=>{
   const engine=geometryHarness(),ctx=new Context2D();
   const canvas={width:0,height:0,getBoundingClientRect(){return {width:1920,height:1080}}};
   for(const type of ['cubo','prisma','piramide','cilindro','esfera'])
     for(const q of ['eco','balanced','high'])
-      for(const mat of ['ceramic','steel','wood','stone']){
+      for(const mat of ['ceramic','steel','wood','stone','grass','sand','dirt','lava','ice','brick','crystal']){
         const out=engine.render(ctx,canvas,{shape:type,quality:q,material:mat,rotX:.45,rotY:.7,zoom:1});
         assert.ok(out.visibleFaces>0);
         assert.ok(out.pixels<=engine.QUALITY[q].pixels*1.005);
