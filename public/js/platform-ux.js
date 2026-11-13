@@ -208,6 +208,7 @@
   }
   function setup(){
     try{if(localStorage.getItem(key)==='1')doc.body.classList.add('agv-quiet-mode')}catch{}
+    doc.dispatchEvent(new CustomEvent('agv:motion-change',{detail:{quiet:motionIsQuiet()}}));
     createDialog();addOpenButton();
     doc.addEventListener('keydown',event=>{
       if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){
@@ -226,6 +227,7 @@
       target.addEventListener('pointercancel',clear,{once:true});
     },{passive:true});
     if(atPortal)currentRoute();
+    doc.body.dataset.agvUx='v3';
     window.AGVTouchUX=Object.freeze({openFinder,navigate,quiet:motionIsQuiet,setMotion});
   }
   if(doc.readyState==='loading')doc.addEventListener('DOMContentLoaded',setup,{once:true});
