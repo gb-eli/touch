@@ -34,7 +34,7 @@
     ctx.imageSmoothingQuality='high';
     const info=$('arcadeResolution');
     if(info)info.textContent=width+' × '+height+' px'+(qualityFactor<1?' · desempenho adaptativo':' · alta definição');
-    draw();
+    if(state)draw();
   }
   function updateScore(value){if($('arcadeScore').textContent!==String(value))$('arcadeScore').textContent=String(value)}
   function message(value){const el=$('arcadeMessage');el.textContent=value;el.hidden=false}
