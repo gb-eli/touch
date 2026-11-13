@@ -1,7 +1,7 @@
-# TV TOUCH — Studio 2.7: experiência e Arcade (piloto)
+# TV TOUCH — Studio 2.7.1: experiência e Arcade HD (pré-publicação)
 
 ## Estado
-Branch feat/studio-2-7-welcome-arcade. Proposta em rascunho. Não publicar em main nem gh-pages antes de homologação. A versão principal agora contém Studio 2.6 integrado; esta mudança adiciona apenas a abertura e o Arcade. Não presumir publicação até verificar a URL do GitHub Pages.
+Branch feat/studio-2-7-welcome-arcade. Preparação de publicação autorizada pelo responsável. Testes automatizados não substituem homologação física; confirmar deployment do GitHub Pages após a publicação. A versão principal agora contém Studio 2.6 integrado; esta mudança adiciona apenas a abertura e o Arcade. Não presumir publicação até verificar a URL do GitHub Pages.
 
 ## Fluxo de abertura
 - Primeira visita da sessão: botão "Iniciar experiência" e opção "Entrar sem testar". Preferência de sessão gravada apenas no navegador.
@@ -9,7 +9,7 @@ Branch feat/studio-2-7-welcome-arcade. Proposta em rascunho. Não publicar em ma
 - Não extrai nem baixa áudio de terceiros; é um trailer audiovisual, não arquivo MP3. Precisa de internet e incorporação autorizada pelo vídeo/rede.
 - Teste de toque com quatro alvos, posição aleatória, temas sorteados (frutas, esportes, formas), duração máxima aproximadamente 5,2 s. Oferece pular/repetir e mostra tempo médio de reação + total de acertos.
 - A verificação mede interação e tempo humano na interface, NÃO calibra o digitalizador/firmware ou mede latência física.
-- Os resultados não são persistidos nem enviados. Não há dados pessoais.
+- Os resultados não são persistidos nem enviados. Não há dados pessoais. A tela de resultado aguarda escolha explícita, sem fechar automaticamente; alvos evitam a região ocupada pelo iframe.
 - Atalhos "Arcade" e "Testar toques" na home; tutorial antigo não aparece sobre a abertura.
 
 ## Arcade
@@ -23,11 +23,14 @@ Branch feat/studio-2-7-welcome-arcade. Proposta em rascunho. Não publicar em ma
 
 ## Compatibilidade e QA
 - HTML/CSS/JS estático, Canvas 2D, JavaScript sem bibliotecas externas. Rota arcade.html independente.
+- Canvas com resolução física dinâmica: coordenadas lógicas 960×540 independentes do tamanho do bitmap. Escala por devicePixelRatio e ResizeObserver, com teto de 3840×2160 pixels para limitar memória e reduzir artefatos de interpolação; em tela cheia, adapta-se à área visível.
+- Qualidade gráfica adaptativa: redução gradual da escala se a taxa de quadros permanecer baixa, recuperação progressiva quando houver folga de desempenho. A resolução efetiva é exibida sobre o jogo.
+- Layout expandido e controles maiores em painéis de alta resolução.
 - Cache PWA inclui arcade e assets; fallback offline prioriza a rota exata em cache.
 - Quatro arquivos JS compilados sem erros de sintaxe; IDs do Arcade exclusivos; 17 verificações estáticas/interativas com DOM e Canvas simulados passaram. Não é certificação de navegador real.
 - Renderização suspensa quando não há partida e ao mudar a aba.
 
-## Pendências de homologação — NO-GO
+## Verificações físicas ainda recomendadas
 - Testar em Samsung WA86F Android 14 real, resoluções CSS efetivas, caneta e múltiplos toques.
 - Verificar que o player embutido reproduz o vídeo indicado na rede da escola, e que a sua área não cobre os alvos.
 - Confirmar compatibilidade com política de áudio e, se o vídeo for bloqueado, trocar por áudio original/autorizado como ativo local.
