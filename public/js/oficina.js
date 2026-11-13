@@ -321,7 +321,7 @@
     return free[rand(free.length)];
   }
   function renderTtt(wins=[]){
-    board.innerHTML='<div class="oficina-grid3" role="grid" aria-label="Jogo da velha">'+state.cells.map((mark,i)=>
+    board.innerHTML='<div class="oficina-grid3" role="grid" aria-busy="'+String(state.thinking)+'" aria-label="Jogo da velha">'+state.cells.map((mark,i)=>
       '<button type="button" role="gridcell" data-square="'+i+'" class="'+(wins.includes(i)?'winning ':'')+(mark==='X'?'mark-x':mark==='O'?'mark-o':'')+'" aria-label="Casa '+(i+1)+': '+(mark||'vazia')+'" '+(state.over||mark||state.thinking?'disabled':'')+'>'+(mark||'')+'</button>'
     ).join('')+'</div>';
     board.querySelectorAll('[data-square]').forEach(b=>b.addEventListener('click',()=>moveTtt(Number(b.dataset.square)),{signal:controller.signal}));
