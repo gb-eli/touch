@@ -3,7 +3,8 @@
   const canvas=document.getElementById('arcadeCanvas');
   if(!canvas)return;
   const ctx=canvas.getContext('2d');
-  const W=canvas.width,H=canvas.height,TAU=Math.PI*2;
+  const W=960,H=540,TAU=Math.PI*2;
+  const MAX_PIXELS=3840*2160,MAX_DPR=4;
   const $=id=>document.getElementById(id);
   const configuration={
     snake:{title:'Snake',category:'ESTRATÉGIA',help:'Deslize o dedo ou use as setas para guiar a cobra e pegar as frutas.',score:'Frutas'},
@@ -12,11 +13,29 @@
     pool:{title:'Sinuca',category:'ÂNGULOS',help:'Arraste da bola branca na direção desejada para dar a tacada. Encaçape as coloridas.',score:'Bolas encaçapadas'}
   };
   let game='snake',state,playing=false,ended=false,mode3d=false,lastTime=0,raf=0,press=null,directionHold=null;
+  let qualityFactor=1,slowFrames=0,fastFrames=0;
   const rand=(min,max)=>min+Math.random()*(max-min);
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   const clear=()=>{ctx.clearRect(0,0,W,H)};
   const text=(value,x,y,size=24,color='#fff')=>{ctx.fillStyle=color;ctx.font='800 '+size+'px system-ui';ctx.textAlign='center';ctx.fillText(value,x,y)};
+  function resizeCanvas(){
+    const rect=canvas.getBoundingClientRect();
+    if(!rect.width||!rect.height)return;
+    const deviceRatio=Math.max(1,Math.min(MAX_DPR,window.devicePixelRatio||1));
+    const pixelRatio=deviceRatio*qualityFactor;
+    const budget=Math.min(1,Math.sqrt(MAX_PIXELS/(rect.width*rect.height*pixelRatio*pixelRatio)));
+    const width=Math.max(2,Math.round(rect.width*pixelRatio*budget));
+    const height=Math.max(2,Math.round(rect.height*pixelRatio*budget));
+    if(canvas.width===width&&canvas.height===height)return;
+    canvas.width=width;canvas.height=height;
+    ctx.setTransform(width/W,0,0,height/H,0,0);
+    ctx.imageSmoothingEnabled=true;
+    ctx.imageSmoothingQuality='high';
+    const info=$('arcadeResolution');
+    if(info)info.textContent=width+' × '+height+' px'+(qualityFactor<1?' · desempenho adaptativo':' · alta definição');
+    draw();
+  }
   function updateScore(value){if($('arcadeScore').textContent!==String(value))$('arcadeScore').textContent=String(value)}
   function message(value){const el=$('arcadeMessage');el.textContent=value;el.hidden=false}
   function hideMessage(){$('arcadeMessage').hidden=true}
@@ -222,8 +241,17 @@
   function schedule(){if(!raf)raf=requestAnimationFrame(frame)}
   function frame(now){
     raf=0;
-    const dt=lastTime?clamp((now-lastTime)/1000,0,.035):0;
+    const elapsed=lastTime?now-lastTime:0;
+    const dt=clamp(elapsed/1000,0,.035);
     lastTime=now;
+    if(playing&&elapsed>0){
+      if(elapsed>36)slowFrames++;else if(elapsed<23)fastFrames++;
+      if(slowFrames+fastFrames>=110){
+        if(slowFrames>=55&&qualityFactor>.7){qualityFactor=Math.max(.7,qualityFactor-.15);resizeCanvas()}
+        else if(fastFrames>=95&&qualityFactor<1){qualityFactor=Math.min(1,qualityFactor+.05);resizeCanvas()}
+        slowFrames=0;fastFrames=0;
+      }
+    }
     if(playing)update(dt);
     draw();
     if(playing)schedule();
@@ -273,7 +301,7 @@
     if(game==='pong'&&playing)state.leftY=clamp(p.y-56,20,H-132);
   });
   canvas.addEventListener('pointermove',e=>{
-    if(game==='pong'&&playing)state.leftY=clamp(coordinates(e).y-56,20,H-132);
+    if(game==='pong'&&playing&&press?.id===e.pointerId)state.leftY=clamp(coordinates(e).y-56,20,H-132);
     if(!press||press.id!==e.pointerId)return;
     const p=coordinates(e);
     if(game==='basket'&&!state.air)state.aim=p;
@@ -317,8 +345,11 @@
   $('arcadePlay').addEventListener('click',togglePlay);
   $('arcadeRestart').addEventListener('click',initialize);
   $('arcadeFullscreen').addEventListener('click',()=>{if(document.fullscreenElement)document.exitFullscreen?.();else $('arcadeStage').requestFullscreen?.().catch(()=>message('Tela cheia indisponível neste navegador.'))});
-  document.addEventListener('visibilitychange',()=>{lastTime=0;if(document.hidden&&playing){playing=false;$('arcadePlay').textContent='▶ Jogar';message('Jogo pausado ao sair desta página.')}});
+  document.addEventListener('visibilitychange',()=>{lastTime=0;slowFrames=0;fastFrames=0;if(document.hidden&&playing){playing=false;$('arcadePlay').textContent='▶ Jogar';message('Jogo pausado ao sair desta página.')}});
+  window.addEventListener('resize',resizeCanvas,{passive:true});
+  document.addEventListener('fullscreenchange',()=>requestAnimationFrame(resizeCanvas));
+  if(typeof ResizeObserver!=='undefined')new ResizeObserver(resizeCanvas).observe(canvas);
   window.addEventListener('pagehide',()=>cancelAnimationFrame(raf),{once:true});
   try{mode3d=localStorage.getItem('tvt:arcade:view:v1')==='3d'}catch{}
-  initialize();changeMode(mode3d?'3d':'2d');schedule();
+  resizeCanvas();initialize();changeMode(mode3d?'3d':'2d');schedule();
 })();
