@@ -1,0 +1,525 @@
+{
+  "schemaVersion": "0.1.0",
+  "dateReviewed": "2026-11-13",
+  "status": "planning-only",
+  "product": "TV TOUCH AGV",
+  "target": "Samsung WA86F, Android 14, 86-inch, landscape; CSS viewport and DPR to be measured",
+  "notes": [
+    "Nenhum candidato está registrado no portal; este catálogo não integra nem publica jogos.",
+    "Prioridade preliminar de engenharia baseada em código inspecionado e valor pedagógico, não desempenho físico na TV.",
+    "Endereços externos de vídeos 360° não são publicados até confirmação manual de panorâmica, duração e classificação.",
+    "Repositório gb-eli/LAB-MEIO-AMBIENTE-3D não localizado (404); gb-eli/touch permanece privado."
+  ],
+  "sourceCommits": {
+    "Fliperama-DS": "efcfe53f74190584fce79b1720ee8e812a908ede",
+    "LAB-PORTOS-360": "0486bbe338239fddad81e933041b5f925d091776",
+    "LAB-TST-360": "5149ed3e6d0df99a6b01c9015fcfe9ff9e9e6653",
+    "LAB-SAUDE-360": "f667c39a8478226ece58044ec961ee4c0930bd80",
+    "planetario-ds": "07ac6e57290820e9ff1f941fd9c5676d9382eb89",
+    "lab-fisica": "24ed8a201696547d6b6648d6284bd77156af537b",
+    "LAB-BIOECONOMIA-360": "3cbf8c8d200d2c59a94615b8cbff7528537a1171",
+    "desafio": "ecb84c277a234d8f6d6245bd419ab2c82e225ea6",
+    "lab-virtual": "ec5c540c4efbcaef54c9c9e1485bec57a628235e",
+    "touch": "d2e25a847d4e75843229838d4930e82e641e6ab8"
+  },
+  "candidates": [
+    {
+      "id": "piano-touch",
+      "title": "Piano multitoque",
+      "priority": "P0",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Artes",
+        "Música",
+        "Matemática",
+        "Física"
+      ],
+      "interaction": [
+        "simultaneous-press",
+        "tap",
+        "chords"
+      ],
+      "source": {
+        "repo": "gb-eli/lab-virtual",
+        "commit": "ec5c540c4efbcaef54c9c9e1485bec57a628235e",
+        "path": "LABDS/lab/modules/audio-lab/index.js"
+      },
+      "approach": "Novo teclado de 12 a 24 teclas; reaproveitar padrões de Web Audio e análise de frequência, sem incorporar o laboratório inteiro.",
+      "acceptance": "Dois ou mais contatos independentes, som após gesto, silenciar, escala e desafio rítmico de notas originais."
+    },
+    {
+      "id": "formas-3d-e-encaixe",
+      "title": "Formas 3D com materiais e encaixe",
+      "priority": "P0",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Matemática",
+        "Artes",
+        "Geometria"
+      ],
+      "interaction": [
+        "rotate",
+        "pinch",
+        "drag-drop"
+      ],
+      "source": {
+        "repo": "gb-eli/touch",
+        "commit": "d2e25a847d4e75843229838d4930e82e641e6ab8",
+        "path": "public/js/app.js"
+      },
+      "approach": "Evoluir os módulos de sólidos e encaixe; substituir geometria decorativa por manipuláveis com iluminação e materiais PBR simples.",
+      "acceptance": "Girar com um dedo, pinça para zoom, encaixar peças e feedback por forma e volume."
+    },
+    {
+      "id": "memoria-niveis",
+      "title": "Memória por áreas",
+      "priority": "P0",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Todas"
+      ],
+      "interaction": [
+        "tap",
+        "match"
+      ],
+      "source": {
+        "repo": "gb-eli/touch",
+        "commit": "d2e25a847d4e75843229838d4930e82e641e6ab8",
+        "path": "public/js/learning-games.js"
+      },
+      "approach": "Reaproveitar a memória existente; níveis e conjuntos temáticos 2D de uso coletivo.",
+      "acceptance": "Cartas 4x3 e 6x4, rótulos acessíveis, feedback por tentativa e nenhum registro de nota escolar."
+    },
+    {
+      "id": "videos-360-curados",
+      "title": "Biblioteca curada 360°",
+      "priority": "P0",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Geografia",
+        "História",
+        "Ciências",
+        "Portos",
+        "Artes"
+      ],
+      "interaction": [
+        "pan",
+        "pinch",
+        "tap"
+      ],
+      "source": {
+        "repo": "gb-eli/touch",
+        "commit": "d2e25a847d4e75843229838d4930e82e641e6ab8",
+        "path": "public/js/app.js"
+      },
+      "approach": "Substituir dependência exclusiva de buscas YouTube por registros aprovados de vídeos 360, incluindo classificação e fonte.",
+      "acceptance": "Cada item tem URL verificada, prévia, duração, acesso testado, tema, faixa etária, internet e objetivo."
+    },
+    {
+      "id": "frutas-e-fracoes",
+      "title": "Corte de frutas e frações",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Matemática",
+        "Ciências",
+        "Artes"
+      ],
+      "interaction": [
+        "swipe",
+        "tap-alternative"
+      ],
+      "source": null,
+      "approach": "Minijogo Canvas 2D original: cortar frutas em metade, quarto e equivalências; feedback visual e sonoro discreto.",
+      "acceptance": "Corte por movimento contínuo, alternativa por toque, pontuação didática e FPS estável."
+    },
+    {
+      "id": "puzzle-hexa",
+      "title": "Quebra-cabeça de encaixe avançado",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Matemática",
+        "Raciocínio"
+      ],
+      "interaction": [
+        "drag-drop",
+        "tap"
+      ],
+      "source": {
+        "repo": "gb-eli/Fliperama-DS",
+        "commit": "efcfe53f74190584fce79b1720ee8e812a908ede",
+        "path": "flipds/games/hexa-reactor/"
+      },
+      "approach": "Selecionar mecânica de Hexa Reactor e apresentar em fases curtas com peças grandes.",
+      "acceptance": "Peças arrastáveis sem confusão com scroll, voltar, reiniciar, indicar movimentos válidos."
+    },
+    {
+      "id": "xadrez-touch-3d",
+      "title": "Xadrez 3D",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Matemática",
+        "Raciocínio",
+        "História"
+      ],
+      "interaction": [
+        "tap-to-select",
+        "drag-orbit",
+        "pinch"
+      ],
+      "source": {
+        "repo": "gb-eli/Fliperama-DS",
+        "commit": "efcfe53f74190584fce79b1720ee8e812a908ede",
+        "path": "flipds/games/chess-arena-360/"
+      },
+      "approach": "Adaptar apenas engine, IA e renderização; incluir opção tabuleiro de cima e alvos maiores.",
+      "acceptance": "Regras completas mantidas, 2 jogadores locais, CPU, sem obrigatoriedade de usar câmera 3D."
+    },
+    {
+      "id": "damas-touch",
+      "title": "Damas de mesa",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Matemática",
+        "Raciocínio"
+      ],
+      "interaction": [
+        "tap-to-select",
+        "tap-to-move"
+      ],
+      "source": null,
+      "approach": "Novo tabuleiro 2D de baixa latência; duplas no mesmo painel, CPU opcional depois.",
+      "acceptance": "Jogadas legais, capturas, promoção a dama, reinício e acessibilidade."
+    },
+    {
+      "id": "container-inspecao",
+      "title": "Inspeção de contêiner 40HC",
+      "priority": "P0",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Portos",
+        "Logística",
+        "Segurança do Trabalho"
+      ],
+      "interaction": [
+        "rotate",
+        "pinch",
+        "tap-hotspot"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-PORTOS-360",
+        "commit": "0486bbe338239fddad81e933041b5f925d091776",
+        "path": "LAB PORTOS 3D/assets/js/modules/container-40hc-inspecao/"
+      },
+      "approach": "Portar a simulação e o modelo selecionado para host isolado; manter cenas LOD e fallback procedural.",
+      "acceptance": "Inspecionar pontos, completar checklist, alternativa 2D, usar touch e 3D com descarte total."
+    },
+    {
+      "id": "inspecao-externa-360",
+      "title": "Contêiner: ronda externa 360°",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Portos",
+        "Segurança do Trabalho"
+      ],
+      "interaction": [
+        "orbit",
+        "tap-hotspot"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-PORTOS-360",
+        "commit": "0486bbe338239fddad81e933041b5f925d091776",
+        "path": "LAB PORTOS 3D/assets/js/modules/inspecao-360/index.js"
+      },
+      "approach": "Aproveitar oito regiões externas com controles de vistas predefinidas.",
+      "acceptance": "Identificar regiões por toque e completar ronda sem depender de pequenos marcadores."
+    },
+    {
+      "id": "navio-operacao",
+      "title": "Navio e operação de cais",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Portos",
+        "Geografia",
+        "Física"
+      ],
+      "interaction": [
+        "orbit",
+        "tap-hotspot",
+        "drag"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-PORTOS-360",
+        "commit": "0486bbe338239fddad81e933041b5f925d091776",
+        "path": "LAB PORTOS 3D/assets/js/modules/navio-operacao/index.js"
+      },
+      "approach": "Reaproveitar cena e componentes selecionados de navio, portêiner, contêiner e caminhão.",
+      "acceptance": "Missão de 5–10 minutos, interações claras e sem apresentar dados simulados como dados reais do porto."
+    },
+    {
+      "id": "epi-missao",
+      "title": "Missão EPI: escolha e proteção",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Segurança do Trabalho"
+      ],
+      "interaction": [
+        "tap",
+        "drag-drop",
+        "inspect"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-TST-360",
+        "commit": "5149ed3e6d0df99a6b01c9015fcfe9ff9e9e6653",
+        "path": "TST LAB 3D/modules/epi-lab/module.js"
+      },
+      "approach": "Extrair seleção de EPIs, objeto 3D e feedback de correspondência; retirar recursos administrativos.",
+      "acceptance": "Associar EPI à situação correta e explicar por que houve acerto ou erro."
+    },
+    {
+      "id": "riscos-eletricos",
+      "title": "Identifique o risco elétrico",
+      "priority": "P2",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Segurança do Trabalho",
+        "Física"
+      ],
+      "interaction": [
+        "tap-hotspot"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-TST-360",
+        "commit": "5149ed3e6d0df99a6b01c9015fcfe9ff9e9e6653",
+        "path": "TST LAB 3D/modules/eletricidade/module.js"
+      },
+      "approach": "Adaptar inspeção com cena 2D/3D e problemas didáticos de segurança.",
+      "acceptance": "Risco identificado por toque com explicação e orientação pedagógica; sem ações perigosas."
+    },
+    {
+      "id": "anatomia-3d",
+      "title": "Anatomia: estruturas e sistemas",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Enfermagem",
+        "Biologia"
+      ],
+      "interaction": [
+        "orbit",
+        "select",
+        "isolate"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-SAUDE-360",
+        "commit": "f667c39a8478226ece58044ec961ee4c0930bd80",
+        "path": "LAB-ENF-3D/modules/corpo-humano/index.js"
+      },
+      "approach": "Reaproveitar modelos e isolamento de estruturas com tour opcional.",
+      "acceptance": "Selecionar órgãos, destacar camadas e comparar posições; linguagem educacional, não clínica."
+    },
+    {
+      "id": "hospital-360",
+      "title": "Tour guiado do hospital",
+      "priority": "P2",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Enfermagem",
+        "Ciências"
+      ],
+      "interaction": [
+        "orbit",
+        "tap-hotspot"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-SAUDE-360",
+        "commit": "f667c39a8478226ece58044ec961ee4c0930bd80",
+        "path": "LAB-ENF-3D/modules/hospital-360/index.js"
+      },
+      "approach": "Adaptar tour que pausa ao toque com controle anterior/próximo.",
+      "acceptance": "Tour não interrompe manipulação; alternativas para saltar e explicações."
+    },
+    {
+      "id": "sistema-solar",
+      "title": "Sistema Solar e comparação",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Astronomia",
+        "Geografia",
+        "Física"
+      ],
+      "interaction": [
+        "orbit",
+        "pinch",
+        "tap"
+      ],
+      "source": {
+        "repo": "gb-eli/planetario-ds",
+        "commit": "07ac6e57290820e9ff1f941fd9c5676d9382eb89",
+        "path": "universo-ds/src/modules/solar-remaster/SolarSystemRemasterModule.js"
+      },
+      "approach": "Aproveitar navegação, banco de corpos e controle de performance, sem carregar toda a plataforma COSMOS DS.",
+      "acceptance": "Planetas seletáveis, comparação de até três, 2D fallback e informações verificadas."
+    },
+    {
+      "id": "laboratorio-ondas",
+      "title": "Ondas e som interativos",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Física",
+        "Música",
+        "Matemática"
+      ],
+      "interaction": [
+        "slider",
+        "tap",
+        "drag"
+      ],
+      "source": {
+        "repo": "gb-eli/lab-fisica",
+        "commit": "24ed8a201696547d6b6648d6284bd77156af537b",
+        "path": "LAB-FISICA/js/modules/waves.js"
+      },
+      "approach": "Selecionar visualização de frequências e ondas, vincular com piano e incluir controle de volume.",
+      "acceptance": "Frequência, amplitude e resposta visual com controle de som e acessibilidade."
+    },
+    {
+      "id": "circuitos-eletricos",
+      "title": "Circuito elétrico de bancada",
+      "priority": "P2",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Física",
+        "Tecnologia"
+      ],
+      "interaction": [
+        "drag-drop",
+        "tap"
+      ],
+      "source": {
+        "repo": "gb-eli/lab-fisica",
+        "commit": "24ed8a201696547d6b6648d6284bd77156af537b",
+        "path": "LAB-FISICA/js/modules/ohm.js"
+      },
+      "approach": "Adaptar cálculo/visualização da lei de Ohm e componentes de bancada selecionados.",
+      "acceptance": "Montar circuito didático, medir alteração de resistência e tensão, feedback compreensível."
+    },
+    {
+      "id": "pixel-art",
+      "title": "Mosaico e pixel art",
+      "priority": "P1",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Artes",
+        "Matemática",
+        "Programação"
+      ],
+      "interaction": [
+        "paint-drag",
+        "tap"
+      ],
+      "source": {
+        "repo": "gb-eli/lab-virtual",
+        "commit": "ec5c540c4efbcaef54c9c9e1485bec57a628235e",
+        "path": "LABDS/lab/modules/graphics-lab/index.js"
+      },
+      "approach": "Reaproveitar grid, paleta e export PNG; reconstruir comandos touch para 86 polegadas.",
+      "acceptance": "Desenho com dedo/caneta, desfazer, zoom e exportar imagem."
+    },
+    {
+      "id": "planilha-simulada",
+      "title": "Desafio de planilhas",
+      "priority": "P2",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Administração",
+        "Matemática",
+        "Tecnologia"
+      ],
+      "interaction": [
+        "tap-cell",
+        "keyboard-virtual"
+      ],
+      "source": {
+        "repo": "gb-eli/lab-virtual",
+        "commit": "ec5c540c4efbcaef54c9c9e1485bec57a628235e",
+        "path": "LABDS/lab/modules/productivity-lab/index.js"
+      },
+      "approach": "Selecionar motor didático de planilhas, fórmulas e gráfico; criar teclado numérico grande para toque.",
+      "acceptance": "Resolver estoque e somas sem login, exportar, teclado acessível e evitar UI de planilha minúscula."
+    },
+    {
+      "id": "missoes-circularidade",
+      "title": "Bioeconomia e decisões",
+      "priority": "P2",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Meio Ambiente",
+        "Biologia",
+        "Administração"
+      ],
+      "interaction": [
+        "tap-choice",
+        "drag"
+      ],
+      "source": {
+        "repo": "gb-eli/LAB-BIOECONOMIA-360",
+        "commit": "3cbf8c8d200d2c59a94615b8cbff7528537a1171",
+        "path": "bio360/modules/missao-multilab/module.js"
+      },
+      "approach": "Selecionar lógica de cenários e resultados; telas reduzidas a escolhas de 5–8 minutos.",
+      "acceptance": "Cada decisão altera indicadores simulados claramente identificados."
+    },
+    {
+      "id": "desafio-perguntas",
+      "title": "Missões de perguntas e feedback",
+      "priority": "P2",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Todas"
+      ],
+      "interaction": [
+        "tap-choice",
+        "team-turns"
+      ],
+      "source": {
+        "repo": "gb-eli/desafio",
+        "commit": "ecb84c277a234d8f6d6245bd419ab2c82e225ea6",
+        "path": "desafio 33/"
+      },
+      "approach": "Reaproveitar padrão de feedback e objetivos; não importar EduAuth, cadastros ou dados de alunos.",
+      "acceptance": "Perguntas curtas, modo equipes, sem nota escolar ou coleta pessoal."
+    },
+    {
+      "id": "voxels-cubos",
+      "title": "Construção com cubos 3D",
+      "priority": "P2",
+      "status": "candidate-not-integrated",
+      "disciplinas": [
+        "Matemática",
+        "Artes",
+        "Programação"
+      ],
+      "interaction": [
+        "tap-place",
+        "drag-orbit",
+        "pinch"
+      ],
+      "source": {
+        "repo": "gb-eli/Fliperama-DS",
+        "commit": "efcfe53f74190584fce79b1720ee8e812a908ede",
+        "path": "flipds/games/voxelcraft-ds/"
+      },
+      "approach": "Selecionar peças e mecânica de voxels; simplificar os controles de jogo para toque.",
+      "acceptance": "Criar estrutura de 10 blocos, girar e remover, desligar renderizador ao sair."
+    }
+  ]
+}

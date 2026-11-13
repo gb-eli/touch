@@ -2,6 +2,18 @@
 
 Portal educacional para os painéis interativos Samsung WA86F de 86 polegadas, Android 14, uso horizontal. O código estático funciona no GitHub Pages sem framework ou workflow personalizado.
 
+## Planejamento de experiências touch 3.0
+
+A integração dos laboratórios existentes está documentada separadamente do portal público. Nenhuma experiência não homologada é anunciada na tela inicial.
+
+- [Curadoria dos repositórios e cronograma](docs/INTEGRACAO_TOUCH_3_0.md)
+- [Contrato de módulos, gestos e desempenho](docs/CONTRATO_MODULOS_TOUCH_3_0.md)
+- [Biblioteca de vídeos 360 — regras de curadoria](docs/BIBLIOTECA_360_CURADORIA_3_0.md)
+- [Catálogo rastreável dos candidatos](docs/candidatos-touch-3.0.json)
+
+**Estado:** documentação em PR de planejamento; não incorporada à produção do GitHub Pages.
+
+
 ## Revisão visual Studio 2.2
 
 - **Portal:** paleta funcional em superfícies sólidas, contraste forte e instruções diretas, reduzindo brilhos, efeito de vidro e gradientes decorativos.
