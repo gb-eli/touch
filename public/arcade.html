@@ -7,8 +7,8 @@
   <meta name="description" content="Arcade educativo TV TOUCH: Pong, Snake, Basquete e Sinuca para telas interativas.">
   <title>TV TOUCH Arcade | AGV</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/arcade.css?v=2.7.0">
-  <script src="js/arcade.js?v=2.7.0" defer></script>
+  <link rel="stylesheet" href="css/arcade.css?v=2.7.1">
+  <script src="js/arcade.js?v=2.7.1" defer></script>
 </head>
 <body>
   <a class="skip" href="#arcadeStage">Pular para o jogo</a>
@@ -38,6 +38,7 @@
       </div>
       <div class="arcade-scene" id="arcadeStage">
         <canvas id="arcadeCanvas" width="960" height="540" tabindex="0" aria-label="Área do minijogo. Use teclado, toque ou os botões abaixo."></canvas>
+        <span class="arcade-resolution" id="arcadeResolution" aria-label="Resolução de renderização">Qualidade adaptativa · até 4K</span>
         <div class="arcade-message" id="arcadeMessage" role="status" aria-live="polite">Toque em Jogar para começar.</div>
       </div>
       <div class="arcade-toolbar">
