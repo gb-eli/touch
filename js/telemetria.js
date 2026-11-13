@@ -43,7 +43,7 @@
     sel.disabled=!SUBJECTS[area];
   }
   function setContext(){
-    const text=context ? `${label[context.area]} · ${context.discipline} · ${context.station}` : 'Escolha a disciplina para organizar o uso do TV TOUCH. O registro de métricas é opcional.';
+    const text=context ? `${label[context.area]} · ${context.discipline} · ${context.station}` : 'Disciplina opcional';
     $('lessonContextText').textContent=text;
     const chipLabel=$('lessonChip').querySelector('span') || $('lessonChip');
     chipLabel.textContent=context?context.discipline:'Definir aula';
@@ -135,7 +135,7 @@
   $('lessonForm').addEventListener('submit',e=>{e.preventDefault();begin($('lessonTelemetry').checked);});
   $('lessonNoTelemetry').addEventListener('click',()=>{begin(false);});
   $('lessonClose').addEventListener('click',closeDialog);
-  $('lessonOpen').addEventListener('click',openDialog);
+  $('lessonOpen')?.addEventListener('click',openDialog);
   $('lessonChip').addEventListener('click',openDialog);
   $('lessonTestNetwork').addEventListener('click',()=>checkNetwork(false));
   window.addEventListener('tvt:station-change',selectStation);

@@ -1,0 +1,45 @@
+/* v2.1: tutorial guiado e polimento de toque em 16:9 */
+.tvt-tour-open-top{height:51px;min-width:51px;padding:0 15px;border:1px solid #4d5d85;border-radius:15px;color:#f8fbff;background:#1c2848;font-weight:900;font-size:23px;touch-action:manipulation}
+.tvt-tour-open-top:focus-visible,.studio-tile:focus-visible{outline:4px solid #c4fe6e!important;outline-offset:3px}
+.studio-ui .studio-tile{box-shadow:inset 0 1px 0 #ffffff45,0 18px 48px #0007;border-color:#ffffff48;transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s,border-color .22s}
+.studio-ui .studio-tile:hover{border-color:#ffffffa0;box-shadow:inset 0 1px 0 #ffffff70,0 26px 64px #0008}
+.studio-ui .studio-tile:active,.studio-ui .studio-tile.pressed{transform:scale(.98)}
+.studio-ui .studio-tile .tile-content strong{text-shadow:0 3px 14px #0009}
+.studio-ui .studio-tile .tile-content small{color:#f4f7ff;text-shadow:0 2px 11px #000c}
+.studio-ui .home-lead-right .home-lesson{background:#172c2d;border-color:#b0fa70;color:#deffba}
+.studio-ui .nav-item:focus-visible,.studio-ui .home-shortcuts button:focus-visible{outline:3px solid #baff70;outline-offset:3px}
+.tvt-tour{width:min(1020px,95vw);max-height:92dvh;border-radius:27px;border:1px solid #7084b6;padding:0;color:#fff;background:#0b132d;box-shadow:0 38px 115px #000d;overflow:auto}
+.tvt-tour::backdrop{background:#030612d9;backdrop-filter:blur(12px)}
+.tvt-tour-layout{display:grid;grid-template-columns:.92fr 1.08fr;min-height:492px}
+.tvt-tour-art{position:relative;min-height:492px;overflow:hidden;background:radial-gradient(circle at 62% 45%,#7551ec 0%,#28115e 48%,#0a153a 90%);isolation:isolate;transition:background .35s}
+.tvt-tour-art:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#fffffc10 1px,transparent 1px),linear-gradient(90deg,#fffffc10 1px,transparent 1px);background-size:35px 35px;transform:perspective(440px) rotateX(40deg) scale(1.4);opacity:.8}
+.tvt-tour-orb{position:absolute;inset:12% 8%;border-radius:50%;border:1px solid #bce8ff64;box-shadow:0 0 0 30px #ffffff0b,0 0 0 70px #ffffff06}
+.tvt-tour-shape{position:absolute;inset:24% 20%;border:1px solid #ffffff9d;border-radius:30px;transform:perspective(600px) rotateY(-15deg) rotateX(9deg);background:radial-gradient(circle at 33% 20%,#ffffffa5,transparent 26%),linear-gradient(145deg,#b881ff,#4729c1 60%,#141762);box-shadow:inset 0 2px 0 #ffffff90,0 30px 70px #0009;animation:tvt-levitate 7s ease-in-out infinite}
+.tvt-tour-shape:after{content:"";position:absolute;inset:19%;border-radius:50%;border:2px solid #ffffff8a;box-shadow:0 0 0 20px #ffffff19}
+.tvt-tour-art-tag{position:absolute;z-index:2;padding:13px 17px;border:1px solid #ffffff85;border-radius:14px;background:#121e4ce0;box-shadow:0 13px 25px #0008;font-size:19px;font-weight:900}
+.tvt-tour-art-tag.a{left:9%;top:22%;transform:rotate(-9deg)}
+.tvt-tour-art-tag.b{right:8%;top:24%;color:#c8ff74;transform:rotate(8deg)}
+.tvt-tour-art-tag.c{right:15%;bottom:20%;color:#85fcff;transform:rotate(-5deg)}
+.tvt-tour-art-caption{position:absolute;bottom:23px;left:23px;color:#e2e9ff;font-size:12px;font-weight:850;letter-spacing:.15em}
+.tvt-tour[data-step="1"] .tvt-tour-art{background:radial-gradient(circle at 50% 35%,#046ca8,#1a3378 55%,#101235)}
+.tvt-tour[data-step="2"] .tvt-tour-art{background:radial-gradient(circle at 50% 35%,#00a8a6,#124e77 50%,#10142c)}
+.tvt-tour[data-step="3"] .tvt-tour-art{background:radial-gradient(circle at 50% 35%,#ef6f44,#7e265b 55%,#12102e)}
+.tvt-tour-body{display:flex;flex-direction:column;position:relative;min-width:0;padding:48px 41px 35px;background:radial-gradient(circle at right top,#243469a8,transparent 46%),#0d152c}
+.tvt-tour-close{position:absolute;top:15px;right:15px;min-width:50px;height:50px;border:1px solid #62749a;border-radius:14px;background:#20304d;color:#fff;font-size:21px}
+.tvt-tour-counter{font-size:12px;font-weight:900;letter-spacing:.17em;color:#b3c3e3}
+.tvt-tour-meter{height:6px;margin:13px 0 34px;border-radius:9px;overflow:hidden;background:#283858}
+.tvt-tour-meter>div{height:100%;width:25%;border-radius:inherit;background:linear-gradient(90deg,#4ff2fa,#bfff6b);transition:width .25s}
+.tvt-tour-eyebrow{color:#87f0ff;font-size:13px;letter-spacing:.17em;font-weight:900;margin:0 0 13px}
+.tvt-tour-body h2{font-size:clamp(32px,2.9vw,49px);line-height:1.08;letter-spacing:-.04em;margin:0 0 22px}
+.tvt-tour-desc{font-size:clamp(17px,1.3vw,21px);line-height:1.48;color:#f0f5ff;margin:0 0 24px}
+.tvt-tour-note{font-size:15px;line-height:1.48;border-left:3px solid #a9fb63;padding:11px 0 11px 15px;color:#b8c8e3}
+.tvt-tour-actions{display:flex;gap:12px;margin-top:auto;padding-top:25px}
+.tvt-tour-actions button{flex:1;min-height:69px;padding:12px;font-size:17px;font-weight:900;border-radius:15px;touch-action:manipulation}
+.tvt-tour-secondary{color:#fff;background:#233251;border:1px solid #52668e}
+.tvt-tour-primary{background:linear-gradient(145deg,#c9ff71,#7df046);border:1px solid #c4ff79;color:#112614;box-shadow:0 15px 32px #baff5b2b}
+.tvt-tour-actions button:active{transform:scale(.96)}
+@keyframes tvt-levitate{50%{transform:perspective(600px) rotateY(4deg) rotateX(-2deg)}}
+@media(max-width:800px),(max-height:590px){.tvt-tour-layout{grid-template-columns:1fr;min-height:0}.tvt-tour-art{display:none}.tvt-tour-body{padding:30px 24px 24px}.tvt-tour-meter{margin-bottom:19px}.tvt-tour-body h2{font-size:33px}.tvt-tour-actions button{min-height:58px}}
+@media(max-width:470px){.tvt-tour-actions{flex-direction:column}.tvt-tour-body{padding:23px 17px}.tvt-tour-body h2{font-size:30px}}
+@media(prefers-reduced-motion:reduce){.tvt-tour-shape{animation:none}.tvt-tour-meter>div,.studio-ui .studio-tile{transition:none}}
+body[data-theme=light] .tvt-tour-open-top{background:#fff;color:#1b3153;border-color:#bdc8db}
