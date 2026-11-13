@@ -135,7 +135,7 @@
   $('lessonForm').addEventListener('submit',e=>{e.preventDefault();begin($('lessonTelemetry').checked);});
   $('lessonNoTelemetry').addEventListener('click',()=>{begin(false);});
   $('lessonClose').addEventListener('click',closeDialog);
-  $('lessonOpen').addEventListener('click',openDialog);
+  $('lessonOpen')?.addEventListener('click',openDialog);
   $('lessonChip').addEventListener('click',openDialog);
   $('lessonTestNetwork').addEventListener('click',()=>checkNetwork(false));
   window.addEventListener('tvt:station-change',selectStation);

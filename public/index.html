@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/telemetria.css">
   <link rel="stylesheet" href="css/governance.css">
   <link rel="stylesheet" href="css/studio.css?v=2.0.2">
+  <link rel="stylesheet" href="css/tutorial.css?v=2.1.0">
   <title>TV TOUCH | AGV</title>
 </head>
 <body data-theme="dark" class="studio-ui">
@@ -37,6 +38,7 @@
         <div class="top-left"><button class="menu-button" id="menuButton" aria-label="Abrir navegação" aria-expanded="false" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><span class="top-current">AGV <span class="crumb-divider">/</span> <strong id="breadcrumb">Início</strong></span></div>
         <div class="top-right">
           <span class="connection" aria-label="Estado da rede"><i id="connectionDot"></i><span id="connectionText">Verificando</span></span>
+          <button type="button" class="tvt-tour-open-top" id="tvtTourOpenTop" aria-label="Ver tutorial" title="Ver tutorial">?</button>
           <button class="lesson-chip" id="lessonChip" type="button" title="Selecionar disciplina"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg><span>Definir aula</span></button>
           <div class="theme-switch" id="themeSwitch" role="group" aria-label="Visual do portal"><button type="button" class="theme-button active" data-theme-mode="dark" aria-pressed="true">Black</button><button type="button" class="theme-button" data-theme-mode="light" aria-pressed="false">Claro</button><button type="button" class="theme-button" data-theme-mode="colorful" aria-pressed="false">Vivo</button></div>
           <button type="button" class="color-pause" data-color-pause hidden aria-pressed="false">Pausar</button>
@@ -48,7 +50,7 @@
       <main id="conteudo">
         <section id="page-inicio" class="page active" aria-labelledby="homeTitle">
           <div class="studio-home">
-            <div class="home-lead"><div><span class="studio-overline"><span class="live-signal"></span> TV TOUCH / LABORATÓRIO DIGITAL</span><h1 id="homeTitle">Escolha. <span>Explore.</span></h1></div><div class="home-lead-right"><span id="lessonContextText" class="studio-context-note" title="Contexto da aula">Disciplina opcional</span><button type="button" class="home-lesson" id="lessonOpen">Definir disciplina <b>+</b></button></div></div>
+            <div class="home-lead"><div><span class="studio-overline"><span class="live-signal"></span> TV TOUCH / LABORATÓRIO DIGITAL</span><h1 id="homeTitle">Escolha. <span>Explore.</span></h1></div><div class="home-lead-right"><span id="lessonContextText" class="studio-context-note" title="Contexto da aula">Disciplina opcional</span><button type="button" class="home-lesson" id="tvtTourOpenHome">Ver tutorial <b>▶</b></button></div></div>
             <div class="studio-tiles">
               <button type="button" class="studio-tile tile-cosmos" data-go="cosmos" aria-label="Abrir Universo 3D"><span class="tile-top"><span class="tile-index">01 / EXPLORAÇÃO</span><span class="tile-corner">↗</span></span><div class="orbit-art" aria-hidden="true"><span class="orbit-ring o1"></span><span class="orbit-ring o2"></span><span class="planet-core"></span><span class="moon-dot m1"></span><span class="moon-dot m2"></span><span class="starfield"></span></div><span class="tile-content"><strong>Universo <em>3D</em></strong><small>Gire planetas. Aproxime. Descubra.</small><span class="tile-cta">Explorar universo <span>→</span></span></span></button>
               <button type="button" class="studio-tile tile-board" data-tool="desenho" aria-label="Abrir Quadro livre"><span class="tile-top"><span class="tile-index">02 / CRIAÇÃO</span><span class="tile-corner">↗</span></span><div class="board-art" aria-hidden="true"><svg viewBox="0 0 360 200"><defs><linearGradient id="boardInk" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0ffff7"/><stop offset="1" stop-color="#756bff"/></linearGradient></defs><path d="M36 118 Q75 26 116 99 T205 92 Q244 45 290 82" fill="none" stroke="url(#boardInk)" stroke-width="13" stroke-linecap="round"/><path d="M52 148c68-32 140 42 235-24" fill="none" stroke="#fafffc" stroke-width="6" stroke-linecap="round" opacity=".76"/><circle cx="289" cy="82" r="10" fill="#fff"/></svg></div><span class="tile-content"><strong>Quadro livre</strong><small>Desenhe com a mão.</small></span></button>
@@ -120,6 +122,20 @@
       <div class="lesson-net"><button type="button" class="small-button" id="lessonTestNetwork">Testar resposta do servidor</button><span id="lessonNetworkResult">Sem teste realizado</span></div>
     </form>
   </dialog>
+    <dialog id="tvtTutorial" class="tvt-tour" aria-labelledby="tvtTutorialTitle" aria-describedby="tvtTourDescription">
+    <div class="tvt-tour-layout">
+      <div class="tvt-tour-art" aria-hidden="true"><div class="tvt-tour-orb"></div><div class="tvt-tour-shape"></div><span class="tvt-tour-art-tag a">3D</span><span class="tvt-tour-art-tag b">360°</span><span class="tvt-tour-art-tag c">TOUCH</span><span class="tvt-tour-art-caption">AGV · PAINEL INTERATIVO</span></div>
+      <div class="tvt-tour-body">
+        <button type="button" id="tvtTourClose" class="tvt-tour-close" aria-label="Fechar tutorial">✕</button>
+        <div id="tvtTourCounter" class="tvt-tour-counter">1 / 4</div><div class="tvt-tour-meter" aria-hidden="true"><div id="tvtTourProgress"></div></div>
+        <p id="tvtTourEyebrow" class="tvt-tour-eyebrow">BEM-VINDO</p>
+        <h2 id="tvtTutorialTitle">Sua próxima aula começa aqui.</h2>
+        <p id="tvtTourDescription" class="tvt-tour-desc">Abra uma experiência e comece.</p>
+        <p id="tvtTourNote" class="tvt-tour-note">Funciona com dedo, caneta touch e mouse.</p>
+        <div class="tvt-tour-actions"><button type="button" id="tvtTourSecondary" class="tvt-tour-secondary">Ir para ferramentas</button><button type="button" id="tvtTourPrimary" class="tvt-tour-primary">Ver tutorial</button></div>
+      </div>
+    </div>
+  </dialog>
   <dialog id="resourceDialog" class="resource-dialog" aria-labelledby="dialogTitle"><form method="dialog"><button class="dialog-close" aria-label="Fechar" type="submit">✕</button></form><div id="dialogContent"></div></dialog>
   <script src="js/telemetria-config.js" defer></script>
   <script src="js/governance.js" defer></script>
@@ -129,6 +145,7 @@
   <script src="js/learning-games.js?v=2.0.2" defer></script>
   <script src="js/diagnostico.js" defer></script>
   <script src="js/telemetria.js" defer></script>
+  <script src="js/tutorial.js?v=2.1.0" defer></script>
   <div id="governanceNotice" role="status" aria-live="polite" class="governance-notice" hidden></div>
 </body>
 </html>
