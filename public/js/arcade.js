@@ -125,7 +125,7 @@
   function resetBasketBall(){state.x=210;state.y=440;state.vx=0;state.vy=0;state.air=false;state.scored=false;state.reset=0;state.aim=null}
   function throwBasket(dx,dy){
     if(state.air)return;
-    state.vx=clamp(dx*1.4,120,900);state.vy=clamp(dy*2.2,-920,-150);
+    state.vx=clamp(dx*1.0,120,900);state.vy=clamp(dy*2.3,-920,-150);
     state.air=true;state.shots++;updateScore(state.points+' / '+state.shots);
   }
   function updateBasket(dt){
@@ -301,7 +301,7 @@
   document.addEventListener('keydown',e=>{
     if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;
     if(keyMap[e.key]){e.preventDefault();control(keyMap[e.key])}
-    if(e.code==='Space'){e.preventDefault();if(game==='basket'&&playing)throwBasket(540,-240);else if(game==='pool'&&playing)shootPool(320,0);else if(!e.repeat)togglePlay()}
+    if(e.code==='Space'){e.preventDefault();if(game==='basket'&&playing)throwBasket(520,-230);else if(game==='pool'&&playing)shootPool(320,0);else if(!e.repeat)togglePlay()}
   });
   document.addEventListener('keyup',e=>{if(game==='pong'&&keyMap[e.key])state.manualDirection=0});
   document.querySelectorAll('[data-direction]').forEach(btn=>{
