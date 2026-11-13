@@ -12,7 +12,7 @@ body.studio-ui{
 body.studio-ui[data-theme=light]{
   --bg:#f4f4f0;--surface:#fffefa;--surface2:#e8eae3;--surface3:#dbdfd7;
   --stroke:#a9b7b1;--text:#172a30;--muted:#40565a;--dim:#597076;
-  --brand-accent:#b86616;--ui-border:#bcc8c0;--ui-top:#fcfcf8;
+  --brand-accent:#eab04c;--ui-border:#bcc8c0;--ui-top:#fcfcf8;
   --ui-text:#1c3337;--ui-secondary:#455b60;--ui-card:#fffefa;--ui-quiet:#576d70;
 }
 body.studio-ui[data-theme=colorful]{

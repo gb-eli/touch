@@ -35,7 +35,7 @@ Não basta "trocar cores": o problema envolve hierarquia, densidade, tipografia,
 - Ação primária: âmbar #F2B84B, sobre azul/grafite; não utilizar âmbar em todos os elementos.
 - Portos: azuis industriais e laranja de carga; Natureza: verdes profundos; Ciência: azuis; Cultura: terracota; Tecnologia: grafite.
 - Sem borda decorativa colorida ou chips fluorescentes em todos os cards.
-- Contrast ratio formal deve ser testado com ferramenta/browser, não presumido só por hex.
+- Os pares de tokens principais de texto e CTA foram medidos em JavaScript e passam 4,5:1 nos três temas. A auditoria completa de contraste em todos os componentes ainda exige navegador/ferramenta apropriada.
 
 ## Diretriz responsiva
 
@@ -91,7 +91,7 @@ A arquitetura ideal das próximas PRs:
 
 - Arquivos públicos alterados: index.html, app.js, service-worker.js.
 - Arquivos novos: product-interface.css, immersive-scenes.svg.
-- Testes novos: tests/ux-video-discovery.test.cjs (4 casos; sem npm).
+- Testes novos: tests/ux-video-discovery.test.cjs (5 casos; sem npm).
 - 8 temas representados; filtros Todos/Portos/Natureza/Ciência/Cultura/Tecnologia.
 - Rota Mais não substitui rotas existentes: apenas agrupa 3 destinos no celular.
 - Novo cache PWA com CSS/sprite incluídos.

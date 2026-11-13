@@ -65,3 +65,18 @@ test('capas são ilustrações distintas, sem apresentar falsas miniaturas',()=>
   assert.match(sw,/tvtouch-studio-v2\.5\.0-audit/);
   assert.ok(sw.includes('immersive-scenes.svg'));
 });
+
+test('tokens de texto e ações mantêm contraste mínimo em Black, Claro e Vivo',()=>{
+  const palettes=[
+    ['#f9fbf7','#0c1115'],['#172a30','#f4f4f0'],['#fbfcf6','#10232c'],
+    ['#182b2b','#f2b84b'],['#182b2b','#eab04c'],['#182b2b','#ffd072'],
+    ['#cbd9d5','#0c1115'],['#455b60','#f4f4f0']
+  ];
+  const chan=s=>{const v=parseInt(s,16)/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;};
+  const lum=hex=>{const h=hex.slice(1);return .2126*chan(h.slice(0,2))+.7152*chan(h.slice(2,4))+.0722*chan(h.slice(4,6));};
+  for(const [text,bg] of palettes){
+    const a=lum(text),b=lum(bg),contrast=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+    assert.ok(contrast>=4.5,'Low contrast '+text+' on '+bg+': '+contrast.toFixed(2));
+  }
+  assert.ok(css.includes('--brand-accent:#eab04c'));
+});
