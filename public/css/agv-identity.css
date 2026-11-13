@@ -1,0 +1,158 @@
+#agvCrystalBackdrop{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("../assets/agv-synapse-crystal.svg");background-size:min(77vw,1300px) auto;background-position:calc(100% + 90px) 35%;background-repeat:no-repeat;opacity:.17;filter:saturate(1.45);transition:opacity .3s}
+body:has(.tvt-entry) #agvCrystalBackdrop{opacity:0}
+body:has(.content-wrap) .layout{position:relative;z-index:1}
+@media(max-width:700px){#agvCrystalBackdrop{opacity:.1;background-size:105vw auto;background-position:calc(100% + 30vw) 16%}}
+/* AGV TOUCH · Studio 2.9 — identidade prismática global, desktop + Samsung WA86F + mobile */
+:root {
+  --agv-bg:#06050b;--agv-ink:#fffaf8;--agv-sub:#d5cde1;
+  --agv-coral:#ff5726;--agv-coral-hot:#ff8748;
+  --agv-cyan:#69e7ff;--agv-violet:#ad54ff;--agv-glass:rgba(18,14,34,.90);
+  --agv-line:rgba(185,151,235,.34);
+}
+html{color-scheme:dark}
+body{background:#06050b;color:#fffaf8}
+#agvSynapseField{position:fixed;inset:0;z-index:0;width:100vw;height:100dvh;pointer-events:none;opacity:.72;transition:opacity .35s;contain:strict}
+body:has(.tvt-entry) #agvSynapseField{opacity:0}
+body:has(:fullscreen) #agvSynapseField{opacity:.08}
+.agv-dev-credit{position:fixed;right:max(9px,env(safe-area-inset-right));bottom:max(5px,env(safe-area-inset-bottom));z-index:10020;pointer-events:none;max-width:55vw;padding:2px 5px;color:rgba(234,219,244,.70);font:600 clamp(9px,.63vw,12px)/1.2 Inter,Arial,sans-serif;letter-spacing:.01em;text-align:right;text-shadow:0 1px 5px #000,0 1px 8px #000;white-space:nowrap}
+.agv-dev-credit strong{font-weight:770;color:#f6edf9}
+body:not(.studio-ui) .agv-dev-credit{color:rgba(232,218,247,.68)}
+/* Aplicação: preserva o fluxo e os elementos interativos já existentes */
+body.studio-ui{
+  --bg:#070610;--surface:#140f20;--surface2:#191227;--surface3:#251a37;
+  --stroke:#55416a;--text:#fffaf8;--muted:#d6cbe3;--dim:#aea0c2;
+  --cyan:#69e7ff;--violet:#ad54ff;--green:#8df7d3;--orange:#ff875a;
+  --brand-accent:#ff622b;--ui-border:#62456e;--ui-top:#0b0815;
+  --ui-text:#fffaf8;--ui-secondary:#e2d7e9;--ui-card:#151021;--ui-quiet:#bfaed2;
+  --studio-ink:#fffaf8;--studio-panel:#120d21;--studio-line:rgba(186,148,235,.30);
+  --studio-shadow:0 18px 55px #0008;
+  background:radial-gradient(circle at 85% 23%,rgba(106,46,177,.19),transparent 32%),radial-gradient(circle at 18% 70%,rgba(229,56,48,.08),transparent 39%),#06050b !important;
+  color:var(--text);
+}
+body.studio-ui::before{background:radial-gradient(circle at 80% 27%,#4f219529,transparent 37%),radial-gradient(circle at 20% 70%,#db412014,transparent 35%);opacity:.75}
+body.studio-ui .app-shell{position:relative;z-index:1;background:transparent}
+body.studio-ui .topbar{background:#090812ed !important;border-bottom:1px solid #694a7966;box-shadow:0 10px 28px #0003}
+body.studio-ui .sidebar{border-color:#b46cf65e !important;background:#0c0918f0 !important;box-shadow:0 20px 65px #000b,0 0 22px #7d33ff19}
+body.studio-ui .nav-item{color:#e2cde9;transition:background-color .22s,color .22s,transform .22s,box-shadow .22s;border-radius:12px}
+body.studio-ui .nav-item:hover{background:#2b1746;color:#fff;transform:translateY(-2px)}
+body.studio-ui .nav-item.active,body.studio-ui[data-theme=light] .nav-item.active{
+  color:#230d0a;background:linear-gradient(120deg,#ff7b39,#ff4b25 67%,#f39a6b);
+  border-color:#ffbd8b;box-shadow:0 0 22px #ff5b2663
+}
+body.studio-ui .theme-switch,body.studio-ui .theme-button,body.studio-ui .top-action,body.studio-ui .home-lesson,
+body.studio-ui .lesson-chip{border-color:#704e7f;color:#f8eefa;background:#20152d}
+body.studio-ui .theme-button.active{background:#fc6c37;color:#150707}
+body.studio-ui .studio-overline,body.studio-ui .kicker,body.studio-ui .page-intro .kicker,
+body.studio-ui .studio-context-note{color:#ff9772}
+body.studio-ui .home-lead h1{color:#fff;font-weight:930;letter-spacing:-.07em;text-shadow:0 5px 35px #000a}
+body.studio-ui .home-lead h1 span{color:#ff7440}
+body.studio-ui .home-lesson:hover,body.studio-ui .top-action:hover{background:#36204a;border-color:#fd8450;color:#fff}
+body.studio-ui .page.active{animation:agvPageReveal .36s cubic-bezier(.17,.68,.2,1) both}
+body.studio-ui .page-intro h1,body.studio-ui .page-intro h2{color:#fff;letter-spacing:-.055em}
+body.studio-ui .studio-tile{border:1px solid #c6a5e84f;border-radius:13px;box-shadow:0 20px 45px #000a,inset 0 1px 0 #ffffff28;transition:transform .25s ease,border-color .25s,box-shadow .25s}
+body.studio-ui .studio-tile:hover{border-color:#ff985eaa;transform:translateY(-4px);box-shadow:0 20px 60px #0009,0 0 27px #ff572433}
+body.studio-ui .tile-cosmos{background:radial-gradient(circle at 75% 27%,#4d247f 0%,#1a1238 45%,#0c0a19 100%)}
+body.studio-ui .tile-board{background:radial-gradient(circle at 76% 30%,#13536b 0%,#152844 45%,#0a0b20 100%)}
+body.studio-ui .tile-solids{background:radial-gradient(circle at 76% 25%,#913e52 0%,#3d1949 44%,#0b0921 100%)}
+body.studio-ui .tile-memory{background:radial-gradient(circle at 76% 25%,#b65029 0%,#522340 49%,#0e0919 100%)}
+body.studio-ui .tile-video{background:radial-gradient(circle at 74% 22%,#3159a2 0%,#242056 51%,#0c0b20 100%)}
+body.studio-ui .studio-tile::after{background:linear-gradient(180deg,#05040a18 10%,#05040aaf 90%)}
+body.studio-ui .tile-cta{border-color:#df8e9d9a;background:#110e24b3;border-radius:5px;color:#fff}
+body.studio-ui .tile-corner{border-color:#ebc8fb73;background:#160a2d80}
+body.studio-ui :is(.resource-card,.lab-card,.mini-tile,.idea-card,.step-card,.activity-pane,.tool-section,.diag-panel,.experience-card,.studio-panel,.settings-panel){
+  border-color:#7f549c72;background-color:#171024;color:#fdf8ff;
+  box-shadow:0 11px 35px #0003,inset 0 1px 0 #fff1;
+}
+body.studio-ui :is(.resource-card,.lab-card,.mini-tile,.idea-card):hover{border-color:#ff88548c;box-shadow:0 15px 45px #0006,0 0 19px #ff5e211a}
+body.studio-ui .resource-body p,body.studio-ui .lab-card p,body.studio-ui .page-intro p{color:#dfd4e8}
+body.studio-ui :is(.button.primary,.card-open,.discovery-primary,.cta-primary){background:linear-gradient(115deg,#ff7a3b,#ff4e22);border-color:#ffb082;color:#220d09;box-shadow:0 8px 24px #ff491c29}
+body.studio-ui :is(.button.primary,.card-open,.discovery-primary,.cta-primary):hover{background:linear-gradient(115deg,#ff9760,#ff692b)}
+body.studio-ui .discovery-hero{background:radial-gradient(circle at 90% 28%,#6228ad88,transparent 52%),linear-gradient(120deg,#0b0b19,#17112b 68%,#2c1742);border-color:#9e5fc28a;border-radius:14px}
+body.studio-ui .discovery-hero-art{background:#170c25}
+body.studio-ui .discovery-hero h1 span{color:#ff8756}
+body.studio-ui .discovery-eyebrow{color:#ffa37a}
+body.studio-ui input,body.studio-ui select,body.studio-ui textarea{accent-color:#ff6a36}
+body.studio-ui .topbar .brand strong{color:#fff}
+body.studio-ui .studio-home,body.studio-ui .page-intro{position:relative}
+body.studio-ui .studio-home:before{content:"";position:absolute;pointer-events:none;right:-3%;top:-5%;width:min(35vw,550px);height:min(34vw,520px);background:url("../assets/agv-synapse-crystal.svg") center / contain no-repeat;opacity:.12;filter:saturate(1.2);z-index:0}
+body.studio-ui .studio-home>*{position:relative;z-index:1}
+body.studio-ui .resource-card,body.studio-ui .lab-card{backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+body.studio-ui .footer{color:#b6a4c8;border-color:#67446c}
+body.studio-ui button:focus-visible,body.studio-ui a:focus-visible,body.studio-ui [tabindex]:focus-visible{outline:3px solid #fff05a;outline-offset:3px}
+/* Evita regressão do seletor existente: versões light/colorful mantêm a família AGV */
+body.studio-ui[data-theme=light]{
+  --bg:#f6f3fb;--surface:#fff;--surface2:#efe8f5;--surface3:#e8def0;
+  --stroke:#9a85a8;--text:#1d1426;--muted:#4e405a;--dim:#66556d;
+  --cyan:#246aa3;--violet:#6e339e;--brand-accent:#d64a20;
+  --ui-top:#f7f2fb;--ui-border:#ae97b6;--ui-text:#27142f;
+  --ui-secondary:#594966;--ui-card:#fff;--ui-quiet:#675771;
+  background:#f5f0f8 !important;color:var(--text)
+}
+body.studio-ui[data-theme=light] :is(.topbar,.sidebar){background:#faf3ffed !important;color:#2a1638;border-color:#af90bd !important}
+body.studio-ui[data-theme=light] .nav-item{color:#432848}
+body.studio-ui[data-theme=light] .studio-tile,body.studio-ui[data-theme=light] .nav-item.active{color:#fff}
+body.studio-ui[data-theme=light] :is(.resource-card,.lab-card,.mini-tile,.idea-card,.step-card,.activity-pane,.tool-section,.diag-panel){
+  background:#fff;color:#25162d;border-color:#b79bbd;
+}
+body.studio-ui[data-theme=light] :is(.resource-body p,.lab-card p,.page-intro p){color:#554460}
+body.studio-ui[data-theme=light] .home-lead h1,body.studio-ui[data-theme=light] .page-intro h1{color:#21142c;text-shadow:none}
+body.studio-ui[data-theme=light] .home-lead h1 span{color:#d4491d}
+body.studio-ui[data-theme=light] .topbar,body.studio-ui[data-theme=light] .top-action{color:#25152e}
+body.studio-ui[data-theme=colorful]{
+  --bg:#090616;--surface:#1c1032;--surface2:#291642;--stroke:#8c58bd;--brand-accent:#ff6d2c;
+  background:radial-gradient(circle at 75% 15%,#381c66,transparent 52%),#090616 !important
+}
+@keyframes agvPageReveal{from{opacity:0;transform:translateY(9px);filter:brightness(.75)}to{opacity:1;transform:translateY(0);filter:brightness(1)}}
+/* Arcade preserva canvas de alta definição, altera apenas shell e botões */
+body:has(.arcade-shell){background:radial-gradient(circle at 85% 14%,#40187055,transparent 45%),#06050b !important;color:#fff}
+.arcade-shell{position:relative;z-index:2}
+.arcade-header,.arcade-intro{position:relative}
+.arcade-identity strong{color:#fff;font-weight:950;letter-spacing:-.06em}
+.arcade-identity em,.arcade-intro em{color:#ff7744 !important}
+.arcade-eyebrow{color:#ff9b78 !important}
+.arcade-panel{background:#130e22dc !important;border:1px solid #8a62ac90 !important;box-shadow:0 25px 70px #0008;border-radius:12px !important}
+.arcade-game{background:#1d142bd9 !important;border:1px solid #664584 !important;color:#fff !important;border-radius:10px !important}
+.arcade-game:hover{border-color:#ff8650 !important}
+.arcade-game.active{background:linear-gradient(140deg,#462141,#29183a) !important;border-color:#ff753e !important;box-shadow:0 0 0 1px #ff64304d,0 8px 32px #0007 !important}
+.arcade-view{background:#130e24;border-color:#6d4b89}
+.arcade-view button[aria-pressed="true"],.arcade-actions .arcade-primary{background:linear-gradient(125deg,#ff8552,#ff4e28) !important;color:#230d09 !important}
+.arcade-scene{border-color:#7a4ea4;background:#060714}
+.arcade-scene:fullscreen::after{content:"Desenvolvido por Gabriel Elienai";position:fixed;right:10px;bottom:6px;z-index:70;pointer-events:none;color:#e9d2e3a6;font:600 10px Arial,sans-serif;text-shadow:0 2px 7px #000;letter-spacing:.01em}
+.arcade-actions button,.arcade-keypad button,.arcade-home{background:#26162e !important;color:#fef9ff !important;border-color:#8b5da2 !important;border-radius:7px !important}
+.arcade-actions .arcade-primary{color:#170806 !important}
+.arcade-metrics{background:#2b1737}
+.arcade-resolution{border-color:#ec7443;color:#ffe7df}
+.arcade-shell footer{padding-bottom:48px}
+/* Admin - mantém autenticação/indicadores e replica a linguagem visual */
+body:has(.content-wrap){
+ --background:#0d0917;--ink:#fdf8ff;--muted:#ccbad8;--border:#64477e;--navy:#120d22;--navy-2:#251737;
+ --teal:#ff7444;--teal-soft:#3d2037;--blue:#69d7f1;--purple:#a950ef;--orange:#ff8d53;
+ background:radial-gradient(circle at 70% 12%,#3a1e704d,transparent 43%),#080711 !important;color:#fdf8ff
+}
+body:has(.content-wrap) :is(.side,.header,.panel,.metric-card,.auth-card){background:#171125 !important;border-color:#674b84 !important;color:#fdfaff !important}
+body:has(.content-wrap) :is(.metric-card>strong,.panel h2,.intro h1,.auth-card h1){color:#fff !important}
+body:has(.content-wrap) :is(.panel p,.metric-card p,.intro p){color:#d9cbdf}
+body:has(.content-wrap) .btn.primary{background:#ff6030 !important;border-color:#ff9a60 !important;color:#200b08 !important}
+body:has(.content-wrap) .side-link.selected{background:#492548;border-color:#ff8c57}
+body:has(.content-wrap) .logo-icon{background:#ff7542;color:#100709}
+body:has(.content-wrap) .panel-tag{background:#3b2449;color:#fbe7fc}
+body:has(.content-wrap) .filter select{background:#22192f;color:#fff;border-color:#805f9a}
+body:has(.content-wrap) .metric-card::before{display:block}
+@media(max-width:700px){
+ .agv-dev-credit{font-size:9px;max-width:85vw;padding:2px 3px}
+ #agvSynapseField{opacity:.45}
+ body.studio-ui .studio-home:before{width:80vw;height:45vh;right:-10%;top:0;opacity:.06}
+ body.studio-ui .home-lead h1{font-size:clamp(33px,8.8vw,53px)}
+ body.studio-ui .studio-tile{border-radius:12px}
+ body.studio-ui .sidebar{bottom:clamp(13px,2vh,24px)}
+ .arcade-shell footer{padding-bottom:54px}
+}
+@media(min-width:1800px){
+ body.studio-ui .studio-tile{border-width:2px}
+ .agv-dev-credit{font-size:clamp(11px,.55vw,17px)}
+}
+@media(prefers-reduced-motion:reduce){
+ body.studio-ui .page.active{animation:none}
+ body.studio-ui .nav-item,body.studio-ui .studio-tile{transition:none}
+ #agvSynapseField{transition:none}
+}
