@@ -454,3 +454,6 @@ body:has(.content-wrap)[data-theme="light"] :is(.pill,.filter select){
     max-width:100%;
   }
 }
+
+/* Em 4K, o cristal da home também deve caber no painel. */
+body.studio-ui .studio-home:before{right:0}
