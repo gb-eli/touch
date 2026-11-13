@@ -286,3 +286,56 @@ body:has(.content-wrap)[data-theme="light"] .btn.primary{
   :is(.arcade-game,.oficina-choices button){transition:none!important}
 }
 .agv-quiet-mode .agv32-touch-wave{display:none}
+
+/* Microinterações de jogos: resultado tem começo, impacto e repouso. */
+.arcade-game,.oficina-choices button{position:relative;overflow:hidden}
+.arcade-game[aria-pressed="true"]::after,
+.oficina-choices button[aria-pressed="true"]::after{
+  content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;
+  background:linear-gradient(90deg,#ff7549,#a76aff,#6ce8ff);
+  box-shadow:0 0 16px #ff764866;
+}
+.oficina-grid3 button:is(.mark-x,.mark-o){
+  animation:agv32-mark-arrive .27s var(--agv32-ease) both;
+}
+.oficina-dama .piece{animation:none}
+.oficina-dama .piece.just-moved{
+  animation:agv32-piece-land .32s var(--agv32-ease) both;
+}
+.oficina-puzzle button.selected{
+  box-shadow:0 0 0 3px #fff39d,0 0 22px #ffaf6180;
+}
+.oficina-status.success{
+  animation:agv32-status-confirm .55s var(--agv32-ease) both;
+}
+.arcade-message:not([hidden]){
+  animation:agv32-message-enter .32s var(--agv32-ease) both;
+}
+@keyframes agv32-mark-arrive{
+  0%{opacity:.35;transform:scale(.83)}
+  65%{opacity:1;transform:scale(1.045)}
+  100%{opacity:1;transform:scale(1)}
+}
+@keyframes agv32-piece-land{
+  0%{transform:translateY(-12%) scale(.92);filter:brightness(1.7)}
+  70%{transform:translateY(2%) scale(1.025)}
+  100%{transform:none;filter:none}
+}
+@keyframes agv32-status-confirm{
+  0%{filter:brightness(1.45)}
+  100%{filter:brightness(1)}
+}
+@keyframes agv32-message-enter{
+  0%{opacity:0;translate:0 9px}
+  100%{opacity:1;translate:0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .oficina-grid3 button:is(.mark-x,.mark-o),
+  .oficina-dama .piece.just-moved,
+  .oficina-status.success,.arcade-message:not([hidden]){
+    animation:none!important;
+  }
+}
+.agv-quiet-mode :is(.oficina-grid3 button,.oficina-dama .piece.just-moved,.oficina-status.success,.arcade-message){
+  animation:none!important;
+}
