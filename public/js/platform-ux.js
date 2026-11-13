@@ -4,6 +4,7 @@
   const atPortal=!!doc.getElementById('conteudo');
   const atArcade=!!doc.querySelector('.arcade-shell');
   const atAdmin=!!doc.querySelector('.content-wrap');
+  const atOficina=!!doc.querySelector('.oficina-shell');
   const key='agv:motion:quiet:v1';
   const shortcuts=[
     {id:'inicio',type:'page',group:'Navegar',name:'Início',detail:'Visão geral e acesso às experiências'},
@@ -25,6 +26,11 @@
     {id:'pong',type:'game',group:'Arcade',name:'Pong',detail:'Reflexo e coordenação'},
     {id:'basket',type:'game',group:'Arcade',name:'Basquete',detail:'Ângulo, força e trajetória'},
     {id:'pool',type:'game',group:'Arcade',name:'Sinuca',detail:'Colisões e geometria'},
+    {id:'blocks',type:'playground',group:'Oficina',name:'Blocos 3D',detail:'Empilhe e arraste nove materiais texturizados'},
+    {id:'pattern',type:'playground',group:'Oficina',name:'Conexões',detail:'Siga uma sequência de pontos na tela'},
+    {id:'ttt',type:'playground',group:'Oficina',name:'Jogo da velha',detail:'Máquina ou dupla na mesma tela'},
+    {id:'checkers',type:'playground',group:'Oficina',name:'Damas',detail:'Tabuleiro com capturas e promoção'},
+    {id:'puzzle',type:'playground',group:'Oficina',name:'Quebra-cabeça de foto',detail:'Monte uma foto local ou um cristal'},
     {id:'admin',type:'admin',group:'Gerenciar',name:'Painel administrativo',detail:'Acesso restrito aos responsáveis'}
   ];
   const contexts={
@@ -92,6 +98,11 @@
     if(dialog?.open)dialog.close();
     const type=item.type,id=item.id;
     if(type==='admin'){window.location.assign('admin.html');return}
+    if(type==='playground'){
+      if(atOficina){doc.querySelector('[data-oficina="'+id+'"]')?.click();}
+      else window.location.assign('oficina.html?game='+encodeURIComponent(id));
+      return;
+    }
     if(type==='game'){
       if(atArcade){
         const button=doc.querySelector('[data-game="'+id+'"]');button?.click();
@@ -200,7 +211,7 @@
   }
   function addOpenButton(){
     if(atPortal){createContextBar();return}
-    const target=atArcade?doc.querySelector('.arcade-header'):doc.querySelector('.header-actions');
+    const target=atArcade?doc.querySelector('.arcade-header'):atOficina?doc.querySelector('.oficina-header'):doc.querySelector('.header-actions');
     if(!target)return;
     const btn=button('agvGlobalFind','⌕ Explorar','Pesquisar todas as ferramentas AGV TOUCH');
     btn.classList.add('agv-global-find');btn.addEventListener('click',openFinder);
