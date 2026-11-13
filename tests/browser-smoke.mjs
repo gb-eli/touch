@@ -38,7 +38,8 @@ try{
     args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader']});
   for(const profile of [
     {name:'mobile-390',width:390,height:844,scale:1},
-    {name:'desktop-1920',width:1920,height:1080,scale:1}
+    {name:'desktop-1920',width:1920,height:1080,scale:1},
+    {name:'tv-3840',width:3840,height:2160,scale:1,smokeOnly:true}
   ]){
     const ctx=await browser.newContext({viewport:{width:profile.width,height:profile.height},
       deviceScaleFactor:profile.scale,serviceWorkers:'block',colorScheme:'dark'});
@@ -87,7 +88,7 @@ try{
         if(await skip.isVisible())await skip.click({timeout:3500}).catch(()=>{});
         await page.waitForTimeout(180);
       }
-      if(pageName==='arcade'){
+      if(pageName==='arcade'&&!profile.smokeOnly){
         console.log('SMOKE ARCADE',profile.name);
         assert.equal(await page.locator('#arcadeCanvas').count(),1);
         assert.equal(await page.locator('#arcadeSound').count(),1);
@@ -100,7 +101,7 @@ try{
         note(profile.name+' Arcade sound UI','pass','aria-pressed='+sound);
         await page.locator('#arcadeRestart').click();
       }
-      if(pageName==='oficina'){
+      if(pageName==='oficina'&&!profile.smokeOnly){
         console.log('SMOKE OFICINA',profile.name);
         await page.locator('[data-oficina="ttt"]').click();
         assert.equal((await page.locator('#oficinaTitle').textContent()).trim(),'Jogo da velha');
@@ -132,6 +133,14 @@ try{
         assert.equal(await page.locator('[data-column="1"] .oficina-cube').count(),1,
           'bloco movido de coluna no mouse');
         note(profile.name+' Blocos toque e arraste','pass');
+      }
+      if(profile.smokeOnly&&pageName==='arcade'){
+        const buffer=await page.locator('#arcadeCanvas').evaluate(c=>{
+          const r=c.getBoundingClientRect();
+          return {pixels:c.width*c.height,width:c.width,height:c.height,
+            cssWidth:Math.round(r.width),cssHeight:Math.round(r.height)};
+        });
+        note('tv-3840 Arcade canvas buffer','pass',JSON.stringify(buffer));
       }
       await page.screenshot({path:path.join(out,profile.name+'-'+pageName+'.png'),
         animations:'disabled',fullPage:false,timeout:12000});
