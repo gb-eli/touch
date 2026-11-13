@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" aria-hidden="true">
+<defs>
+  <symbol id="port" viewBox="0 0 600 340">
+    <path fill="#162f47" d="M0 0h600v340H0z"/><path fill="#286078" d="M0 223h600v117H0z"/>
+    <path d="M0 246h600M0 275h600M0 307h600" stroke="#8ad2df" stroke-width="2" opacity=".37"/>
+    <g stroke="#ecb35b" stroke-width="7" fill="none"><path d="M144 215V34H359V215M144 59H424M304 59v104m-13 0h27M144 34l-65 181M359 59l85 156"/><path d="M424 59h60"/></g>
+    <g stroke="#bde2e9" stroke-width="2"><rect fill="#d66e42" x="65" y="170" width="148" height="60" rx="3"/><rect fill="#e4af56" x="215" y="157" width="150" height="73" rx="3"/><rect fill="#377a82" x="367" y="179" width="168" height="51" rx="3"/></g>
+    <g stroke="#102c3d" stroke-width="3" opacity=".55"><path d="M85 177v46m20-46v46m20-46v46m20-46v46m20-46v46m20-46v46M237 166v55m22-55v55m22-55v55m22-55v55m22-55v55"/></g>
+  </symbol>
+  <symbol id="ship" viewBox="0 0 600 340">
+    <rect width="600" height="340" fill="#15364a"/><rect y="218" width="600" height="122" fill="#225c78"/>
+    <path fill="#d1d5c8" d="M64 168h450l-59 111H143z"/><path fill="#d56d4b" d="M145 191h240l-25 46H171z"/>
+    <rect x="220" y="105" width="145" height="65" rx="4" fill="#e5e4da"/><rect x="251" y="74" width="84" height="31" fill="#e5e4da"/>
+    <path stroke="#ecbc73" stroke-width="6" d="M327 75V20m-43 36h92"/><path fill="#2b5c74" d="M234 118h32v25h-32zm46 0h32v25h-32zm47 0h27v25h-27z"/>
+    <path d="M0 287c49-19 89-19 134 0s91 19 140 0 91-19 140 0 91 19 186 0" fill="none" stroke="#9cd8db" stroke-width="5" opacity=".7"/>
+  </symbol>
+  <symbol id="sea" viewBox="0 0 600 340">
+    <rect width="600" height="340" fill="#0c3446"/><path d="M0 0h600v145H0z" fill="#286e87"/><path d="M0 80h600" stroke="#b8e7e2" stroke-width="2" opacity=".32"/>
+    <g fill="#267c78"><path d="M0 293q90-121 178-14t178-8 244 22v47H0z"/></g>
+    <path d="M75 340c15-74 20-101 5-154M110 340c-10-69 1-112 36-154M463 340c4-65 20-100 62-134M500 340c-4-51 2-81 31-109" stroke="#e2ac65" stroke-width="9" fill="none"/>
+    <g fill="#e4c470"><path d="m233 134 63-30-8 30 8 30z"/><path d="m395 191 77-31-9 31 9 31z"/></g><circle cx="301" cy="129" r="4" fill="#153a47"/><circle cx="479" cy="186" r="4" fill="#153a47"/>
+    <g fill="#b9ded9" opacity=".55"><circle cx="175" cy="55" r="4"/><circle cx="187" cy="37" r="6"/><circle cx="492" cy="86" r="5"/><circle cx="501" cy="64" r="3"/></g>
+  </symbol>
+  <symbol id="history" viewBox="0 0 600 340">
+    <rect width="600" height="340" fill="#593f34"/><path d="M0 286h600v54H0z" fill="#c08d61"/>
+    <path d="M76 261V116h448v145H76z" fill="#bc9167"/><path d="M66 110h468l-37-38H103z" fill="#e1bc8c"/>
+    <g fill="#e0c29b"><rect x="106" y="123" width="40" height="135"/><rect x="190" y="123" width="40" height="135"/><rect x="274" y="123" width="40" height="135"/><rect x="358" y="123" width="40" height="135"/><rect x="442" y="123" width="40" height="135"/></g>
+    <g stroke="#74513e" stroke-width="5" fill="none"><path d="M95 260h398M95 125h398M113 144h24m60 0h24m60 0h24m60 0h24m60 0h24"/></g>
+  </symbol>
+  <symbol id="space" viewBox="0 0 600 340">
+    <rect width="600" height="340" fill="#171b32"/>
+    <g fill="#e8dcba"><circle cx="55" cy="44" r="3"/><circle cx="524" cy="72" r="4"/><circle cx="301" cy="37" r="2"/><circle cx="468" cy="272" r="2"/><circle cx="87" cy="230" r="3"/><circle cx="333" cy="285" r="2"/></g>
+    <circle cx="322" cy="171" r="120" fill="#ae7656"/><path d="M235 92c46 27 84 41 156 19M208 145c80 42 147 42 232 13M209 206c69 19 131 38 213 9M239 245c51-10 98 14 144 16" stroke="#e2bd83" stroke-width="13" fill="none" opacity=".7"/>
+    <path d="M300 54a120 120 0 0 1 10 235" fill="none" stroke="#412f37" stroke-width="25" opacity=".72"/>
+    <ellipse cx="322" cy="178" rx="212" ry="58" transform="rotate(-19 322 178)" fill="none" stroke="#d9b991" stroke-width="12" opacity=".82"/>
+  </symbol>
+  <symbol id="museum" viewBox="0 0 600 340">
+    <rect width="600" height="340" fill="#302c32"/><path fill="#8c796c" d="M0 0h600v340H0z"/>
+    <path fill="#e3d6bd" d="M0 0h600v264H0z"/>
+    <g fill="#594b3f"><rect x="64" y="52" width="195" height="172"/><rect x="342" y="42" width="181" height="191"/></g>
+    <rect x="78" y="65" width="168" height="145" fill="#c49a6a"/><path d="M79 185q80-96 166-23v48H79z" fill="#45686e"/><circle cx="191" cy="110" r="23" fill="#f0d19e"/>
+    <rect x="356" y="56" width="154" height="163" fill="#71867b"/><path d="M432 82l-53 112h106z" fill="#d5b08e"/>
+    <path fill="#9e9184" d="M0 269h600v71H0z"/><path d="M300 266L190 340M300 266l110 74" stroke="#d9c9af" stroke-width="2"/>
+  </symbol>
+  <symbol id="forest" viewBox="0 0 600 340">
+    <rect width="600" height="340" fill="#203e34"/><rect width="600" height="155" fill="#7caba1"/>
+    <path fill="#4c7757" d="M0 223 97 94l107 137 77-97 103 123 86-111 130 109v85H0z"/>
+    <g fill="#163a30"><path d="m65 290 56-165 60 165zM220 315l72-237 76 237zM425 298l70-188 73 188z"/></g>
+    <path d="M0 290q180-39 282-7t318-24v81H0z" fill="#31614d"/>
+    <path d="M190 340q42-48 88-66t87-47" stroke="#beae7e" stroke-width="17" fill="none" opacity=".8"/>
+  </symbol>
+  <symbol id="industry" viewBox="0 0 600 340">
+    <rect width="600" height="340" fill="#223440"/><path fill="#44606b" d="M0 187h600v153H0z"/>
+    <path fill="#c89a68" d="M40 259V165l113-46v65l104-65v65l104-65v140z"/>
+    <path fill="#e4be85" d="M361 259V140h194v119z"/><path fill="#9b8873" d="M395 140V52h45v88zm83 0V30h40v110z"/>
+    <g fill="#2f4b59"><rect x="81" y="207" width="59" height="37"/><rect x="184" y="207" width="59" height="37"/><rect x="283" y="207" width="53" height="37"/><rect x="399" y="190" width="59" height="54"/><rect x="475" y="190" width="52" height="54"/></g>
+    <path d="M417 43c-18-17 23-21 5-38m78 17c-18-17 25-23 6-40" stroke="#b3c4c5" stroke-width="8" fill="none" opacity=".55"/>
+    <rect x="0" y="270" width="600" height="70" fill="#1d313a"/><path d="M0 291h600M0 317h600" stroke="#d5a86a" stroke-width="3" opacity=".5"/>
+  </symbol>
+</defs></svg>
