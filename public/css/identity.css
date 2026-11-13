@@ -1,0 +1,115 @@
+/* TV TOUCH 2.2 — identidade de produto: materiais sólidos, cores de função, legibilidade a distância. */
+/* A estrutura e as interações ficam em studio.css; este arquivo define exclusivamente apresentação. */
+body.studio-ui{
+  --bg:#101513;--surface:#1a2220;--surface2:#202b28;--surface3:#25332f;
+  --stroke:#3a4944;--text:#f6f5ef;--muted:#c0c9c2;--dim:#8e9d96;
+  --cyan:#3dc0a3;--green:#b6df57;--orange:#f5a845;
+  --studio-line:rgba(233,241,234,.18);--studio-panel:#1b2521;
+}
+body.studio-ui[data-theme=light]{
+  --bg:#e7e9e2;--surface:#f7f7f1;--surface2:#ecefe8;--surface3:#e0e7db;
+  --stroke:#bcc9bf;--text:#1a2a24;--muted:#41574c;--dim:#586c60;
+  --cyan:#0b7864;--studio-line:rgba(36,60,46,.18);--studio-panel:#fafbf7;
+}
+body.studio-ui[data-theme=colorful]{
+  --bg:#111e19;--surface:#1d2d27;--surface2:#253b32;--surface3:#2e4539;
+  --stroke:#557465;--text:#fffaf0;--muted:#d2e3d7;--dim:#a3bcad;
+  --cyan:#59dbad;--studio-line:rgba(238,255,240,.22);
+}
+body.studio-ui[data-theme=colorful]::before{opacity:.55;filter:saturate(.72)}
+body.studio-ui .topbar{background:var(--bg);border-bottom:1px solid var(--studio-line);backdrop-filter:none;-webkit-backdrop-filter:none}
+body.studio-ui .sidebar{
+  background:var(--surface);border:1px solid var(--studio-line);
+  box-shadow:0 8px 25px rgba(0,0,0,.28);backdrop-filter:none;-webkit-backdrop-filter:none;
+  border-radius:20px;
+}
+body.studio-ui .nav-item{border-radius:13px;color:var(--muted);font-weight:700}
+body.studio-ui .nav-item:hover{background:var(--surface3);color:var(--text)}
+body.studio-ui .nav-item.active{
+  background:#f1f2e9;border-color:#f1f2e9;color:#163d34;
+  box-shadow:none;
+}
+body.studio-ui[data-theme=light] .nav-item.active{background:#184a3b;color:#fff;border-color:#184a3b}
+body.studio-ui .connection i{box-shadow:none;background:#a8c99b}
+body.studio-ui .studio-overline{letter-spacing:.09em;color:var(--muted);font-weight:700}
+body.studio-ui .home-lead h1{font-weight:840;letter-spacing:-.06em}
+body.studio-ui .home-lead h1 span{color:#b8dc70;background:none;-webkit-text-fill-color:currentColor}
+body.studio-ui[data-theme=light] .home-lead h1 span{color:#176a4e}
+body.studio-ui .home-lesson,
+body.studio-ui .lesson-chip,
+body.studio-ui .top-action,
+body.studio-ui .tvt-tour-open-top{
+  background:var(--surface2);color:var(--text);border:1px solid var(--studio-line);
+  box-shadow:none;border-radius:13px;
+}
+body.studio-ui .home-lesson:hover,
+body.studio-ui .lesson-chip:hover,
+body.studio-ui .top-action:hover{background:var(--surface3)}
+body.studio-ui .theme-switch{background:var(--surface2);border-color:var(--studio-line);border-radius:13px}
+body.studio-ui .theme-button.active{background:var(--text);color:var(--bg);box-shadow:none}
+body.studio-ui .studio-tile{
+  border-radius:19px;border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 5px 15px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.09);
+  transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+}
+body.studio-ui .studio-tile::after{background:linear-gradient(180deg,transparent 46%,rgba(9,13,12,.72) 100%)}
+body.studio-ui .studio-tile:focus-visible{outline:4px solid #d8fa86;outline-offset:4px}
+body.studio-ui .studio-tile:hover{box-shadow:0 7px 18px rgba(0,0,0,.20);border-color:rgba(255,255,255,.62);filter:brightness(1.05)}
+body.studio-ui .studio-tile:active{transform:scale(.988)}
+body.studio-ui .tile-cosmos{background:#243b43}
+body.studio-ui .tile-board{background:#116baf}
+body.studio-ui .tile-solids{background:#9e482d}
+body.studio-ui .tile-memory{background:#347854}
+body.studio-ui .tile-video{background:#235f83}
+body.studio-ui .tile-index{font-size:clamp(10px,.82vw,16px);letter-spacing:.08em;color:#fff;font-weight:760}
+body.studio-ui .tile-corner{
+  width:clamp(38px,3vw,54px);height:clamp(38px,3vw,54px);
+  border:1px solid rgba(255,255,255,.38);border-radius:13px;background:rgba(0,0,0,.17);font-size:0;
+}
+body.studio-ui .tile-corner svg{width:23px;height:23px}
+body.studio-ui .tile-content strong{letter-spacing:-.047em;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+body.studio-ui .tile-content small{color:#fff;opacity:.95;text-shadow:0 2px 8px #0005}
+body.studio-ui .tile-cta{background:#f0f2e8;border:1px solid #fff;color:#1f3d34;border-radius:12px;box-shadow:none;font-weight:850}
+body.studio-ui .tile-cosmos .tile-cta{background:#e8c694;color:#313b35}
+body.studio-ui .planet-core{
+  background:radial-gradient(circle at 28% 23%,#e8bb83 0%,#d47e49 16%,#8a4637 44%,#522f2b 72%,#282c31 100%);
+  box-shadow:inset -32px -28px 62px #091116a8,inset 13px 10px 25px #ffd8a423;
+  animation:none;
+}
+body.studio-ui .planet-core::before{
+  background:repeating-linear-gradient(154deg,transparent 0 18px,#f5c28a2e 20px 24px,transparent 27px 52px);
+  mix-blend-mode:soft-light;
+}
+body.studio-ui .orbit-ring{border-color:rgba(241,214,178,.22);box-shadow:none}
+body.studio-ui .moon-dot{box-shadow:none}
+body.studio-ui .tile-board .board-art svg{filter:none}
+body.studio-ui .cube-3d span{border-color:#f0d8acaa;box-shadow:inset 0 0 28px rgba(89,26,14,.16);backdrop-filter:none}
+body.studio-ui .memory-art .mini-tile{background:#e5a65b;color:#2d422c;border-color:#f8dcb2;box-shadow:0 6px 14px #0b271e36}
+body.studio-ui .memory-art .mini-tile.mt-2,
+body.studio-ui .memory-art .mini-tile.mt-3{background:#164d3a;color:#cfeab0;border-color:#9cc49e}
+body.studio-ui .memory-art .mini-tile svg{width:30px;height:30px}
+body.studio-ui .video-ring{box-shadow:none;border-color:#a9e6ef88}
+body.studio-ui .video-play{background:#f1efe6;color:#184e6d;box-shadow:0 5px 12px #0003}
+body.studio-ui .home-bottom-title{color:var(--muted);font-weight:760}
+body.studio-ui .home-shortcuts button{
+  background:var(--surface2);border:1px solid var(--studio-line);
+  border-radius:12px;box-shadow:none;color:var(--text);font-weight:710;
+}
+body.studio-ui .home-shortcuts button:hover{background:var(--surface3);border-color:var(--cyan)}
+body.studio-ui .shortcut-icon{color:#b8dc70}
+body.studio-ui[data-theme=light] .shortcut-icon{color:#1c7654}
+body.studio-ui .studio-tile[disabled]{opacity:.4;filter:grayscale(1)}
+body.studio-ui .tile-cta>span{font-size:21px}
+@media (min-width:981px) and (max-height:850px){
+  body.studio-ui .home-lead h1{margin:3px 0}
+  body.studio-ui .studio-home{gap:9px;padding-block:8px}
+  body.studio-ui .home-bottom{margin-top:0}
+}
+@media (max-width:980px){
+ body.studio-ui .studio-tile{border-radius:16px}
+ body.studio-ui .sidebar{border-radius:17px}
+}
+@media(prefers-reduced-motion:reduce){
+  body.studio-ui .studio-tile{transition:none}
+  body.studio-ui .planet-core{animation:none}
+}
