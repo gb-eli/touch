@@ -192,8 +192,8 @@
   function placeTarget() {
     if (!overlay) return;
     const positions = window.innerWidth < 700
-      ? [{x:.08,y:.22},{x:.68,y:.22},{x:.08,y:.54},{x:.08,y:.73}]
-      : [{x:.08,y:.20},{x:.78,y:.20},{x:.12,y:.68},{x:.58,y:.56}];
+      ? [{x:.08,y:.46},{x:.68,y:.43},{x:.08,y:.62},{x:.68,y:.73}]
+      : [{x:.08,y:.50},{x:.78,y:.20},{x:.12,y:.72},{x:.58,y:.56}];
     const spot = points[current];
     const entry = theme.items[current % theme.items.length];
     const target = document.createElement('button');
