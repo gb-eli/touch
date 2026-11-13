@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080610">
+<meta name="description" content="AGV TOUCH: jogos de lógica, padrões, construção de blocos, dama e quebra-cabeças de fotos para telas multitoque.">
+<title>AGV TOUCH | Oficina Interativa</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/agv-identity.css?v=2.9.0">
+<link rel="stylesheet" href="css/agv-ux.css?v=3.1.0">
+<link rel="stylesheet" href="css/oficina.css?v=3.1.0">
+<script defer src="js/site-synapses.js?v=3.1.0"></script>
+<script defer src="js/platform-ux.js?v=3.1.0"></script>
+<script defer src="js/oficina.js?v=3.1.0"></script>
+</head>
+<body class="oficina-body">
+<a class="oficina-skip" href="#oficinaStage">Pular para a atividade</a>
+<div class="oficina-shell">
+<header class="oficina-header">
+<a href="index.html#inicio" class="oficina-back" aria-label="Voltar ao início do AGV TOUCH">← Portal</a>
+<a href="index.html#inicio" class="oficina-brand" aria-label="AGV TOUCH, início">AGV <span>TOUCH.</span><small>OFICINA INTERATIVA</small></a>
+<button type="button" id="oficinaSound" class="oficina-sound" aria-pressed="false">♫ Ativar efeitos sonoros</button>
+</header>
+<main id="oficinaMain">
+<div class="oficina-intro">
+<div><span class="oficina-eyebrow"><i></i> JOGAR · CONSTRUIR · EXPERIMENTAR</span><h1>APRENDA<br><em>TOCANDO.</em></h1></div>
+<p>Jogos com animações, desafios de precisão e blocos texturizados. Use os dedos, a caneta touch ou o mouse. As partidas são locais, sem cadastro e sem placar público.</p>
+</div>
+<nav class="oficina-choices" aria-label="Escolher atividade">
+<button type="button" data-oficina="blocks" aria-pressed="true"><span class="oficina-icon">▦</span><strong>Blocos 3D</strong><small>Construir e encaixar</small></button>
+<button type="button" data-oficina="pattern" aria-pressed="false"><span class="oficina-icon">⌁</span><strong>Conexões</strong><small>Trace o padrão</small></button>
+<button type="button" data-oficina="ttt" aria-pressed="false"><span class="oficina-icon">✕</span><strong>Jogo da velha</strong><small>2 pessoas ou máquina</small></button>
+<button type="button" data-oficina="checkers" aria-pressed="false"><span class="oficina-icon">◉</span><strong>Damas</strong><small>Estratégia e capturas</small></button>
+<button type="button" data-oficina="puzzle" aria-pressed="false"><span class="oficina-icon">◈</span><strong>Quebra-cabeça</strong><small>Foto da sua escolha</small></button>
+</nav>
+<section class="oficina-panel" id="oficinaStage" aria-labelledby="oficinaTitle">
+<header class="oficina-panel-head">
+<div><span class="oficina-eyebrow" id="oficinaCategory">CRIATIVIDADE</span><h2 id="oficinaTitle">Blocos 3D</h2><p id="oficinaHelp">Selecione um material e monte sua construção.</p></div>
+<div class="oficina-panel-actions"><span class="oficina-clock" id="oficinaClock" aria-label="Tempo da rodada">00:00</span><button type="button" id="oficinaRestart">↻ Reiniciar</button></div>
+</header>
+<div id="oficinaTools" class="oficina-tools"></div>
+<div id="oficinaBoard" class="oficina-board"></div>
+<div class="oficina-status" id="oficinaStatus" role="status" aria-live="polite">Escolha como deseja jogar.</div>
+</section>
+<section class="oficina-more" aria-label="Outras atividades">
+<div><span class="oficina-eyebrow">CONTINUE EXPLORANDO</span><h2>Da oficina para o laboratório.</h2></div>
+<div class="oficina-links"><a href="index.html?tool=solidos">Sólidos geométricos ↗</a><a href="index.html?tool=encaixe">Encaixe de formas ↗</a><a href="arcade.html">Arcade ↗</a></div>
+</section>
+</main>
+<footer class="oficina-footer">AGV TOUCH · Laboratório interativo · Atividades locais e acessíveis</footer>
+</div>
+<div class="agv-dev-credit" aria-label="Desenvolvido por Gabriel Elienai">Desenvolvido por <strong>Gabriel Elienai</strong></div>
+</body>
+</html>

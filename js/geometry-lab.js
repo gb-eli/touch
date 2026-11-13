@@ -6,7 +6,14 @@ const MATERIALS=Object.freeze({
   ceramic:{label:'Cerâmica',base:'#decfbd',grain:'smooth'},
   steel:{label:'Aço escovado',base:'#a4bdc1',grain:'brushed'},
   wood:{label:'Madeira',base:'#c18a50',grain:'wood'},
-  stone:{label:'Pedra',base:'#9aa6a0',grain:'stone'}
+  stone:{label:'Pedra',base:'#9aa6a0',grain:'stone'},
+  grass:{label:'Gramado',base:'#4f9c4a',grain:'grass'},
+  sand:{label:'Areia',base:'#d8bb82',grain:'sand'},
+  dirt:{label:'Terra',base:'#8c6040',grain:'dirt'},
+  lava:{label:'Lava',base:'#c14b2a',grain:'lava'},
+  ice:{label:'Gelo',base:'#9ce2ed',grain:'ice'},
+  brick:{label:'Tijolos',base:'#bf6d54',grain:'brick'},
+  crystal:{label:'Cristal',base:'#806fc3',grain:'crystal'}
 });
 const QUALITY=Object.freeze({eco:{lat:8,lon:14,cyl:16,dpr:1,pixels:900000},
   balanced:{lat:13,lon:22,cyl:28,dpr:1.5,pixels:1850000},
@@ -76,7 +83,7 @@ function grain(ctx,kind){
   const cv=document.createElement('canvas');cv.width=cv.height=72;
   const g=cv.getContext('2d');if(!g)return null;
   g.clearRect(0,0,72,72);
-  let seed=kind==='wood'?821:kind==='brushed'?547:231;
+  let seed=Array.from(kind).reduce((a,c)=>((a*31+c.charCodeAt(0))>>>0),913);
   const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
   if(kind==='brushed'){
     for(let i=0;i<120;i++){
@@ -92,10 +99,35 @@ function grain(ctx,kind){
       g.bezierCurveTo(24,y+rnd()*8-4,48,y+rnd()*8-4,72,y+rnd()*6-3);
       g.stroke();
     }
+  } else if(kind==='brick'){
+    g.strokeStyle='rgba(238,214,193,.66)';g.lineWidth=3;
+    for(let y=0;y<=72;y+=18){g.beginPath();g.moveTo(0,y);g.lineTo(72,y);g.stroke();
+      for(let x=(Math.round(y/18)%2?0:16);x<=72;x+=32){g.beginPath();g.moveTo(x,y);g.lineTo(x,y+18);g.stroke()}
+    }
+  } else if(kind==='lava'){
+    g.fillStyle='rgba(18,9,20,.68)';g.fillRect(0,0,72,72);
+    for(let i=0;i<42;i++){
+      const x=rnd()*72,y=rnd()*72;
+      g.strokeStyle=i%3?'rgba(255,105,28,.8)':'rgba(255,235,94,.8)';
+      g.lineWidth=1.2+rnd()*4;g.beginPath();g.moveTo(x,y);g.lineTo(x+7+rnd()*17,y+4+rnd()*15);g.stroke();
+    }
+  } else if(kind==='grass'){
+    for(let i=0;i<180;i++){
+      const x=rnd()*72,y=rnd()*72;
+      g.fillStyle=rnd()>.5?'rgba(172,241,91,.56)':'rgba(12,57,25,.52)';
+      g.fillRect(x,y,2+rnd()*6,1+rnd()*4);
+    }
+  } else if(kind==='ice'||kind==='crystal'){
+    for(let i=0;i<56;i++){
+      const x=rnd()*72,y=rnd()*72;
+      g.strokeStyle=kind==='ice'?'rgba(248,255,255,.58)':'rgba(255,235,255,.66)';
+      g.lineWidth=.8+rnd()*1.4;g.beginPath();g.moveTo(x,y);
+      g.lineTo(x+4+rnd()*18,y-4-rnd()*10);g.lineTo(x+5+rnd()*14,y+10+rnd()*13);g.closePath();g.stroke();
+    }
   } else {
-    for(let i=0;i<260;i++){
-      const shade=rnd()>.5?'rgba(255,255,255,.22)':'rgba(21,33,33,.20)';
-      g.fillStyle=shade;g.fillRect(rnd()*72,rnd()*72,1+rnd()*2,1+rnd()*2);
+    for(let i=0;i<280;i++){
+      const shade=rnd()>.5?'rgba(255,255,255,.27)':'rgba(18,20,21,.30)';
+      g.fillStyle=shade;g.fillRect(rnd()*72,rnd()*72,.7+rnd()*(kind==='sand'?1.9:4),.7+rnd()*(kind==='sand'?1.9:4));
     }
   }
   const result=ctx.createPattern(cv,'repeat');patternCache.set(kind,result);return result;
@@ -144,7 +176,7 @@ function render(ctx,canvas,options={}){
     const variation=options.shape==='esfera'?1:1+Math.sin(face.index*7.11)*.04;
     ctx.fillStyle=colorScale(material.base,intensity*variation);ctx.fill();
     if(pattern){
-      ctx.save();ctx.clip();ctx.globalAlpha=material.grain==='wood'?.33:.27;ctx.fillStyle=pattern;
+      ctx.save();ctx.clip();ctx.globalAlpha=['grass','lava','ice','crystal','brick'].includes(material.grain)?.52:material.grain==='wood'?.33:.40;ctx.fillStyle=pattern;
       const minx=Math.min(...pts.map(v=>v.x)),miny=Math.min(...pts.map(v=>v.y));
       const maxx=Math.max(...pts.map(v=>v.x)),maxy=Math.max(...pts.map(v=>v.y));
       ctx.fillRect(minx,miny,maxx-minx,maxy-miny);ctx.restore();
