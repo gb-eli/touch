@@ -101,3 +101,42 @@
 @media(max-width:1100px){.oficina-choices{grid-template-columns:repeat(3,minmax(0,1fr))}.oficina-intro{align-items:start;flex-direction:column}}
 @media(max-width:700px){.oficina-shell{padding:15px 12px 58px}.oficina-header{gap:8px}.oficina-brand{order:-1;width:100%;text-align:left}.oficina-brand small{font-size:9px}.oficina-back,.oficina-sound{min-height:44px;padding:8px 12px;font-size:12px}.oficina-intro{margin:25px 0}.oficina-intro h1{font-size:clamp(47px,11.8vw,76px)}.oficina-intro p{font-size:14px}.oficina-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.oficina-choices button{padding:10px;gap:3px 8px;min-height:76px}.oficina-choices .oficina-icon{font-size:25px}.oficina-choices strong{font-size:13px}.oficina-choices small{font-size:10px}.oficina-panel{padding:14px;border-radius:13px;min-height:410px}.oficina-panel-head{align-items:start}.oficina-panel-head h2{font-size:31px}.oficina-panel-head p{font-size:13px}.oficina-panel-actions button{min-height:42px;padding:8px 12px}.oficina-tools{gap:7px}.oficina-tools button,.oficina-tools select{min-height:44px;padding:8px 11px;font-size:12px}.oficina-board{min-height:260px}.oficina-column{height:clamp(200px,65vw,370px)}.oficina-builder{gap:3px}.oficina-palette button{min-width:72px}.oficina-palette .oficina-swatch{width:40px;height:32px}.oficina-grid3{width:100%}.oficina-pattern button{width:58px;height:58px}.oficina-status{font-size:14px}.oficina-dama{width:min(100%,87vw)}.oficina-more h2{font-size:25px}}
 @media(prefers-reduced-motion:reduce){.oficina-body *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* Studio 3.1.1 — correção de gesto, fullscreen e leitura em painel 4K */
+.oficina-palette button{touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.oficina-palette button:active{cursor:grabbing;transform:scale(.97)}
+.oficina-grabbing .oficina-column{border-color:#bf88e2;transition:border-color .14s,box-shadow .14s}
+.oficina-grabbing .oficina-column:hover{border-color:#ffcb84;box-shadow:0 0 0 2px #ffc077a8,0 0 24px #ff864355}
+.oficina-column:focus-visible{outline:4px solid #ffed91;outline-offset:1px}
+.oficina-panel:fullscreen{
+  width:100vw;max-width:none;height:100dvh;min-height:100dvh;
+  margin:0;border:0;border-radius:0;overflow:auto;
+  padding:clamp(20px,2.1vw,54px) clamp(18px,3vw,76px) max(35px,env(safe-area-inset-bottom));
+  background:radial-gradient(circle at 72% 25%,#31184e99,transparent 55%),#070611;
+}
+.oficina-panel:fullscreen .oficina-board{min-height:min(68vh,760px)}
+.oficina-panel:fullscreen .oficina-builder{width:min(100%,1500px)}
+.oficina-panel:fullscreen .oficina-pattern{width:min(65vh,870px)}
+.oficina-panel:fullscreen .oficina-dama{width:min(74vh,1000px)}
+.oficina-panel:fullscreen .oficina-puzzle{width:min(72vh,870px)}
+.oficina-panel:fullscreen .oficina-grid3{width:min(70vh,870px)}
+.oficina-panel:fullscreen::after{
+  content:"Desenvolvido por Gabriel Elienai";position:fixed;right:10px;bottom:5px;
+  pointer-events:none;z-index:100;color:#e7d7f0ae;
+  font:600 clamp(9px,.6vw,13px)/1.4 Inter,Arial,sans-serif;
+  text-shadow:0 2px 8px #000;
+}
+.oficina-panel:fullscreen .oficina-status{margin-bottom:26px}
+.oficina-grid3[aria-busy=true]{filter:saturate(.76);cursor:wait}
+.oficina-grid3[aria-busy=true] button{cursor:wait}
+@media(max-width:700px){
+ .oficina-panel:fullscreen{padding:14px 12px calc(33px + env(safe-area-inset-bottom))}
+ .oficina-panel:fullscreen .oficina-panel-actions{flex-wrap:wrap;justify-content:flex-end}
+ .oficina-panel:fullscreen .oficina-board{min-height:260px}
+ .oficina-panel:fullscreen .oficina-builder{width:100%}
+ .oficina-panel:fullscreen .oficina-pattern{width:min(85vw,60vh)}
+}
+@media(prefers-reduced-motion:reduce){
+ .oficina-palette button:active{transform:none}
+ .oficina-grabbing .oficina-column{transition:none}
+}
