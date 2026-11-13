@@ -117,7 +117,7 @@ function launchTool(tool) {
 
 function startShell() {
   $('#todayDate').textContent=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'short'}).format(new Date());
-  const connection=()=>{ const online=navigator.onLine;$('#connectionText').textContent=online?'Conectado':'Sem conexão';$('#connectionDot').classList.toggle('offline',!online);};
+  const connection=()=>{ const online=navigator.onLine;$('#connectionText').textContent=online?'Rede ativa':'Sem rede';$('#connectionDot').classList.toggle('offline',!online);};
   connection();window.addEventListener('online',connection);window.addEventListener('offline',connection);
   $('#featuredCards').innerHTML=RESOURCES.slice(0,3).map(card).join('');
   $('#videoCards').innerHTML=VIDEOS.map(card).join('');
