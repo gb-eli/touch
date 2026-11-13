@@ -277,15 +277,15 @@
   const tttLines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
   const tttWin=cells=>{for(const line of tttLines){const [a,b,c]=line;if(cells[a]&&cells[a]===cells[b]&&cells[b]===cells[c])return {winner:cells[a],line}}return cells.every(Boolean)?{winner:'draw',line:[]}:null};
   function initializeTtt(){
-    state={cells:Array(9).fill(null),turn:'X',mode:'cpu',over:false,scores:{X:0,O:0,draw:0},thinking:false};
+    state={cells:Array(9).fill(null),turn:'X',mode:'cpu',over:false,scores:{X:0,O:0,draw:0},thinking:false,lastMove:-1};
     select('Partida', [['cpu','Contra a máquina'],['local','Duas pessoas']],state.mode,v=>{state.mode=v;resetTtt();});
     button('Nova rodada',resetTtt);
     renderTtt();setStatus('Você joga com X. Toque em qualquer casa para começar.');
   }
-  function resetTtt(){if(thinkingTimer)clearTimeout(thinkingTimer);state.cells=Array(9).fill(null);state.turn='X';state.over=false;state.thinking=false;renderTtt();setStatus('Nova rodada. Vez de X.')}
+  function resetTtt(){if(thinkingTimer)clearTimeout(thinkingTimer);state.cells=Array(9).fill(null);state.turn='X';state.over=false;state.thinking=false;state.lastMove=-1;renderTtt();setStatus('Nova rodada. Vez de X.')}
   function moveTtt(index){
     if(state.over||state.thinking||state.cells[index])return;
-    state.cells[index]=state.turn;playTone(state.turn==='X'?480:630);finishTtt();
+    state.cells[index]=state.turn;state.lastMove=index;playTone(state.turn==='X'?480:630);finishTtt();
   }
   function finishTtt(){
     const outcome=tttWin(state.cells);
@@ -305,7 +305,7 @@
       const token=asyncId;thinkingTimer=setTimeout(()=>{
         if(token!==asyncId||game!=='ttt'||state.over)return;
         state.thinking=false;const move=chooseTtt();
-        if(move!==null){state.cells[move]='O';playTone(540);finishTtt();}
+        if(move!==null){state.cells[move]='O';state.lastMove=move;playTone(540);finishTtt();}
       },400+rand(510));
     }else{
       renderTtt();
@@ -322,7 +322,7 @@
   }
   function renderTtt(wins=[]){
     board.innerHTML='<div class="oficina-grid3" role="grid" aria-busy="'+String(state.thinking)+'" aria-label="Jogo da velha">'+state.cells.map((mark,i)=>
-      '<button type="button" role="gridcell" data-square="'+i+'" class="'+(wins.includes(i)?'winning ':'')+(mark==='X'?'mark-x':mark==='O'?'mark-o':'')+'" aria-label="Casa '+(i+1)+': '+(mark||'vazia')+'" '+(state.over||mark||state.thinking?'disabled':'')+'>'+(mark||'')+'</button>'
+      '<button type="button" role="gridcell" data-square="'+i+'" class="'+(wins.includes(i)?'winning ':'')+(mark==='X'?'mark-x':mark==='O'?'mark-o':'')+(state.lastMove===i?' agv32-last-mark':'')+'" aria-label="Casa '+(i+1)+': '+(mark||'vazia')+'" '+(state.over||mark||state.thinking?'disabled':'')+'>'+(mark||'')+'</button>'
     ).join('')+'</div>';
     board.querySelectorAll('[data-square]').forEach(b=>b.addEventListener('click',()=>moveTtt(Number(b.dataset.square)),{signal:controller.signal}));
     const info=tools.querySelector('.oficina-score')||document.createElement('div');info.className='oficina-score';
@@ -360,15 +360,15 @@
     return forced>=0?[]:moves;
   }
   function initializeCheckers(){
-    state={cells:initCheckersBoard(),turn:'w',selected:-1,forced:-1,mode:'cpu',over:false,thinking:false,scores:{w:0,b:0}};
+    state={cells:initCheckersBoard(),turn:'w',selected:-1,forced:-1,mode:'cpu',over:false,thinking:false,scores:{w:0,b:0},lastMoved:-1};
     select('Partida',[['cpu','Contra a máquina'],['local','Duas pessoas']],state.mode,v=>{state.mode=v;resetCheckers()});
     button('Nova partida',resetCheckers);
     renderCheckers();setStatus('Suas peças são coral. Capture é obrigatório e damas promovidas podem voltar.');
   }
-  function resetCheckers(){if(thinkingTimer)clearTimeout(thinkingTimer);state.cells=initCheckersBoard();state.turn='w';state.selected=-1;state.forced=-1;state.over=false;state.thinking=false;renderCheckers();setStatus('Nova partida: coral começa.')}
+  function resetCheckers(){if(thinkingTimer)clearTimeout(thinkingTimer);state.cells=initCheckersBoard();state.turn='w';state.selected=-1;state.forced=-1;state.over=false;state.thinking=false;state.lastMoved=-1;renderCheckers();setStatus('Nova partida: coral começa.')}
   function checkersPlay(move){
     const s=state,piece=s.cells[move.from];
-    s.cells[move.to]=piece;s.cells[move.from]=0;
+    s.cells[move.to]=piece;s.cells[move.from]=0;s.lastMoved=move.to;
     if(move.capture>=0)s.cells[move.capture]=0;
     const lastRow=Math.floor(move.to/8);
     if(Math.abs(piece)===1&&((piece>0&&lastRow===0)||(piece<0&&lastRow===7)))s.cells[move.to]=piece>0?2:-2;
@@ -419,7 +419,7 @@
     const html=s.cells.map((p,i)=>{
       const r=Math.floor(i/8),c=i%8,isDark=(r+c)%2===1;
       const cls=(isDark?'dark':'light')+(i===s.selected?' select':'')+(!p&&destinations.includes(i)?' legal':'');
-      const piece=p?'<span class="piece '+(p>0?'player':'cpu')+(Math.abs(p)===2?' king':'')+'"></span>':'';
+      const piece=p?'<span class="piece '+(p>0?'player':'cpu')+(Math.abs(p)===2?' king':'')+(s.lastMoved===i?' just-moved':'')+'"></span>':'';
       return '<button type="button" data-checker="'+i+'" class="'+cls+'" aria-label="Linha '+(r+1)+', coluna '+(c+1)+': '+(p?(p>0?'peça coral':'peça azul')+(Math.abs(p)===2?' promovida':''):'vazia')+'" '+(!isDark?'disabled':'')+'>'+piece+'</button>';
     }).join('');
     board.innerHTML='<div class="oficina-dama" role="grid" aria-label="Tabuleiro de damas, oito por oito">'+html+'</div>';
