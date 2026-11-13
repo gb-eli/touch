@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const KEY = 'tvt:entry:v2';
+  const KEY = 'tvt:entry:v3';
   const maxTargets = 4;
   const themes = [
     {name:'Ícones', items:[['◆','square'],['✳','circle'],['●','circle'],['✦','square'],['▲','square']]},
@@ -78,7 +78,7 @@
         const gain=soundContext.createGain();gain.gain.value=.48;
         gain.connect(analyser);analyser.connect(soundContext.destination);
         await soundContext.resume();synthAudio(soundContext,gain);
-        setSoundStatus('SOUND DESIGN ORIGINAL · ÁUDIO ATIVO');
+        setSoundStatus('SOM ORIGINAL · ÁUDIO REATIVO ATIVO');
       }
       soundOn=true;
       const button=$('tvtSoundToggle');
@@ -145,7 +145,7 @@
   }
   function installScene(){
     cancelAnimationFrame(raf);lastFxTime=0;
-    overlay.insertAdjacentHTML('afterbegin','<div class="tvt-entry-header"><strong>TV<span>/</span>TOUCH.</strong><em>ALBERTO GOMES VEIGA · LAB INTERATIVO</em><button type="button" id="tvtExit">PULAR ↗</button></div><div class="tvt-scene-art" aria-hidden="true"><canvas id="tvtEnergyCanvas"></canvas><div class="tvt-scene-core"><span>AGV / LAB</span><strong>TOUCH</strong><small>INTERACTIVE DISPLAY</small></div></div><div class="tvt-entry-status" id="tvtSoundStatus">ENERGIA CRIATIVA EM MOVIMENTO</div><div class="tvt-sound-dock"><button type="button" class="tvt-sound-toggle" aria-pressed="false" id="tvtSoundToggle">♫ ATIVAR SOM</button><label class="tvt-local-file" for="tvtAudioUpload">ÁUDIO LOCAL <input id="tvtAudioUpload" type="file" accept="audio/*"></label></div>');
+    overlay.insertAdjacentHTML('afterbegin','<div class="tvt-entry-header"><strong>AGV<span>/</span>TOUCH.</strong><em>COLÉGIO ALBERTO GOMES VEIGA · TELA INTERATIVA</em><button type="button" id="tvtExit">PULAR ↗</button></div><div class="tvt-scene-art" aria-hidden="true"><canvas id="tvtEnergyCanvas"></canvas><div class="tvt-scene-core"><span>AGV / LAB</span><strong>SYNAPSE</strong><small>INTERACTIVE DISPLAY</small></div></div><div class="tvt-entry-status" id="tvtSoundStatus">ENERGIA CRIATIVA EM MOVIMENTO</div><div class="tvt-sound-dock"><button type="button" class="tvt-sound-toggle" aria-pressed="false" id="tvtSoundToggle">♫ ATIVAR SOM</button><label class="tvt-local-file" for="tvtAudioUpload">ÁUDIO LOCAL <input id="tvtAudioUpload" type="file" accept="audio/*"></label></div>');
     $('tvtExit').addEventListener('click',complete);
     $('tvtSoundToggle').addEventListener('click',()=>{if(soundOn)stopMusic();else addMusic();});
     $('tvtAudioUpload').addEventListener('change',event=>{
@@ -162,9 +162,9 @@
   }
   function showWelcome() {
     cleanTimers();
-    overlay.innerHTML='<div class="tvt-entry-card"><p class="tvt-entry-kicker">STUDIO 2.8 / EXPERIÊNCIA IMERSIVA</p><h2>A TELA<br><span>GANHA</span><br>VIDA.</h2><p class="tvt-entry-description">Seu próximo universo começa na ponta dos dedos. Ative a experiência, teste os toques e entre no laboratório.</p><div class="tvt-entry-actions"><button type="button" class="tvt-entry-main" id="tvtEntryStart">COMEÇAR AGORA ↗</button><button type="button" class="tvt-entry-secondary" id="tvtEntrySkip">IR DIRETO AO PORTAL</button></div><div class="tvt-entry-rail">GEOMETRIA 3D <i></i> MÚSICA <i></i> JOGOS <i></i> CRIAÇÃO</div></div>';
+    overlay.innerHTML='<div class="tvt-entry-card"><p class="tvt-entry-kicker">AGV TOUCH / LABORATÓRIO INTERATIVO</p><h2>AGV<br><span>TOUCH.</span></h2><p class="tvt-entry-description">Conexões, descobertas e experiências ao alcance das mãos. Inicie o som, teste quatro pontos de toque e entre no laboratório.</p><div class="tvt-entry-actions"><button type="button" class="tvt-entry-main" id="tvtEntryStart">COMEÇAR AGORA ↗</button><button type="button" class="tvt-entry-secondary" id="tvtEntrySkip">ENTRAR NO PORTAL ↗</button></div><div class="tvt-entry-rail">SINAPSES <i></i> CRISTAIS <i></i> SOM REATIVO <i></i> INTERAÇÃO</div></div>';
     installScene();
-    $('tvtEntryStart').addEventListener('click',()=>{ addMusic(); beginCalibration(); });
+    $('tvtEntryStart').addEventListener('click',()=>{ void addMusic(); beginCalibration(); });
     $('tvtEntrySkip').addEventListener('click',complete);
     $('tvtEntryStart').focus();
   }
