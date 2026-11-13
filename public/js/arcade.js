@@ -351,5 +351,10 @@
   if(typeof ResizeObserver!=='undefined')new ResizeObserver(resizeCanvas).observe(canvas);
   window.addEventListener('pagehide',()=>cancelAnimationFrame(raf),{once:true});
   try{mode3d=localStorage.getItem('tvt:arcade:view:v1')==='3d'}catch{}
-  resizeCanvas();initialize();changeMode(mode3d?'3d':'2d');schedule();
+  resizeCanvas();initialize();changeMode(mode3d?'3d':'2d');
+  try{
+    const requested=new URLSearchParams(location.search).get('game');
+    if(configuration[requested])selectGame(requested);
+  }catch{}
+  schedule();
 })();

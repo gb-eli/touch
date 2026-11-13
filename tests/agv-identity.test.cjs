@@ -11,14 +11,14 @@ test('Identidade e crédito permanente nas três entradas',()=>{
  for(const page of pages){
   const html=read('public/'+page);
   assert.match(html,/css\/agv-identity\.css\?v=2\.9\.0/);
-  assert.match(html,/js\/site-synapses\.js\?v=2\.9\.0/);
+  assert.match(html,/js\/site-synapses\.js\?v=3\.0\.0/);
   assert.match(html,/class="agv-dev-credit"/);
   assert.match(html,/Desenvolvido por <strong>Gabriel Elienai<\/strong>/);
  }
 });
 test('Marca AGV TOUCH e qualidade Arcade preservadas',()=>{
  assert.match(read('public/index.html'),/<h1 id="homeTitle">AGV <span>TOUCH\.<\/span>/);
- assert.match(read('public/arcade.html'),/js\/arcade\.js\?v=2\.7\.1/);
+ assert.match(read('public/arcade.html'),/js\/arcade\.js\?v=3\.0\.0/);
  assert.match(read('public/arcade.html'),/id="arcadeCanvas"/);
 });
 test('Som no botão Começar agora e ausência de vídeo',()=>{
@@ -52,7 +52,7 @@ test('Performance limitada, reduzida e pausa',()=>{
 test('Cache offline inclui os novos ativos',()=>{
  const cache=read('public/service-worker.js');
  for(const asset of ['agv-identity.css','site-synapses.js','agv-synapse-crystal.svg'])assert.ok(cache.includes(asset),asset);
- assert.match(cache,/tvtouch-studio-v2\.9\.0-synapse-identity/);
+ assert.match(cache,/tvtouch-studio-v3\.0\.0-full-platform-ux/);
 });
 test('JS alterado passa no parser',()=>{
  for(const file of ['public/js/site-synapses.js','public/js/experience-intro.js','public/service-worker.js']){
