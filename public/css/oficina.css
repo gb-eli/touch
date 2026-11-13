@@ -91,7 +91,7 @@
 .oficina-pattern button.error{background:#a93447;border-color:#ffbfcb}
 .oficina-pattern button:active{transform:translate(-50%,-50%) scale(.94)}
 .oficina-puzzle{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:5px;width:min(100%,min(75vh,710px));aspect-ratio:1;background:#120e24;border:5px solid #8b60b4;border-radius:12px;padding:5px;box-shadow:0 20px 43px #0009}
-.oficina-puzzle button{position:relative;border:2px solid #e6dbfc65;border-radius:5px;min-width:0;min-height:0;background-color:#231337;background-repeat:no-repeat;background-size:calc(var(--n)*100%) calc(var(--n)*100%);background-position:var(--pos-x) var(--pos-y);transition:filter .2s,transform .2s;cursor:pointer}
+.oficina-puzzle button{position:relative;border:2px solid #e6dbfc65;border-radius:5px;min-width:0;min-height:0;background-color:#231337;background-repeat:no-repeat;background-size:var(--slice-size) var(--slice-size);background-position:var(--pos-x) var(--pos-y);transition:filter .2s,transform .2s;cursor:pointer}
 .oficina-puzzle button.selected{outline:4px solid #fff58c;outline-offset:-4px;z-index:1;transform:scale(.95)}
 .oficina-puzzle button.correct{border-color:#eaffd54d}
 .oficina-puzzle button:hover{filter:brightness(1.2)}
