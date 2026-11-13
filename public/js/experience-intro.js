@@ -9,7 +9,7 @@
   ];
   let overlay, gameTimer = 0, current = 0, times = [], startedAt = 0;
   let audioFile = null, soundContext = null, analyser = null, audioElement = null, soundURL = null, soundOn = false, nodes = [], raf = 0, visualCanvas = null, visualContext = null, sampleData = null;
-  let lowEnergy = 0, midEnergy = 0, highEnergy = 0, beatEnergy = 0;
+  let lowEnergy = 0, midEnergy = 0, highEnergy = 0, beatEnergy = 0, lastFxTime = 0;
   let stepAt = 0, theme, points = [];
   const $ = id => document.getElementById(id);
   function markSeen() { try { sessionStorage.setItem(KEY,'done'); } catch {} }
@@ -88,6 +88,8 @@
   function setSoundStatus(label) { const node=$('tvtSoundStatus');if(node)node.textContent=label; }
   function paintScene(time) {
     if(!overlay||!visualCanvas||!visualContext)return;
+    if(time-lastFxTime<33){raf=requestAnimationFrame(paintScene);return;}
+    lastFxTime=time;
     const c=visualCanvas,g=visualContext,r=c.getBoundingClientRect();
     if(r.width&&r.height){
       const dpr=Math.min(2,window.devicePixelRatio||1);
@@ -142,7 +144,7 @@
     raf=requestAnimationFrame(paintScene);
   }
   function installScene(){
-    cancelAnimationFrame(raf);
+    cancelAnimationFrame(raf);lastFxTime=0;
     overlay.insertAdjacentHTML('afterbegin','<div class="tvt-entry-header"><strong>TV<span>/</span>TOUCH.</strong><em>ALBERTO GOMES VEIGA · LAB INTERATIVO</em><button type="button" id="tvtExit">PULAR ↗</button></div><div class="tvt-scene-art" aria-hidden="true"><canvas id="tvtEnergyCanvas"></canvas><div class="tvt-scene-core"><span>AGV / LAB</span><strong>TOUCH</strong><small>INTERACTIVE DISPLAY</small></div></div><div class="tvt-entry-status" id="tvtSoundStatus">ENERGIA CRIATIVA EM MOVIMENTO</div><div class="tvt-sound-dock"><button type="button" class="tvt-sound-toggle" aria-pressed="false" id="tvtSoundToggle">♫ ATIVAR SOM</button><label class="tvt-local-file" for="tvtAudioUpload">ÁUDIO LOCAL <input id="tvtAudioUpload" type="file" accept="audio/*"></label></div>');
     $('tvtExit').addEventListener('click',complete);
     $('tvtSoundToggle').addEventListener('click',()=>{if(soundOn)stopMusic();else addMusic();});
