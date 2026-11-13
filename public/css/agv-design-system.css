@@ -375,3 +375,57 @@ body:has(.content-wrap)[data-theme="light"] :is(.pill,.filter select){
 @media(prefers-reduced-motion:reduce){
   body.studio-ui .page.active{animation:none!important}
 }
+
+/* A arte da abertura é decorativa e pode ultrapassar visualmente sua área,
+   mas não deve aumentar a largura rolável do documento no Android. */
+@media(max-width:700px){
+  .tvt-entry{
+    contain:paint;
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+  /* Os jogos ficam acessíveis sem rolagem vertical excessiva no celular. */
+  .oficina-intro{margin:16px 0 13px;gap:7px}
+  .oficina-intro h1{font-size:clamp(36px,9.8vw,54px);line-height:.97;margin:9px 0 0}
+  .oficina-intro p{font-size:13px;line-height:1.42;max-width:42ch}
+  .oficina-choices{
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scroll-snap-type:x proximity;
+    gap:8px;
+    padding:2px 2px 12px;
+    scrollbar-color:#9561c8 #1d112c;
+  }
+  .oficina-choices button{
+    flex:0 0 clamp(148px,43vw,176px);
+    min-height:73px;
+    scroll-snap-align:start;
+    padding:9px;
+  }
+  .oficina-panel-head{gap:10px;margin-bottom:16px}
+  .oficina-panel-head h2{font-size:clamp(25px,7vw,32px)}
+  .oficina-panel-head p{margin-top:5px}
+  .oficina-panel-actions{gap:7px}
+  .oficina-tools{gap:7px;margin-bottom:12px}
+  .oficina-palette{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
+    width:100%;
+    min-width:0;
+  }
+  .oficina-palette button{
+    min-width:0;
+    width:100%;
+    min-height:63px;
+    padding:6px 1px;
+    font-size:10px;
+  }
+  .oficina-palette .oficina-swatch{width:35px;height:27px}
+  .oficina-goal{font-size:11px;padding:8px 10px}
+}
+@media(max-width:360px){
+  .oficina-palette{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
