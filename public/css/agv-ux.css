@@ -277,3 +277,25 @@ body:has(.content-wrap) .control-group :is(select,input){background:#2a193a;colo
 @media(prefers-reduced-motion:reduce){
  .agv-experience-bar,.agv-command-option,.agv-pressed,body.studio-ui .page.active{animation:none!important;transition:none!important}
 }
+
+/* Legibilidade das variantes oficiais: busca/formulários não herdam texto claro em superfície clara */
+body.studio-ui[data-theme=light] .searchbox{background:#fff;border-color:#9d85af}
+body.studio-ui[data-theme=light] .searchbox input,
+body.studio-ui[data-theme=light] .lesson-fields select,
+body.studio-ui[data-theme=light] .filter-scroll button:not(.active),
+body.studio-ui[data-theme=light] .tool-toolbar select{color:#28172e}
+body.studio-ui[data-theme=light] .searchbox input::placeholder{color:#66566e}
+body.studio-ui[data-theme=light] .tool-toolbar .tool-section{background:#fff;border-color:#ae95bc;color:#291b36}
+body.studio-ui[data-theme=light] .tool-toggle:not(.active){color:#27162e}
+body.studio-ui[data-theme=light] .piano-panel .piano-section{background:#fff;color:#28172c;border-color:#b79fc9}
+body.studio-ui[data-theme=light] .piano-section h2{color:#28172c}
+body.studio-ui[data-theme=light] .piano-instrument{background:#24132f;color:#fff}
+body.studio-ui[data-theme=light] .piano-instrument .piano-now{color:#e6d9ec}
+body.studio-ui[data-theme=light] .piano-instrument .piano-now strong{color:#fff}
+body.studio-ui[data-theme=light] #tool-solidos .model-panel{background:#f9f2ff;color:#25132b}
+body.studio-ui[data-theme=light] #tool-solidos .model-panel h2{color:#25132b}
+body.studio-ui[data-theme=light] #tool-solidos .material-title{color:#3d2445}
+body.studio-ui[data-theme=light] #tool-solidos .material-options button:not([aria-pressed=true]){background:#e9dced;color:#2d1836}
+body.studio-ui[data-theme=light] .page-intro h1,body.studio-ui[data-theme=light] .experience-heading h1{color:#20162a}
+body.studio-ui[data-theme=light] .filter-button.active{color:#251007}
+body.studio-ui[data-theme=light] .agv-experience-bar{background:linear-gradient(110deg,#251335,#190c29);color:#fff}
