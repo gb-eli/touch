@@ -1,0 +1,47 @@
+name: AGV TOUCH | Quality checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agv-touch-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Node tests and JavaScript syntax
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run all tests
+        run: node --test tests/*.test.cjs
+      - name: Validate JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          find public/js -type f -name '*.js' -print0 | while IFS= read -r -d '' file; do
+            node --check "$file"
+          done
+          node --check public/service-worker.js
+      - name: Check deployment inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s public/index.html
+          test -s public/arcade.html
+          test -s public/oficina.html
+          test -s public/css/agv-design-system.css
+          test -s public/js/agv-touch-feedback.js
