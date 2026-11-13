@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/admin.css">
   <link rel="stylesheet" href="css/admin-controls.css">
   <link rel="stylesheet" href="css/ux-shell.css?v=1.7.1">
+  <link rel="stylesheet" href="css/admin-clarity.css?v=2.2.0">
   <title>TV TOUCH | Indicadores AGV</title>
 </head>
 <body data-theme="dark">
@@ -16,34 +17,34 @@
   <div class="layout">
     <aside class="side">
       <a class="logo" href="index.html" aria-label="TV TOUCH, voltar para o portal">
-        <span class="logo-icon">▣</span>
-        <span><strong>TV TOUCH</strong><small>GESTÃO INTELIGENTE</small></span>
+        <span class="logo-icon" aria-hidden="true">TV</span>
+        <span><strong>TV TOUCH</strong><small>PAINÉIS E ATIVIDADES</small></span>
       </a>
       <div class="side-label">PAINEL DE GESTÃO</div>
       <nav aria-label="Navegação do painel">
-        <a class="side-link selected" href="#overview"><span>◫</span> Visão geral</a>
-        <a class="side-link" href="#usage"><span>◷</span> Utilização</a>
-        <a class="side-link" href="#devices"><span>▣</span> Equipamentos</a>
-        <a class="side-link" href="#quality"><span>⌁</span> Conectividade</a>
+        <a class="side-link selected" href="#overview">Visão geral</a>
+        <a class="side-link" href="#usage">Utilização</a>
+        <a class="side-link" href="#devices">Equipamentos</a>
+        <a class="side-link" href="#quality">Conectividade</a>
       </nav>
       <div class="side-divider"></div>
       <div class="side-label">PORTAL</div>
-      <a class="side-link" href="index.html"><span>↗</span> Abrir atividades</a>
+      <a class="side-link" href="index.html">Abrir atividades</a>
       <div class="side-foot">
         <div class="privacy"><span>◈</span><div><strong>Dados protegidos</strong><p>Sem cadastro de alunos. Relatórios acessíveis somente aos administradores autorizados.</p></div></div>
-        <span class="version">TV TOUCH • AGV / v1.8.0</span>
+        <span class="version">TV TOUCH • AGV / 2.2.0</span>
       </div>
     </aside>
     <div class="content-wrap">
       <header class="header">
         <div class="trail">AGV <span>/</span> TV TOUCH <span>/</span> <strong>Indicadores</strong></div>
-        <div class="header-actions"><div class="ux-themes" id="uxThemeBar" role="group" aria-label="Modo visual"><button class="ux-theme active" type="button" data-ux-theme="dark" aria-pressed="true">Black</button><button class="ux-theme" type="button" data-ux-theme="light" aria-pressed="false">Claro</button><button class="ux-theme" type="button" data-ux-theme="colorful" aria-pressed="false">Colorido</button></div><button class="ux-pause" id="uxPause" type="button" hidden aria-pressed="false">Pausar cores</button><span id="livePill" class="pill"><i></i> Aguardando conexão</span><a href="index.html" class="open-portal">Abrir portal <span>↗</span></a></div>
+        <div class="header-actions"><div class="ux-themes" id="uxThemeBar" role="group" aria-label="Modo visual"><button class="ux-theme active" type="button" data-ux-theme="dark" aria-pressed="true">Black</button><button class="ux-theme" type="button" data-ux-theme="light" aria-pressed="false">Claro</button><button class="ux-theme" type="button" data-ux-theme="colorful" aria-pressed="false">Vivo</button></div><button class="ux-pause" id="uxPause" type="button" hidden aria-pressed="false">Pausar cores</button><span id="livePill" class="pill"><i></i> Aguardando conexão</span><a href="index.html" class="open-portal">Abrir portal <span>↗</span></a></div>
       </header>
       <main id="main">
         <section id="authView" class="auth-view" aria-labelledby="authTitle">
           <div class="auth-card">
-            <div class="auth-symbol">▥</div>
-            <span class="eyebrow">TV TOUCH • ÁREA RESTRITA</span>
+            
+            <span class="eyebrow">ACESSO RESTRITO</span>
             <h1 id="authTitle">Administração do TV TOUCH</h1>
             <p class="auth-description">Acompanhe as três TVs, controle as ferramentas liberadas e ajuste os gestos de cada painel.</p>
             <form id="loginForm" class="auth-form" autocomplete="on">
@@ -55,18 +56,18 @@
               <p id="authMessage" class="auth-message" role="status" aria-live="polite">Acesso exclusivo a administradores cadastrados no Supabase.</p>
             </form>
             <div class="demo-divider"><span>QUER CONHECER A INTERFACE?</span></div>
-            <button id="demoButton" type="button" class="btn outline">▣ Explorar demonstração com dados fictícios</button>
+            <button id="demoButton" type="button" class="btn outline">Explorar demonstração</button>
             <p class="auth-note">O modo de demonstração não acessa o banco nem representa utilização real da escola.</p>
           </div>
-          <div class="auth-graphic" aria-hidden="true"><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div><div class="data-plane"><span class="dp-label">TV TOUCH / PERFORMANCE</span><div class="dp-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="dp-row"><b>3</b> PAINÉIS <b>360°</b> EXPERIÊNCIAS</div></div></div>
+          
         </section>
 
         <div id="dashboard" class="dashboard" hidden>
           <section id="overview" class="intro">
-            <div><div class="eyebrow">INTELIGÊNCIA PEDAGÓGICA E TECNOLÓGICA</div><h1>Visão geral <span class="spark">✳</span></h1><p>Dados de utilização das TVs interativas do Colégio Estadual Alberto Gomes Veiga.</p></div>
-            <div class="intro-buttons"><button type="button" id="refreshButton" class="btn outline">⟳ Atualizar</button><button type="button" id="exportButton" class="btn primary">↓ Exportar CSV</button><button type="button" id="signoutButton" class="btn quiet">Sair</button></div>
+            <div><div class="eyebrow">UTILIZAÇÃO E EQUIPAMENTOS</div><h1>Visão geral</h1><p>Dados de utilização das TVs interativas do Colégio Estadual Alberto Gomes Veiga.</p></div>
+            <div class="intro-buttons"><button type="button" id="refreshButton" class="btn outline">Atualizar dados</button><button type="button" id="exportButton" class="btn primary">Baixar CSV</button><button type="button" id="signoutButton" class="btn quiet">Sair</button></div>
           </section>
-          <div id="demoNotice" class="demo-notice" hidden><strong>▣ MODO DEMONSTRAÇÃO</strong> Os indicadores abaixo são totalmente fictícios. Nenhum dado foi consultado no Supabase. <button type="button" id="leaveDemo">Sair da demonstração</button></div>
+          <div id="demoNotice" class="demo-notice" hidden><strong>PRÉVIA COM DADOS FICTÍCIOS</strong> Os indicadores abaixo são totalmente fictícios. Nenhum dado foi consultado no Supabase. <button type="button" id="leaveDemo">Sair da demonstração</button></div>
           <div class="filter-row">
             <div class="filter"><label for="periodFilter">Período</label><select id="periodFilter"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></div>
             <div class="filter"><label for="stationFilter">Equipamento</label><select id="stationFilter"><option value="">Todas as TVs</option><option value="TV TOUCH 01">TV TOUCH 01</option><option value="TV TOUCH 02">TV TOUCH 02</option><option value="TV TOUCH 03">TV TOUCH 03</option></select></div>
@@ -81,7 +82,7 @@
           </section>
           <div class="panel-grid grid-2" id="usage">
             <section class="panel trend-panel" aria-labelledby="trendTitle"><div class="panel-head"><div><div class="eyebrow">UTILIZAÇÃO AO LONGO DO TEMPO</div><h2 id="trendTitle">Aulas registradas</h2></div><span class="panel-tag">por dia</span></div><div id="trendChart" class="trend-chart" role="img" aria-label="Gráfico de sessões por dia"></div><div class="chart-footer"><span><i class="legend-dot"></i> Sessões registradas</span><span id="chartPeriod">Últimos 30 dias</span></div></section>
-            <section class="panel" aria-labelledby="areasTitle"><div class="panel-head"><div><div class="eyebrow">ÁREAS CURRICULARES</div><h2 id="areasTitle">Onde a TV é utilizada?</h2></div></div><div class="area-layout"><div id="areaDonut" class="donut"><div><strong id="areaTotal">—</strong><span>sessões</span></div></div><div id="areaLegend" class="area-legend"></div></div><div class="panel-note">A distribuição reflete a disciplina selecionada ao iniciar a aula.</div></section>
+            <section class="panel" aria-labelledby="areasTitle"><div class="panel-head"><div><div class="eyebrow">COMPARAÇÃO</div><h2 id="areasTitle">Sessões por área</h2></div></div><div class="area-breakdown"><p class="area-summary"><strong id="areaTotal">—</strong> sessões no período</p><div id="areaLegend" class="area-legend"></div></div><div class="panel-note">A distribuição reflete a disciplina selecionada ao iniciar a aula.</div></section>
           </div>
           <div class="panel-grid grid-2">
             <section class="panel" aria-labelledby="disciplinesTitle"><div class="panel-head"><div><div class="eyebrow">PANORAMA PEDAGÓGICO</div><h2 id="disciplinesTitle">Disciplinas mais ativas</h2></div><span class="panel-tag">sessões</span></div><div id="disciplinesList" class="ranking"></div></section>

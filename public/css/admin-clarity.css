@@ -1,0 +1,87 @@
+/* TV TOUCH 2.2 — painel orientado a decisões. Sem ornamentos que pareçam dados. */
+:root{--navy:#1b3730;--navy-2:#224438;--ink:#22352c;--muted:#64786b;--border:#d8e1d7;--background:#f2f4ee;--teal:#226b52;--teal-soft:#e4eee6;--blue:#2669a8;--purple:#486a5c;--orange:#bd6a32;--radius:12px}
+body{background:var(--background)}
+.side{background:var(--navy);color:#eaf2e8}
+.logo{padding-bottom:24px}
+.logo-icon{background:#f2f4ee;color:#1c5544;border-radius:10px;font-size:23px}
+.logo small,.side-label{letter-spacing:.06em}
+.side-link{border-radius:9px;font-weight:680}
+.side-link.selected{background:#305845;box-shadow:inset 3px 0 #cce6b3}
+.privacy{border:1px solid #3d614e;background:#224135;border-radius:10px}
+.privacy>span{display:none}
+.header{background:#fcfdfa;border-bottom:1px solid var(--border)}
+.pill{border-radius:8px;background:#e8ebe7;color:#43554b;font-weight:760}
+.pill i{box-shadow:none}
+.pill.demo{background:#fff0d7;color:#805321}
+.pill.connected{background:#e5f0e5;color:#2b6749}
+.open-portal{color:#1c664f}
+main{max-width:1750px}
+.auth-view{grid-template-columns:minmax(0,560px);justify-content:center;min-height:calc(100vh - 145px);gap:0}
+.auth-card{padding:clamp(26px,3.8vw,46px);background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 14px 40px #17382d12}
+.auth-graphic{display:none!important}
+.auth-card h1{font-size:clamp(27px,2.3vw,38px);letter-spacing:-.045em}
+.auth-card .eyebrow{font-size:12px;letter-spacing:.10em;color:var(--teal);font-weight:850}
+.auth-description{color:#536b5f;font-size:15px;line-height:1.55}
+.btn{border-radius:10px;font-weight:760}
+.btn.primary{background:#1e674e;border-color:#1e674e;color:#fff}
+.btn.outline{background:#fff;border-color:#aebeb1;color:#24513d}
+.btn.quiet{color:#506b59}
+#demoButton{width:100%;border:1px solid #cad7ca;font-size:14px}
+.demo-divider{color:#6a7c70}
+.demo-notice{background:#fff1d7!important;border:1px solid #cd9847!important;color:#674313!important;border-radius:10px!important}
+.intro{align-items:center}
+.intro h1{font-size:clamp(30px,2.7vw,44px);letter-spacing:-.052em}
+.intro .spark{display:none}
+.eyebrow{letter-spacing:.08em;font-weight:850;color:#617469}
+.metrics{gap:14px}
+.metric-card{background:#fff;border-radius:13px;border:1px solid var(--border);box-shadow:none;min-height:148px;padding:23px}
+.metric-card::before,.metric-card::after{display:none!important}
+.metric-card>strong{color:#1c3e2e;font-size:clamp(32px,2.4vw,46px);letter-spacing:-.045em}
+.metric-card p{color:#6b7e70;font-size:12px;line-height:1.5}
+.metric-label{font-size:13px;color:#445f4c;font-weight:780}
+.mini-icon{display:none!important}
+.panel{background:#fff;border:1px solid var(--border);border-radius:13px;box-shadow:none}
+.panel h2{font-size:clamp(21px,1.55vw,27px);letter-spacing:-.03em}
+.panel-tag{border-radius:6px;background:#edf2ed;color:#4e6956}
+.filter-row{gap:18px;border-radius:10px}
+.filter label{color:#486554;font-weight:750}
+.filter select{border:1px solid #bacaba;background:#fff;border-radius:9px;color:#21382b;min-height:46px}
+.updated{color:#65796a}
+.area-breakdown{padding:5px 0 10px}
+.area-summary{font-size:14px;color:#536959;margin:0 0 22px}
+.area-summary strong{font-variant-numeric:tabular-nums;font-size:25px;color:#213c2e;margin-right:5px}
+.area-legend{width:100%;max-width:none;display:flex;flex-direction:column;gap:19px}
+.area-row{display:grid;gap:8px}
+.area-row-head{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#304b39;font-size:14px}
+.area-row-head>span{font-weight:700}
+.area-row-head strong{font-variant-numeric:tabular-nums;font-size:15px}
+.area-row-head small{font-size:12px;color:#617c68;font-weight:600}
+.area-track{width:100%;height:13px;border-radius:6px;background:#e7ece5;overflow:hidden}
+.area-track>span{display:block;height:100%;min-width:0;border-radius:6px;transition:width .2s ease}
+.area-track>span[style*="width:0.0%"]{border-radius:0}
+.area-layout{display:block}
+.areaDonut,.donut{display:none}
+.trend-chart svg{overflow:visible}
+.rank-fill{background:#236850}
+.rank-fill.alt{background:#b76b35}
+.rank-track,.device-swatch{background:#e9efe8}
+.device-card{background:#f8faf6;border-color:#dae4d8;border-radius:11px}
+.device-swatch>div{background:#2b7557}
+.load-status.error{background:#fff0e8;color:#a13b27}
+.controls-panel .control-group{border:1px solid #d5e0d5;border-radius:11px;box-shadow:none}
+.controls-status{border-radius:8px}
+@media(prefers-reduced-motion:reduce){.area-track>span{transition:none}}
+@media(max-width:900px){.auth-view{grid-template-columns:1fr}.area-legend{grid-template-columns:1fr}}
+/* The previous theme toggles remain functional; no simulated values are presented as live. */
+body[data-theme="dark"]{--background:#101915;--ink:#e4eee7;--border:#34483c;--navy:#0f2018;--teal:#7ac79c}
+body[data-theme="dark"] .header,body[data-theme="dark"] .auth-card,body[data-theme="dark"] .panel,body[data-theme="dark"] .metric-card{background:#1a2b21;color:#edf2ea;border-color:#405749}
+body[data-theme="dark"] .auth-card h1,body[data-theme="dark"] .panel h2,body[data-theme="dark"] .intro h1,body[data-theme="dark"] .metric-card>strong,body[data-theme="dark"] .area-row-head,body[data-theme="dark"] .area-summary strong{color:#f1f6ec}
+body[data-theme="dark"] .auth-description,body[data-theme="dark"] .metric-card p,body[data-theme="dark"] .area-summary,body[data-theme="dark"] .area-row-head small{color:#bacfc0}
+body[data-theme="dark"] .area-track,body[data-theme="dark"] .rank-track{background:#384e3e}
+body[data-theme="dark"] .panel-tag,body[data-theme="dark"] .pill{background:#2a4734;color:#dceade}
+body[data-theme="dark"] .filter select{background:#21392b;border-color:#42634b;color:#fff}
+body[data-theme="dark"] .device-card{background:#223c2e;border-color:#44604c}
+body[data-theme="dark"] .side{background:#0f2018}
+body[data-theme="light"]{--background:#f2f4ee;--ink:#22352c;--border:#d8e1d7}
+body[data-theme="colorful"]{--background:#eff4ea;--ink:#22352c;--border:#c9dbcd}
+body[data-theme="colorful"] .header,body[data-theme="colorful"] .panel,body[data-theme="colorful"] .metric-card{background:#fff;color:#233a2c}
