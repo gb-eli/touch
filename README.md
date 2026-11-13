@@ -2,6 +2,19 @@
 
 Portal educacional para os painéis interativos Samsung WA86F de 86 polegadas, Android 14, uso horizontal. O código estático funciona no GitHub Pages sem framework ou workflow personalizado.
 
+## Revisão proposta Studio 2.5 — auditoria UX/UI
+
+**Em PR de revisão, sem publicação na gh-pages.** A captura mobile de 13/11/2026 confirmou superlotação do dock, grade pequena na biblioteca e falta de diferenciação entre temas 360°.
+
+- Interface de descoberta 360 com hero editorial e oito capas SVG específicas (ilustrações, não miniaturas de vídeos).
+- Filtros de tema que realmente alteram os resultados e contagem visível.
+- Uma coluna no celular para biblioteca e vídeos; navegação móvel com cinco destinos e seção Mais.
+- Paleta grafite/azul petróleo/âmbar, fontes e botões ampliados, contraste mais nítido e animação reduzida quando solicitado.
+- Sem copiar conteúdo do YouTube nem adicionar bibliotecas, login ou chamadas externas.
+- Oito itens ainda são **pesquisas**, não vídeos curados ou avaliados em 360°.
+- Executar testes: `node --test tests/ux-video-discovery.test.cjs`.
+- Relatório: [Auditoria e roadmap de revisão](docs/AUDITORIA_UX_UI_STUDIO_2_5.md).
+
 ## Revisão visual Studio 2.2
 
 - **Portal:** paleta funcional em superfícies sólidas, contraste forte e instruções diretas, reduzindo brilhos, efeito de vidro e gradientes decorativos.

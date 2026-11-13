@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/studio.css?v=2.0.2">
   <link rel="stylesheet" href="css/tutorial.css?v=2.1.0">
   <link rel="stylesheet" href="css/identity.css?v=2.2.0">
+  <link rel="stylesheet" href="css/product-interface.css?v=2.5.0">
   <title>TV TOUCH | AGV</title>
 </head>
 <body data-theme="dark" class="studio-ui">
@@ -30,9 +31,10 @@
         <button type="button" class="nav-item" data-page="favoritos" aria-label="Favoritos" title="Favoritos"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.1 6.3 7 .9-5 5 .9 7-6-3.3-6 3.3.9-7-5-5 7-.9z"/></svg><span class="nav-caption">Favoritos</span></button>
         <button type="button" class="nav-item" data-page="guia" aria-label="Guia" title="Guia"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span class="nav-caption">Guia</span></button>
         <button type="button" class="nav-item" data-page="diagnostico" aria-label="Diagnóstico" title="Diagnóstico"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15h4l3-9 4 13 3-7h4"/><path d="M3 4h4M17 4h4"/></svg><span class="nav-caption">Diagnóstico</span></button>
+        <button type="button" class="nav-item nav-more" data-page="mais" aria-label="Mais opções" title="Mais opções"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg><span class="nav-caption">Mais</span></button>
       </nav>
       <div class="sidebar-bottom"><a href="admin.html" target="_blank" rel="noopener" title="Administração" aria-label="Administração" class="studio-admin-link"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Admin</span></a></div>
-      <div class="sidebar-signature" aria-hidden="true">TV TOUCH / 2.2</div>
+      <div class="sidebar-signature" aria-hidden="true">TV TOUCH / 2.5 (REVISÃO)</div>
     </aside>
     <div class="main-area">
       <header class="topbar">
@@ -69,9 +71,43 @@
 
         <section id="page-biblioteca" class="page" aria-labelledby="libraryTitle"><div class="page-intro"><span class="kicker">BIBLIOTECA DIGITAL</span><h1 id="libraryTitle">Ferramentas para cada aula<span class="gradient-dot">.</span></h1><p>Recursos externos selecionados com fonte identificada e uma ideia de atividade. Você sai do portal para acessar a plataforma original.</p></div><div class="toolbar"><label class="searchbox"><span>⌕</span><input type="search" id="resourceSearch" placeholder="Buscar ferramenta, tema ou disciplina..." autocomplete="off" aria-label="Buscar ferramentas"></label><div class="filter-scroll" id="libraryFilters" role="group" aria-label="Filtrar por área"></div></div><div id="libraryCount" class="results-line" aria-live="polite"></div><div id="libraryCards" class="resource-grid"></div></section>
 
-        <section id="page-videos" class="page" aria-labelledby="videosTitle"><div class="page-intro"><span class="kicker">EXPERIÊNCIAS IMERSIVAS</span><h1 id="videosTitle">Explore o mundo em <span class="accent-text">360°</span></h1><p>Buscas temáticas no YouTube para encontrar vídeos imersivos e visitas virtuais. Abra um vídeo compatível e arraste a imagem com o dedo para olhar ao redor.</p></div><div class="notice info">◎ <span><strong>Atenção:</strong> os cartões abrem pesquisas no YouTube, não vídeos previamente homologados. Confira a qualidade, a adequação à turma e se o vídeo realmente oferece visualização em 360° antes de apresentar.</span></div><div id="videoCards" class="resource-grid"></div></section>
+        <section id="page-videos" class="page immersive-page" aria-labelledby="videosTitle">
+  <header class="discovery-hero">
+    <div class="discovery-hero-copy"><span class="discovery-eyebrow">TV TOUCH / DESCOBERTA IMERSIVA</span>
+      <h1 id="videosTitle">Descubra um lugar.<br><span>Mude o ponto de vista.</span></h1>
+      <p>Portos, oceanos, planetas, museus e lugares para investigar com a turma. Escolha um tema e encontre um vídeo panorâmico compatível.</p>
+      <div class="discovery-hero-actions"><button type="button" data-video-scroll="videoCategories" class="discovery-primary">Explorar temas <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12h16m-7-7 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="discovery-meta">Pesquisas externas · acesso online</span></div>
+    </div>
+    <div class="discovery-hero-art" aria-hidden="true"><svg viewBox="0 0 600 340" preserveAspectRatio="xMidYMid slice"><use href="assets/immersive-scenes.svg#ship"/></svg><span>EXPLORAÇÃO / 360°</span></div>
+  </header>
+  <div id="videoCategories" class="discovery-toolbar">
+    <div class="discovery-toolbar-intro"><span class="discovery-eyebrow">ESCOLHA UM TEMA</span><h2>Para onde vamos?</h2></div>
+    <div class="discovery-filters" role="group" aria-label="Filtrar temas imersivos">
+      <button type="button" data-video-filter="Todos" aria-pressed="true">Todos</button>
+      <button type="button" data-video-filter="Portos" aria-pressed="false">Portos</button>
+      <button type="button" data-video-filter="Natureza" aria-pressed="false">Natureza</button>
+      <button type="button" data-video-filter="Ciência" aria-pressed="false">Ciência</button>
+      <button type="button" data-video-filter="Cultura" aria-pressed="false">Cultura</button>
+      <button type="button" data-video-filter="Tecnologia" aria-pressed="false">Tecnologia</button>
+    </div>
+  </div>
+  <div id="videoCount" class="discovery-count" role="status" aria-live="polite"></div>
+  <div id="videoCards" class="video-discovery-grid"></div>
+  <div class="discovery-disclaimer"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6m0-10v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><p><strong>Antes da aula:</strong> estas opções iniciam pesquisas no YouTube, não são vídeos 360° homologados. Confirme a rotação da câmera e a adequação do conteúdo para a turma.</p></div>
+</section>
 
-        <section id="page-laboratorio" class="page" aria-labelledby="labTitle"><div class="page-intro"><span class="kicker">CRIADO PARA A TV TOUCH</span><h1 id="labTitle">Laboratório<span class="gradient-dot">.</span></h1><p>Atividades que funcionam diretamente neste portal, feitas para usar com os dedos, caneta touch ou mouse.</p></div><div class="lab-grid"><button class="lab-card" data-tool="desenho" type="button"><span class="lab-visual draw-visual">✎</span><span class="lab-meta">ARTE • QUALQUER DISCIPLINA</span><strong>Quadro de desenho</strong><span>Desenhe, explique, apague, desfaça e salve a imagem da aula.</span><em>Iniciar atividade →</em></button><button class="lab-card" data-tool="solidos" type="button"><span class="lab-visual solids-visual">⬡</span><span class="lab-meta">MATEMÁTICA • ESPAÇO</span><strong>Laboratório de sólidos 3D</strong><span>Manipule sólidos com rotação, zoom e informações geométricas.</span><em>Iniciar atividade →</em></button><button class="lab-card" data-tool="encaixe" type="button"><span class="lab-visual puzzle-visual">◈</span><span class="lab-meta">GEOMETRIA • RACIOCÍNIO</span><strong>Desafio de encaixe</strong><span>Arraste ou toque para relacionar formas geométricas.</span><em>Iniciar atividade →</em></button><button class="lab-card" data-tool="porto" type="button"><span class="lab-visual porto-visual">⚓</span><span class="lab-meta">PORTOS • LOGÍSTICA</span><strong>Decisões no porto</strong><span>Resolva desafios sobre segurança, logística e operações.</span><em>Iniciar atividade →</em></button></div></section>
+<section id="page-mais" class="page more-page" aria-labelledby="moreTitle">
+  <header class="more-header"><span class="discovery-eyebrow">TV TOUCH / CONTROLES</span><h1 id="moreTitle">Mais opções</h1><p>Ferramentas complementares da plataforma.</p></header>
+  <div class="more-grid">
+    <button type="button" data-go="favoritos"><span class="more-icon" aria-hidden="true">☆</span><strong>Favoritos</strong><small>Ferramentas que você salvou</small></button>
+    <button type="button" data-go="guia"><span class="more-icon" aria-hidden="true">▤</span><strong>Guia do professor</strong><small>Atividades e orientações</small></button>
+    <button type="button" data-go="diagnostico"><span class="more-icon" aria-hidden="true">⌁</span><strong>Testar a TV</strong><small>Toques, rede e desempenho</small></button>
+    <button type="button" data-more-fullscreen><span class="more-icon" aria-hidden="true">⛶</span><strong>Tela cheia</strong><small>Mais espaço para explorar</small></button>
+  </div>
+  <div class="more-secondary"><button type="button" id="moreTutorial">Ver tutorial de uso</button><button type="button" class="more-color-pause" data-more-color-pause>Pausar / continuar cores</button><a href="admin.html" target="_blank" rel="noopener noreferrer">Acesso administrativo</a></div>
+</section>
+
+<section id="page-laboratorio" class="page" aria-labelledby="labTitle"><div class="page-intro"><span class="kicker">CRIADO PARA A TV TOUCH</span><h1 id="labTitle">Laboratório<span class="gradient-dot">.</span></h1><p>Atividades que funcionam diretamente neste portal, feitas para usar com os dedos, caneta touch ou mouse.</p></div><div class="lab-grid"><button class="lab-card" data-tool="desenho" type="button"><span class="lab-visual draw-visual">✎</span><span class="lab-meta">ARTE • QUALQUER DISCIPLINA</span><strong>Quadro de desenho</strong><span>Desenhe, explique, apague, desfaça e salve a imagem da aula.</span><em>Iniciar atividade →</em></button><button class="lab-card" data-tool="solidos" type="button"><span class="lab-visual solids-visual">⬡</span><span class="lab-meta">MATEMÁTICA • ESPAÇO</span><strong>Laboratório de sólidos 3D</strong><span>Manipule sólidos com rotação, zoom e informações geométricas.</span><em>Iniciar atividade →</em></button><button class="lab-card" data-tool="encaixe" type="button"><span class="lab-visual puzzle-visual">◈</span><span class="lab-meta">GEOMETRIA • RACIOCÍNIO</span><strong>Desafio de encaixe</strong><span>Arraste ou toque para relacionar formas geométricas.</span><em>Iniciar atividade →</em></button><button class="lab-card" data-tool="porto" type="button"><span class="lab-visual porto-visual">⚓</span><span class="lab-meta">PORTOS • LOGÍSTICA</span><strong>Decisões no porto</strong><span>Resolva desafios sobre segurança, logística e operações.</span><em>Iniciar atividade →</em></button></div></section>
 
         <section id="page-favoritos" class="page" aria-labelledby="favoritesTitle"><div class="page-intro"><span class="kicker">ACESSO RÁPIDO</span><h1 id="favoritesTitle">Seus favoritos<span class="gradient-dot">.</span></h1><p>Salvos somente neste navegador. Não são sincronizados entre as três TVs.</p></div><div id="favoritesCards" class="resource-grid"></div><div id="favoritesEmpty" class="empty-state" hidden><div>☆</div><h3>Nenhum favorito por enquanto</h3><p>Toque na estrela de uma ferramenta para encontrá-la rapidamente aqui.</p><button class="button primary" type="button" data-go="biblioteca">Explorar biblioteca</button></div></section>
 
