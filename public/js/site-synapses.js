@@ -105,7 +105,8 @@
   function frame(now){
     raf=0;
     if(doc.hidden)return;
-    if(!last||now-last>=34){draw(now);last=now}
+    const interval=doc.querySelector('.arcade-shell')?90:34;
+    if(!last||now-last>=interval){draw(now);last=now}
     raf=window.requestAnimationFrame(frame);
   }
   if(doc.readyState==='loading')doc.addEventListener('DOMContentLoaded',initialize,{once:true});
