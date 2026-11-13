@@ -18,7 +18,7 @@
     desenho:'Quadro digital',solidos:'Sólidos 3D',encaixe:'Encaixe de formas',porto:'Desafio portuário',cosmos:'Universo 3D',memoria:'Jogo da memória',fisica:'Física 2D'
   });
   const AREAS = Object.freeze({comum:'Formação geral',tecnica:'Formação técnica',interdisciplinar:'Interdisciplinar'});
-  const COLORS = ['#18b8a8','#577fda','#e9a566'];
+  const COLORS = ['#22624C','#2669A8','#BD6A32'];
   const num = v => Number.isFinite(Number(v)) ? Number(v) : 0;
   const fmt = (v,opts) => new Intl.NumberFormat('pt-BR',opts).format(num(v));
   const str = v => String(v ?? '');
@@ -172,18 +172,25 @@
     }).join('');
     const interval=Math.max(1,Math.floor(values.length/5));
     const labels=values.map((v,i)=>i%interval===0 || i===values.length-1 ? `<text x="${x(i).toFixed(1)}" y="${h-4}" text-anchor="middle" fill="#94a6b1" font-size="11">${v.date.slice(8,10)}/${v.date.slice(5,7)}</text>`:'').join('');
-    $('trendChart').innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#15b7ad" stop-opacity=".22"/><stop offset="1" stop-color="#15b7ad" stop-opacity="0"/></linearGradient></defs>${ticks}<polygon points="${area}" fill="url(#trendFill)"/><polyline points="${points}" stroke="#0fa9a4" fill="none" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>${labels}</svg>`;
+    $('trendChart').innerHTML=`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">${ticks}<polyline points="${points}" stroke="#226b50" fill="none" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>${labels}</svg>`;
     $('trendChart').setAttribute('aria-label',`Sessões diárias nos últimos ${days} dias. Total: ${fmt(values.reduce((n,v)=>n+v.count,0))} sessões.`);
   }
 
   function renderAreas(areas,total){
-    const value=num(total),map=new Map(areas.map(x=>[x.name,num(x.sessions)]));
+    const map=new Map(asArray(areas).map(x=>[x.name,num(x.sessions)]));
     const groups=['comum','tecnica','interdisciplinar'];
-    let cursor=0;
-    const segments=groups.map((name,i)=>{const n=map.get(name)||0;const start=cursor;cursor+=value?n*100/value:0;return `${COLORS[i]} ${start}% ${cursor}%`;});
-    $('areaDonut').style.background=value?`conic-gradient(${segments.join(',')})`:'conic-gradient(#dfe8ed 0 100%)';
+    const value=Math.max(0,num(total));
     $('areaTotal').textContent=fmt(value);
-    $('areaLegend').innerHTML=groups.map((name,i)=>`<div class="area-item"><i style="background:${COLORS[i]}"></i><div>${safe(AREAS[name])}<strong>${fmt(map.get(name)||0)} · ${value?fmt((map.get(name)||0)*100/value,{maximumFractionDigits:1}):'0'}%</strong></div></div>`).join('');
+    $('areaLegend').innerHTML=groups.map((name,i)=>{
+      const count=Math.max(0,map.get(name)||0);
+      const percent=value?Math.min(100,count*100/value):0;
+      return `<div class="area-row">
+        <div class="area-row-head"><span>${safe(AREAS[name])}</span><strong>${fmt(count)} <small>· ${fmt(percent,{maximumFractionDigits:1})}%</small></strong></div>
+        <div class="area-track" role="img" aria-label="${safe(AREAS[name])}: ${fmt(count)} sessões, ${fmt(percent,{maximumFractionDigits:1})} por cento">
+          <span style="width:${percent.toFixed(1)}%;background:${COLORS[i]}"></span>
+        </div>
+      </div>`;
+    }).join('');
   }
 
   function renderRanking(id,items,alternate){
