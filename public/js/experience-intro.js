@@ -8,7 +8,7 @@
     {name:'Esportes', items:[['⚽','circle'],['🏀','circle'],['🏐','circle'],['🎾','circle'],['🏈','rectangle']]},
     {name:'Formas', items:[['●','circle'],['■','square'],['◆','square'],['▰','rectangle'],['▲','square']]}
   ];
-  let overlay, music, gameTimer = 0, resultTimer = 0, current = 0, times = [], startedAt = 0;
+  let overlay, music, gameTimer = 0, current = 0, times = [], startedAt = 0;
   let stepAt = 0, theme, points = [];
   const $ = id => document.getElementById(id);
   function markSeen() { try { sessionStorage.setItem(KEY,'done'); } catch {} }
@@ -18,7 +18,7 @@
     for (let i=out.length-1;i>0;i--) { const j=Math.floor(Math.random()*(i+1)); [out[i],out[j]]=[out[j],out[i]]; }
     return out;
   }
-  function cleanTimers() { clearTimeout(gameTimer); clearTimeout(resultTimer); }
+  function cleanTimers() { clearTimeout(gameTimer); }
   function stopMusic() {
     if (!music) return;
     music.remove();
@@ -84,8 +84,17 @@
     $('tvtCalStage').appendChild(target);
     const pos=positions[spot];
     const w=target.offsetWidth, h=target.offsetHeight;
-    target.style.left=Math.round(Math.min(window.innerWidth-w-9,Math.max(9,window.innerWidth*pos.x)))+'px';
-    target.style.top=Math.round(Math.min(window.innerHeight-h-8,Math.max(92,window.innerHeight*pos.y)))+'px';
+    let left=Math.round(Math.min(window.innerWidth-w-9,Math.max(9,window.innerWidth*pos.x)));
+    let top=Math.round(Math.min(window.innerHeight-h-8,Math.max(92,window.innerHeight*pos.y)));
+    const player=music?.getBoundingClientRect();
+    const overlaps=(x,y)=>player&&x<player.right+12&&x+w>player.left-12&&y<player.bottom+12&&y+h>player.top-12;
+    if(overlaps(left,top)){
+      const alternatives=[{x:.08,y:.52},{x:.08,y:.35},{x:.7,y:.35},{x:.08,y:.68},{x:.45,y:.42}];
+      const available=alternatives.map(item=>({x:Math.round(Math.min(window.innerWidth-w-9,Math.max(9,window.innerWidth*item.x))),y:Math.round(Math.min(window.innerHeight-h-8,Math.max(92,window.innerHeight*item.y)))})).find(item=>!overlaps(item.x,item.y));
+      if(available){left=available.x;top=available.y;}
+    }
+    target.style.left=left+'px';
+    target.style.top=top+'px';
     stepAt=performance.now();
     target.addEventListener('click',()=>{
       times.push(Math.round(performance.now()-stepAt));
@@ -120,7 +129,7 @@
     $('tvtReplay').addEventListener('click',beginCalibration);
     $('tvtArcadeNow').addEventListener('click',()=>{complete();window.location.href='arcade.html';});
     $('tvtFinish').focus();
-    resultTimer=setTimeout(complete,2400);
+    // Os resultados permanecem visíveis até uma escolha explícita.
   }
   function setup() {
     const shortcuts=document.querySelector('.home-shortcuts');
