@@ -83,3 +83,5 @@
 }
 @media(max-height:650px) and (min-width:701px){.tvt-entry h2{font-size:clamp(50px,7vh,86px)}.tvt-entry-description{margin:12px 0 20px}.tvt-entry-card{padding:60px 0}.tvt-scene-art{top:0;height:100vh}}
 @media(prefers-reduced-motion:reduce){.tvt-cal-target{animation:none}.tvt-entry-main,.tvt-entry-secondary{transition:none}.tvt-entry-progress-fill{transition:none}}
+
+@media(max-width:700px){.tvt-entry-result h2{font-size:clamp(36px,10vw,58px);overflow-wrap:anywhere}}
