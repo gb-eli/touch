@@ -11,7 +11,7 @@ test('Identidade e crédito permanente nas três entradas',()=>{
  for(const page of pages){
   const html=read('public/'+page);
   assert.match(html,/css\/agv-identity\.css\?v=2\.9\.0/);
-  assert.match(html,/js\/site-synapses\.js\?v=3\.0\.0/);
+  assert.match(html,/js\/site-synapses\.js\?v=3\.1\.0/);
   assert.match(html,/class="agv-dev-credit"/);
   assert.match(html,/Desenvolvido por <strong>Gabriel Elienai<\/strong>/);
  }
