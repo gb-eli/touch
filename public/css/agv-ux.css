@@ -301,3 +301,48 @@ body.studio-ui[data-theme=light] .filter-button.active{color:#251007}
 body.studio-ui[data-theme=light] .agv-experience-bar{background:linear-gradient(110deg,#251335,#190c29);color:#fff}
 
 body:has(.arcade-shell) .arcade-scene{border:2px solid #986bb0;box-shadow:0 20px 60px #0008;isolation:isolate}
+
+/* Studio 3.1 — correção de sobreposição e repetição vistas nas capturas do celular */
+body.studio-ui .agv-oficina-lab{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit}
+body.studio-ui .agv-oficina-lab strong{font-size:clamp(21px,1.4vw,30px);color:#fff}
+body.studio-ui .agv-oficina-lab>span:last-of-type{color:#d7c7e0}
+body.studio-ui .agv-oficina-shortcut{display:inline-flex;align-items:center;min-height:52px;padding:11px 17px;gap:9px;border:1px solid #ff8c60;border-radius:9px;background:linear-gradient(115deg,#5b2543,#231a42);color:#fff;text-decoration:none;font-weight:850}
+body.studio-ui .agv-oficina-shortcut:hover{border-color:#ffd093;background:#6f3549}
+.agv-crosslink{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 25px;padding:13px 18px;border:1px solid #705394;border-radius:10px;background:#1b102a}
+.agv-crosslink span{color:#d4bada;font-size:11px;font-weight:870;letter-spacing:.13em}
+.agv-crosslink a{display:inline-flex;align-items:center;min-height:50px;padding:8px 16px;border:1px solid #ff9059;border-radius:8px;background:#462443;color:#fff;text-decoration:none;font-weight:850}
+#tool-solidos .material-options{grid-template-columns:repeat(4,minmax(0,1fr))}
+#tool-solidos .material-options button{min-height:84px}
+#tool-solidos .material-options button span{min-height:33px}
+#tool-solidos .material-options .mat-grass{background:linear-gradient(180deg,#65a83d 0 32%,#a5cf6f 33% 36%,#714e36 37%,#876b42 100%)}
+#tool-solidos .material-options .mat-sand{background:repeating-linear-gradient(22deg,#f9e8b0 0 4px,#c8aa6c 4px 6px,#dcc38c 6px 11px)}
+#tool-solidos .material-options .mat-dirt{background:repeating-conic-gradient(#61402e 0 15%,#a67d53 15% 25%,#845e3b 25% 40%) 0 0/22px 22px}
+#tool-solidos .material-options .mat-lava{background:repeating-conic-gradient(#260c1a 0 18%,#ff4b24 18% 28%,#fbb55d 28% 41%,#60151f 41% 55%) 0 0/35px 28px}
+#tool-solidos .material-options .mat-ice{background:linear-gradient(125deg,#faffff,#84d8f4 38%,#3379ad 54%,#d4f6ff 76%,#67aada)}
+#tool-solidos .material-options .mat-brick{background:repeating-linear-gradient(0deg,transparent 0 10px,#e8bca1 11px 12px),repeating-linear-gradient(90deg,#be6049 0 18px,#9b4238 18px 21px,#d88864 21px 37px)}
+#tool-solidos .material-options .mat-crystal{background:conic-gradient(from 55deg,#e5f2ff,#6d42bb,#b2ebff,#26204f,#deb7f1)}
+body.studio-ui #tool-solidos .material-options button small{font-size:clamp(10px,.68vw,13px)}
+@media(max-width:780px){
+  body.studio-ui .agv-experience-bar{padding:10px 12px;margin:0 0 12px;min-height:0;gap:9px;border-radius:10px}
+  body.studio-ui .agv-context-copy{display:none}
+  body.studio-ui .agv-context-actions{width:100%;display:flex;flex-wrap:nowrap;gap:6px}
+  body.studio-ui .agv-context-actions .agv-command-button{flex:1;min-width:0;min-height:45px;padding:8px 6px;font-size:clamp(11px,2.7vw,14px)}
+  body.studio-ui .agv-experience-bar[data-page=inicio] .agv-context-actions{display:block}
+  body.studio-ui .agv-experience-bar[data-page=inicio] .agv-context-actions .agv-context-primary{width:100%}
+  body.studio-ui .page-intro{margin-top:8px}
+  body.studio-ui .resource-card .resource-body,body.studio-ui .lab-card{padding-block:13px}
+  body.studio-ui .lab-card{min-height:unset}
+  body.studio-ui .home-shortcuts{flex-wrap:wrap}
+  body.studio-ui .discovery-hero{margin-top:8px}
+}
+@media(max-width:600px){
+  body.studio-ui main{padding-bottom:calc(145px + env(safe-area-inset-bottom,0px))!important}
+  body.studio-ui .footer{padding-bottom:28px}
+  body.studio-ui .sidebar{z-index:25}
+  body.studio-ui .agv-dev-credit{bottom:calc(93px + env(safe-area-inset-bottom,0px));right:9px;opacity:.75;font-size:9px}
+  body.studio-ui .agv-experience-bar{position:relative}
+  body.studio-ui .agv-experience-bar .agv-command-button{white-space:normal}
+  body.studio-ui .filter-scroll{padding-bottom:12px}
+  #tool-solidos .material-options{grid-template-columns:repeat(3,minmax(0,1fr))}
+  body.studio-ui #tool-solidos .material-options button{min-height:70px}
+}

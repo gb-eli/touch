@@ -99,3 +99,6 @@ body.studio-ui[data-theme=light] #tool-solidos,body.studio-ui[data-theme=light] 
 @media(prefers-reduced-motion:reduce){
   body.studio-ui #tool-encaixe .puzzle-piece,body.studio-ui #tool-solidos .shape-option{transition:none}
 }
+
+body.studio-ui #tool-solidos .material-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+body.studio-ui #tool-solidos .material-options button{min-width:0}
