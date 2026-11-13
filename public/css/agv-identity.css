@@ -1,3 +1,7 @@
+#agvCrystalBackdrop{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("../assets/agv-synapse-crystal.svg");background-size:min(77vw,1300px) auto;background-position:calc(100% + 90px) 35%;background-repeat:no-repeat;opacity:.17;filter:saturate(1.45);transition:opacity .3s}
+body:has(.tvt-entry) #agvCrystalBackdrop{opacity:0}
+body:has(.content-wrap) .layout{position:relative;z-index:1}
+@media(max-width:700px){#agvCrystalBackdrop{opacity:.1;background-size:105vw auto;background-position:calc(100% + 30vw) 16%}}
 /* AGV TOUCH · Studio 2.9 — identidade prismática global, desktop + Samsung WA86F + mobile */
 :root {
   --agv-bg:#06050b;--agv-ink:#fffaf8;--agv-sub:#d5cde1;
