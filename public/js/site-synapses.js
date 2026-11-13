@@ -13,7 +13,9 @@
     canvas=doc.createElement('canvas');canvas.id='agvSynapseField';
     canvas.setAttribute('aria-hidden','true');
     canvas.setAttribute('role','presentation');
-    doc.body.insertBefore(canvas,doc.body.firstChild);
+    const backdrop=doc.createElement('div');backdrop.id='agvCrystalBackdrop';backdrop.setAttribute('aria-hidden','true');
+    doc.body.insertBefore(backdrop,doc.body.firstChild);
+    doc.body.insertBefore(canvas,backdrop.nextSibling);
     ctx=canvas.getContext('2d',{alpha:true,desynchronized:true});
     if(!ctx)return;
     layout();
