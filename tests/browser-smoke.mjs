@@ -59,11 +59,23 @@ try{
       assert.equal(response.status(),200,pageName+' HTTP status');
       await page.waitForTimeout(350);
       console.log('SMOKE LOADED',profile.name,pageName);
-      const layout=await page.evaluate(()=>({
-        viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-        credit:!!document.querySelector('.agv-dev-credit'),
-        stylesheet:[...document.styleSheets].some(x=>x.href?.includes('agv-design-system.css'))
-      }));
+      const layout=await page.evaluate(()=>{
+        const viewport=innerWidth;
+        const offenders=[...document.querySelectorAll('body *')].map(el=>({
+          el,rect:el.getBoundingClientRect()
+        })).filter(({rect})=>rect.width>0&&rect.height>0&&rect.right>viewport+4)
+          .sort((a,b)=>b.rect.right-a.rect.right).slice(0,14)
+          .map(({el,rect})=>({tag:el.tagName,id:el.id,
+            classes:String(el.className||'').slice(0,120),
+            x:Math.round(rect.x),width:Math.round(rect.width),
+            right:Math.round(rect.right),
+            position:getComputedStyle(el).position,
+            overflow:getComputedStyle(el).overflow}));
+        return {viewport,scrollWidth:document.documentElement.scrollWidth,
+          credit:!!document.querySelector('.agv-dev-credit'),
+          stylesheet:[...document.styleSheets].some(x=>x.href?.includes('agv-design-system.css')),
+          offenders};
+      });
       assert.equal(layout.credit,true,pageName+' credit');
       assert.equal(layout.stylesheet,true,pageName+' design system');
       const overflow=Math.max(0,layout.scrollWidth-layout.viewport);
