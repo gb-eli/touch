@@ -295,7 +295,7 @@ body:has(.content-wrap)[data-theme="light"] .btn.primary{
   background:linear-gradient(90deg,#ff7549,#a76aff,#6ce8ff);
   box-shadow:0 0 16px #ff764866;
 }
-.oficina-grid3 button:is(.mark-x,.mark-o){
+.oficina-grid3 button.agv32-last-mark{
   animation:agv32-mark-arrive .27s var(--agv32-ease) both;
 }
 .oficina-dama .piece{animation:none}
@@ -330,7 +330,7 @@ body:has(.content-wrap)[data-theme="light"] .btn.primary{
   100%{opacity:1;translate:0 0}
 }
 @media(prefers-reduced-motion:reduce){
-  .oficina-grid3 button:is(.mark-x,.mark-o),
+  .oficina-grid3 button.agv32-last-mark,
   .oficina-dama .piece.just-moved,
   .oficina-status.success,.arcade-message:not([hidden]){
     animation:none!important;
