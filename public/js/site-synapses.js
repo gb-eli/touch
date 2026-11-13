@@ -4,6 +4,7 @@
   const reduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)').matches||false;
   const saving=()=>navigator.connection?.saveData===true;
   const mobile=()=>window.innerWidth<700;
+  const quiet=()=>doc.body.classList.contains('agv-quiet-mode');
   const seed={value:22391};
   function rand(){seed.value=(seed.value*48271)%2147483647;return seed.value/2147483647;}
   let canvas,ctx,width=0,height=0,raf=0,last=0,nodes=[],edges=[],bursts=[],enabled=false;
@@ -22,8 +23,15 @@
     window.addEventListener('resize',layout,{passive:true});
     doc.addEventListener('visibilitychange',visibility);
     doc.addEventListener('pointerdown',spark,{passive:true});
-    if(reduced()||saving()){draw(0);return}
+    doc.addEventListener('agv:motion-change',updateMotion);
+    if(reduced()||saving()||quiet()){draw(0);return}
     enabled=true;raf=window.requestAnimationFrame(frame);
+  }
+  function updateMotion(){
+    if(raf){window.cancelAnimationFrame(raf);raf=0;}
+    enabled=!(reduced()||saving()||quiet());
+    if(enabled&&!doc.hidden){last=0;raf=window.requestAnimationFrame(frame);}
+    else draw(0);
   }
   function layout(){
     if(!canvas||!ctx)return;
@@ -48,7 +56,7 @@
   }
   function visibility(){
     if(doc.hidden&&raf){window.cancelAnimationFrame(raf);raf=0;return}
-    if(!doc.hidden&&enabled&&!raf){last=0;raf=window.requestAnimationFrame(frame)}
+    if(!doc.hidden&&enabled&&!quiet()&&!raf){last=0;raf=window.requestAnimationFrame(frame)}
   }
   function spark(event){
     if(reduced()||saving()||doc.hidden||doc.documentElement.dataset.tvtIntro==='active')return;
@@ -64,7 +72,7 @@
   function draw(time){
     if(!ctx||!width||!height)return;
     ctx.clearRect(0,0,width,height);
-    const active=!reduced()&&!saving()&&doc.documentElement.dataset.tvtIntro!=='active';
+    const active=!reduced()&&!saving()&&!quiet()&&doc.documentElement.dataset.tvtIntro!=='active';
     const drift=active?time*.0004:0;
     const coords=nodes.map(n=>({
       x:n.x+Math.sin(drift+n.phase)*9,
