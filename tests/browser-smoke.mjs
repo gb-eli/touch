@@ -51,11 +51,14 @@ try{
       ['oficina','/oficina.html'],['admin','/admin.html']
     ]){
       const page=await ctx.newPage();
+      page.setDefaultTimeout(8500);
+      console.log('SMOKE START',profile.name,pageName);
       const errors=[];
       page.on('pageerror',e=>errors.push(String(e)));
       const response=await page.goto(origin+url,{waitUntil:'domcontentloaded',timeout:20000});
       assert.equal(response.status(),200,pageName+' HTTP status');
       await page.waitForTimeout(350);
+      console.log('SMOKE LOADED',profile.name,pageName);
       const layout=await page.evaluate(()=>({
         viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,
         credit:!!document.querySelector('.agv-dev-credit'),
@@ -73,6 +76,7 @@ try{
         await page.waitForTimeout(180);
       }
       if(pageName==='arcade'){
+        console.log('SMOKE ARCADE',profile.name);
         assert.equal(await page.locator('#arcadeCanvas').count(),1);
         assert.equal(await page.locator('#arcadeSound').count(),1);
         await page.locator('#arcadePlay').click();
@@ -85,6 +89,7 @@ try{
         await page.locator('#arcadeRestart').click();
       }
       if(pageName==='oficina'){
+        console.log('SMOKE OFICINA',profile.name);
         await page.locator('[data-oficina="ttt"]').click();
         assert.equal((await page.locator('#oficinaTitle').textContent()).trim(),'Jogo da velha');
         await page.locator('[data-square="0"]').click();
@@ -117,9 +122,11 @@ try{
         note(profile.name+' Blocos toque e arraste','pass');
       }
       await page.screenshot({path:path.join(out,profile.name+'-'+pageName+'.png'),
-        animations:'disabled',fullPage:true});
+        animations:'disabled',fullPage:false,timeout:12000});
+      console.log('SMOKE SCREENSHOT',profile.name,pageName);
       if(errors.length)report.issues.push({pageName,profile:profile.name,type:'runtime-errors',errors});
       await page.close();
+      console.log('SMOKE COMPLETE',profile.name,pageName);
     }
     await ctx.close();
   }
