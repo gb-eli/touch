@@ -219,12 +219,14 @@
   function draw(){clear();if(game==='snake')drawSnake();else if(game==='pong')drawPong();else if(game==='basket')drawBasket();else drawPool()}
   function finish(info){playing=false;ended=true;message(info+' Toque em Jogar para reiniciar.');$('arcadePlay').textContent='▶ Jogar novamente'}
   function update(dt){if(game==='snake')updateSnake(dt);else if(game==='pong')updatePong(dt);else if(game==='basket')updateBasket(dt);else updatePool(dt)}
+  function schedule(){if(!raf)raf=requestAnimationFrame(frame)}
   function frame(now){
+    raf=0;
     const dt=lastTime?clamp((now-lastTime)/1000,0,.035):0;
     lastTime=now;
     if(playing)update(dt);
     draw();
-    raf=requestAnimationFrame(frame);
+    if(playing)schedule();
   }
   function initialize(){
     playing=false;ended=false;press=null;directionHold=null;
@@ -248,7 +250,7 @@
     if(ended)initialize();
     playing=!playing;
     $('arcadePlay').textContent=playing?'Ⅱ Pausar':'▶ Jogar';
-    if(playing)hideMessage();else message('Pausado. Toque em Jogar para continuar.');
+    if(playing){hideMessage();lastTime=0;schedule()}else{message('Pausado. Toque em Jogar para continuar.');draw()}
     canvas.focus({preventScroll:true});
   }
   function changeMode(next){
@@ -299,7 +301,7 @@
     if(game==='pong')state.manualDirection=direction==='up'?-1:direction==='down'?1:0;
   }
   document.addEventListener('keydown',e=>{
-    if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;
+    if(e.target?.closest?.('button, a, input, textarea, select'))return;
     if(keyMap[e.key]){e.preventDefault();control(keyMap[e.key])}
     if(e.code==='Space'){e.preventDefault();if(game==='basket'&&playing)throwBasket(520,-230);else if(game==='pool'&&playing)shootPool(320,0);else if(!e.repeat)togglePlay()}
   });
@@ -318,5 +320,5 @@
   document.addEventListener('visibilitychange',()=>{lastTime=0;if(document.hidden&&playing){playing=false;$('arcadePlay').textContent='▶ Jogar';message('Jogo pausado ao sair desta página.')}});
   window.addEventListener('pagehide',()=>cancelAnimationFrame(raf),{once:true});
   try{mode3d=localStorage.getItem('tvt:arcade:view:v1')==='3d'}catch{}
-  initialize();changeMode(mode3d?'3d':'2d');raf=requestAnimationFrame(frame);
+  initialize();changeMode(mode3d?'3d':'2d');schedule();
 })();
