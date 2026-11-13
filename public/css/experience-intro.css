@@ -11,7 +11,7 @@
 .tvt-entry button{min-height:50px;touch-action:manipulation;cursor:pointer;font-weight:800}
 .tvt-entry-main{border:0;border-radius:17px;padding:17px 30px;background:#9ceaff;color:#051020;font-size:17px;box-shadow:0 0 30px #58c7f548}
 .tvt-entry-secondary{border:1px solid #6486a6;border-radius:15px;padding:15px 24px;color:#e3f0ff;background:#152538}
-.tvt-entry-main:focus-visible,.tvt-entry-secondary:focus-visible,.tvt-target:focus-visible,.tvt-music-close:focus-visible{outline:4px solid #ffe494;outline-offset:4px}
+.tvt-entry-main:focus-visible,.tvt-entry-secondary:focus-visible,.tvt-cal-target:focus-visible,.tvt-music-close:focus-visible{outline:4px solid #ffe494;outline-offset:4px}
 .tvt-entry-info{margin:26px 0 0;color:#a7bed0;font-size:13px}
 .tvt-entry-progress{height:9px;background:#263e52;border-radius:20px;overflow:hidden;margin:18px 0 22px}
 .tvt-entry-progress-fill{height:100%;background:#88edff;transition:width .15s linear}
