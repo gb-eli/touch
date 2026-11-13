@@ -3,8 +3,8 @@
   const KEY = 'tvt:entry:v2';
   const maxTargets = 4;
   const themes = [
-    {name:'Frutas', items:[['🍎','circle'],['🍉','rectangle'],['🍓','square'],['🍌','rectangle'],['🍊','circle']]},
-    {name:'Esportes', items:[['⚽','circle'],['🏀','circle'],['🏐','circle'],['🎾','circle'],['🏈','rectangle']]},
+    {name:'Ícones', items:[['◆','square'],['✳','circle'],['●','circle'],['✦','square'],['▲','square']]},
+    {name:'Símbolos', items:[['⬡','square'],['✦','square'],['◆','square'],['●','circle'],['▲','square']]},
     {name:'Formas', items:[['●','circle'],['■','square'],['◆','square'],['▰','rectangle'],['▲','square']]}
   ];
   let overlay, gameTimer = 0, current = 0, times = [], startedAt = 0;
@@ -242,7 +242,7 @@
     if (!overlay) return;
     const count=times.length;
     const mean=count?Math.round(times.reduce((a,b)=>a+b,0)/count):0;
-    const total=Math.min(5.2,(performance.now()-startedAt)/1000);
+    const total=Math.max(0,(performance.now()-startedAt)/1000);
     const description=count===maxTargets?'Os quatro pontos responderam nesta verificação.':count?'Você acionou '+count+' de '+maxTargets+' pontos. Pode testar outra vez ou continuar.':'Nenhum ponto foi acionado. Isso não significa, por si só, defeito na tela.';
     const headline=count===maxTargets?'TOQUE<br><span>VALIDADO.</span>':count?'TESTE<br><span>INCOMPLETO.</span>':'NÃO<br><span>REALIZADO.</span>';
     overlay.innerHTML='<div class="tvt-entry-card tvt-entry-result"><p class="tvt-entry-kicker">TOUCH CHECK / RESULTADO</p><h2>'+headline+'</h2><p class="tvt-entry-description">'+description+'</p><div class="tvt-cal-result"><div class="tvt-cal-stat">PONTOS<strong>'+count+' / '+maxTargets+'</strong></div><div class="tvt-cal-stat">REAÇÃO MÉDIA<strong>'+(mean?mean+' ms':'—')+'</strong></div><div class="tvt-cal-stat">DURAÇÃO<strong>'+total.toFixed(1)+' s</strong></div></div><div class="tvt-entry-actions"><button type="button" class="tvt-entry-main" id="tvtFinish">ABRIR TV TOUCH ↗</button><button type="button" class="tvt-entry-secondary" id="tvtReplay">REPETIR</button><button type="button" class="tvt-entry-secondary" id="tvtArcadeNow">ARCADE ↗</button></div><p class="tvt-entry-info">Mede o tempo de reação da pessoa, não a latência do sensor físico.</p></div>';
