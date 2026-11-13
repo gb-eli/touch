@@ -41,7 +41,7 @@
 .tvt-entry-status{position:fixed;left:clamp(24px,5.5vw,108px);bottom:clamp(22px,4vh,58px);font-size:clamp(10px,.75vw,13px);font-weight:850;color:#b8a9c0;letter-spacing:.13em;text-transform:uppercase;max-width:39%;z-index:10;pointer-events:none}
 .tvt-entry-status:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:11px;background:#e8ff53;box-shadow:0 0 15px #ddff51}
 .tvt-cal-stage{position:fixed;inset:0;z-index:9;pointer-events:none}
-.tvt-cal-target{position:fixed;z-index:12;display:grid;place-items:center;transform:translate(-50%,-50%);width:clamp(86px,9vw,148px);height:clamp(86px,9vw,148px);font-weight:950;font-size:clamp(42px,5vw,82px);border:3px solid #ffe6aa;border-radius:18px;color:#110408;background:#ff5a24;box-shadow:0 0 0 12px #ff4f251a,0 0 70px #ff57267d;pointer-events:auto;animation:tvt-target-breathe .9s ease-in-out infinite alternate}
+.tvt-cal-target{position:fixed;z-index:12;display:grid;place-items:center;width:clamp(86px,9vw,148px);height:clamp(86px,9vw,148px);font-weight:950;font-size:clamp(42px,5vw,82px);border:3px solid #ffe6aa;border-radius:18px;color:#110408;background:#ff5a24;box-shadow:0 0 0 12px #ff4f251a,0 0 70px #ff57267d;pointer-events:auto;animation:tvt-target-breathe .9s ease-in-out infinite alternate}
 .tvt-cal-target.tvt-hit{background:#f4ff56;box-shadow:0 0 120px #d6ff35}
 .tvt-cal-top{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(490px,74vw);text-align:center;pointer-events:none;opacity:.24}
 .tvt-cal-top strong{font-size:clamp(18px,2vw,30px)}
