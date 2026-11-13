@@ -299,3 +299,5 @@ body.studio-ui[data-theme=light] #tool-solidos .material-options button:not([ari
 body.studio-ui[data-theme=light] .page-intro h1,body.studio-ui[data-theme=light] .experience-heading h1{color:#20162a}
 body.studio-ui[data-theme=light] .filter-button.active{color:#251007}
 body.studio-ui[data-theme=light] .agv-experience-bar{background:linear-gradient(110deg,#251335,#190c29);color:#fff}
+
+body:has(.arcade-shell) .arcade-scene{border:2px solid #986bb0;box-shadow:0 20px 60px #0008;isolation:isolate}
