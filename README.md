@@ -1,6 +1,16 @@
-# TV TOUCH / Studio 2.2 — AGV
+# TV TOUCH / Studio 2.3 (piloto) — AGV
 
 Portal educacional para os painéis interativos Samsung WA86F de 86 polegadas, Android 14, uso horizontal. O código estático funciona no GitHub Pages sem framework ou workflow personalizado.
+
+## Piloto 2.3 — Piano multitoque
+
+Implementação modular em PR (não homologada em hardware): piano musical Web Audio com 24 notas, controle de som e modo visual, três timbres sintetizados, três desafios de acordes e toques simultâneos identificados por pointerId.
+
+- Atalho na home e cartão no Laboratório; rota `#piano` com bloqueio respeitando `module_laboratorio` e `module_piano` quando presente.
+- JS da experiência carregado somente ao abrir; CSS pequeno e arquivos do piloto incluídos no cache PWA para uso sem rede.
+- Ao trocar de página ou esconder a aplicação, as notas são encerradas; na saída, listeners e AudioContext são liberados.
+- Nenhuma música comercial, login ou dado pessoal; sem alterações no Supabase.
+- Necessários testes físicos na Samsung WA86F antes de publicar na `gh-pages`.
 
 ## Revisão visual Studio 2.2
 

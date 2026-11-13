@@ -1,0 +1,53 @@
+/* TV TOUCH / Piano 2.3 — instrumento tátil para paisagem 16:9 */
+.piano-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(292px,26%);gap:clamp(14px,1.6vw,28px);max-width:1840px;margin-inline:auto;align-items:stretch;color:#f7f6ed}
+.piano-instrument{min-width:0;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(18px,2.1vw,34px);border:1px solid #53655b;border-radius:21px;background:#1e2924;box-shadow:0 12px 26px #030a0730}
+.piano-bar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:clamp(25px,4vh,52px);font-size:clamp(13px,.95vw,18px)}
+.piano-mark{display:flex;align-items:center;gap:11px;color:#cbdad2;font-weight:850;letter-spacing:.08em}
+.piano-led{display:inline-block;width:11px;height:11px;background:#76867a;border-radius:50%}
+.piano-led.active{background:#9cce66;box-shadow:0 0 0 5px #98c95922}
+.piano-now{color:#b8c7bc}.piano-now strong{color:#f9f9ee;font-size:clamp(16px,1.3vw,24px);font-variant-numeric:tabular-nums}
+.piano-key-scroll{min-width:0;overflow-x:auto;overflow-y:hidden;padding:4px 2px 14px;scrollbar-width:thin;scrollbar-color:#7f9987 #22312a}
+.piano-keys{position:relative;display:block;min-width:700px;height:clamp(235px,39vh,450px);min-height:235px;max-height:53vh;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:13px;border:5px solid #131c18;box-shadow:0 13px 0 #0d1511,0 25px 30px #030a0745;background:#151d18}
+.piano-white-row{display:flex;width:100%;height:100%}
+.piano-key{font-family:inherit;appearance:none;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none;cursor:pointer;transition:background-color .09s,transform .09s;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:9px}
+.piano-white{position:relative;flex:1 1 0;min-width:0;height:100%;padding:0 0 clamp(18px,2vw,34px);border:1px solid #b4b8b0;border-bottom:11px solid #c8cfc9;border-radius:0 0 9px 9px;background:#f3f4ed;color:#294036;box-shadow:inset 0 -8px 12px #9ca69a1d}
+.piano-white:first-child{border-radius:8px 0 9px 9px}
+.piano-white:last-child{border-radius:0 8px 9px 9px}
+.piano-white span{font-size:clamp(14px,1.15vw,21px);font-weight:820}
+.piano-white small{font-size:clamp(10px,.75vw,13px);height:1em;color:#667a69}
+.piano-white.playing{background:#a9d77d;border-color:#6c955f;transform:translateY(5px);border-bottom-width:6px}
+.piano-black{position:absolute;top:0;transform:translateX(-50%);height:61%;width:calc(100% / 14 * .64);z-index:2;padding:0 4px clamp(22px,2vw,35px);border:2px solid #46534b;border-bottom:10px solid #070d09;border-radius:0 0 8px 8px;background:#1b2721;color:#f8f8ed;box-shadow:3px 4px 8px #050b0870}
+.piano-black span{font-size:clamp(10px,.84vw,15px);font-weight:800;white-space:nowrap}
+.piano-black.playing{background:#4c9373;border-bottom-width:6px;box-shadow:0 4px 10px #164b3755}
+.piano-key:focus-visible{outline:4px solid #f6a95b;outline-offset:-5px;z-index:4}
+.piano-footer{display:flex;gap:12px 22px;justify-content:space-between;flex-wrap:wrap;margin-top:clamp(26px,4vh,45px);color:#b7c6bb;font-size:clamp(12px,.86vw,16px)}
+.piano-footer strong{color:#e7f1dd}
+.piano-panel{display:flex;flex-direction:column;gap:14px;min-width:0}
+.piano-section{padding:clamp(18px,1.65vw,27px);border:1px solid #455f50;border-radius:18px;background:#26372e}
+.piano-section h2{margin:0 0 18px;font-size:clamp(21px,1.7vw,29px);letter-spacing:-.04em;color:#f9f8ed}
+.piano-timbres{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.piano-timbres button{min-width:0;min-height:54px;padding:5px;border-radius:10px;border:1px solid #708776;background:#34483b;color:#f7f7ee;font-size:clamp(12px,.85vw,16px);font-weight:750}
+.piano-timbres button[aria-pressed=true]{background:#e8e9d8;color:#193727;border-color:#e8e9d8}
+.piano-volume{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:22px 0 10px;font-size:15px;font-weight:780;color:#e0e9d9}
+.piano-volume input{display:block;width:100%;height:37px;accent-color:#9bd170;touch-action:pan-x}
+.piano-subbutton,.piano-next{min-height:54px;border-radius:10px;padding:10px 15px;font-size:clamp(14px,1vw,17px);font-weight:780;cursor:pointer}
+.piano-subbutton{border:1px solid #869587;color:#e7eee4;background:#314238}
+.piano-next{border:1px solid #c0df8c;background:#a3d46e;color:#183324}
+.piano-subbutton:focus-visible,.piano-next:focus-visible,.piano-timbres button:focus-visible{outline:3px solid #faf1b2;outline-offset:3px}
+.piano-audio-status{color:#b8c9bb;font-size:13px;line-height:1.4;margin:13px 0 0}
+.piano-label{font-size:12px;font-weight:900;letter-spacing:.10em;color:#b5d897;margin-bottom:10px}
+.piano-challenge{flex:1;display:flex;flex-direction:column}
+.piano-challenge h2{margin-bottom:8px}
+.piano-challenge>p{color:#d6e0d6;line-height:1.45;font-size:clamp(13px,.96vw,17px);margin:5px 0 13px}
+.piano-goal-list{display:flex;gap:8px;margin:12px 0 16px;flex-wrap:wrap}
+.piano-goal-list span{display:grid;place-items:center;min-width:63px;min-height:50px;padding:7px 13px;color:#183a2c;background:#e4e9d4;border-radius:10px;font-size:16px;font-weight:900}
+.piano-challenge .piano-feedback{color:#c0d6bd;font-weight:650}
+.piano-challenge .piano-feedback.success{color:#d3f79e;font-weight:900}
+.piano-actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:auto}
+.piano-loading{display:grid;place-items:center;min-height:320px;border-radius:16px;border:1px solid #455a4d;background:#1d3026;color:#f3f6ed;padding:25px;font-size:20px}
+body[data-theme=light] .piano-layout{color:#f7f6ed}
+body[data-theme=light] #page-piano .experience-heading{color:var(--text)}
+@media(max-width:1180px){.piano-layout{grid-template-columns:1fr}.piano-panel{display:grid;grid-template-columns:1fr 1fr}.piano-section{min-height:0}.piano-keys{min-height:290px}}
+@media(max-width:760px){.piano-instrument{padding:13px}.piano-layout{gap:12px}.piano-panel{grid-template-columns:1fr}.piano-keys{min-width:660px;min-height:245px}.piano-bar{margin-bottom:18px}.piano-footer{margin-top:25px}.piano-section{padding:17px}.piano-actions{grid-template-columns:1fr 1fr}}
+@media(pointer:coarse){.piano-timbres button,.piano-subbutton,.piano-next{min-height:64px}}
+@media(prefers-reduced-motion:reduce){.piano-key{transition:none}}

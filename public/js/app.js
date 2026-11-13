@@ -31,7 +31,7 @@ const VIDEOS = [
   {id:'industrias360',name:'Indústrias em 360°',provider:'Pesquisa no YouTube',icon:'🏭',tone:'violet',type:'Busca de vídeo 360°',categories:['Tecnologia','Portos'],description:'Busque visitas por fábricas, armazéns e linhas de produção.',url:youtubeSearch('factory warehouse 360 VR tour'),lesson:'Mapeie entradas, processos, saídas, logística e pontos de melhoria operacional.'}
 ];
 const resourcesById = Object.fromEntries([...RESOURCES, ...VIDEOS].map(x => [x.id,x]));
-const pageTitles = {inicio:'Início',biblioteca:'Biblioteca de ferramentas',videos:'Vídeos 360°',laboratorio:'Laboratório interativo',favoritos:'Meus favoritos',guia:'Guia do professor',diagnostico:'Diagnóstico da TV',atividade:'Atividade',cosmos:'Universo 3D',memoria:'Memória',fisica:'Física 2D'};
+const pageTitles = {inicio:'Início',biblioteca:'Biblioteca de ferramentas',videos:'Vídeos 360°',laboratorio:'Laboratório interativo',favoritos:'Meus favoritos',guia:'Guia do professor',diagnostico:'Diagnóstico da TV',atividade:'Atividade',cosmos:'Universo 3D',memoria:'Memória',fisica:'Física 2D',piano:'Piano multitoque'};
 const FAVORITE_KEY = 'tvtouch:favorite-resource-ids:v1';
 let favorites = new Set();
 try {const saved = JSON.parse(localStorage.getItem(FAVORITE_KEY) || '[]'); if (Array.isArray(saved)) favorites = new Set(saved.filter(id => resourcesById[id]));} catch { /* Navegadores com armazenamento restrito */ }
@@ -81,8 +81,8 @@ function openResource(id) {
 function closeMenu() { $('.sidebar').classList.remove('open'); $('#mobileOverlay').hidden=true; $('#menuButton').setAttribute('aria-expanded','false'); }
 function go(page, {hash=true}={}) {
   if (!pageTitles[page]) page='inicio';
-  const controlled=['videos','laboratorio','diagnostico','cosmos','memoria','fisica'];
-  if(controlled.includes(page)&&window.TVTouchGovernance?.available('module_'+page)===false){
+  const controlled=['videos','laboratorio','diagnostico','cosmos','memoria','fisica','piano'];
+  if(controlled.includes(page) && (window.TVTouchGovernance?.available(page==='piano'?'module_laboratorio':'module_'+page)===false || (page==='piano'&&window.TVTouchGovernance?.available('module_piano')===false))){
     const notice=document.getElementById('governanceNotice');
     if(notice){notice.textContent='Atividade desativada pela administração.';notice.hidden=false;setTimeout(()=>{notice.hidden=true;},5000);}
     page='inicio';
@@ -90,7 +90,7 @@ function go(page, {hash=true}={}) {
   if (currentPage !== 'atividade' && page === 'atividade') lastPage=currentPage;
   currentPage=page;
   document.body.classList.toggle('studio-home-active',page==='inicio');
-  if(['cosmos','memoria','fisica'].includes(page))window.dispatchEvent(new CustomEvent('tvt:tool-open',{detail:{id:page}}));
+  if(['cosmos','memoria','fisica','piano'].includes(page))window.dispatchEvent(new CustomEvent('tvt:tool-open',{detail:{id:page}}));
   $$('.page').forEach(e=>e.classList.toggle('active',e.id === `page-${page}`));
   $$('.nav-item').forEach(e=>{ const active = e.dataset.page === page || (page==='atividade'&&e.dataset.page==='laboratorio'); e.classList.toggle('active',active); active?e.setAttribute('aria-current','page'):e.removeAttribute('aria-current'); });
   $('#breadcrumb').textContent=pageTitles[page];
