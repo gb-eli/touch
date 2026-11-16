@@ -12,13 +12,25 @@
   };
   const materialNames={grass:'Grama',dirt:'Terra',sand:'Areia',stone:'Pedra',lava:'Lava',ice:'Gelo',wood:'Madeira',brick:'Tijolo',crystal:'Cristal'};
   const choice=[...document.querySelectorAll('[data-oficina]')];
-  let game='blocks',state=null,controller=null,asyncId=0,started=0,clockTimer=0,thinkingTimer=0,sound=false,audioCtx=null,photoURL=null;
+  let game='blocks',state=null,controller=null,asyncId=0,started=0,clockTimer=0,thinkingTimer=0,sound=false,photoURL=null;
+  const gameExperience=window.AGVGameExperience;
+  let gameSession=null;
   const rand=n=>Math.floor(Math.random()*n);
   const shuffle=a=>{const out=[...a];for(let i=out.length-1;i>0;i--){const j=rand(i+1);[out[i],out[j]]=[out[j],out[i]];}return out};
   const safe=n=>String(n).padStart(2,'0');
   const elapsed=()=>started?Math.floor((Date.now()-started)/1000):0;
   function updateClock(){const t=elapsed();$('oficinaClock').textContent=safe(Math.floor(t/60))+':'+safe(t%60)}
-  function setStatus(message,kind=''){status.textContent=message;status.className='oficina-status'+(kind?' '+kind:'')}
+  function setStatus(message,kind=''){
+    status.textContent=message;
+    status.className='oficina-status agv33-game-status'+(kind?' '+kind:'');
+    status.dataset.feedback=kind==='success'?'win':kind==='warn'?'wrong':'move';
+    if(kind==='success'||kind==='warn'){
+      const event=kind==='success'?'win':'wrong';
+      if(kind==='success')gameSession?.transition(game==='ttt'&&state?.cells?.every(Boolean)&&
+        !tttWin(state.cells)?.line?.length?'draw':'win');
+      gameSession?.emit(event,{target:status,audio:false});
+    }
+  }
   function animate(kind='oficina-flash'){
     board.classList.remove('oficina-flash','oficina-shake');
     void board.offsetWidth;
@@ -26,18 +38,10 @@
   }
   function playTone(hz=360,kind='sine'){
     if(!sound)return;
-    try{
-      const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
-      audioCtx??=new AC();
-      if(audioCtx.state==='suspended')void audioCtx.resume();
-      const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),start=audioCtx.currentTime;
-      osc.type=kind;osc.frequency.setValueAtTime(hz,start);osc.frequency.exponentialRampToValueAtTime(Math.max(80,hz*.65),start+.16);
-      gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(.045,start+.014);gain.gain.exponentialRampToValueAtTime(.0001,start+.24);
-      osc.connect(gain);gain.connect(audioCtx.destination);osc.start(start);osc.stop(start+.25);
-    }catch{}
+    gameExperience?.tone(hz,kind,.19);
   }
-  $('oficinaSound').addEventListener('click',()=>{
-    sound=!sound;
+  $('oficinaSound').addEventListener('click',async()=>{
+    sound=await gameExperience?.setSound(!sound)===true;
     $('oficinaSound').setAttribute('aria-pressed',String(sound));
     $('oficinaSound').textContent=sound?'♫ Efeitos sonoros ligados':'♫ Ativar efeitos sonoros';
     if(sound)playTone(680);
@@ -61,7 +65,12 @@
   }
   function start(next){
     if(!names[next])return;
-    cleanup();game=next;started=Date.now();updateClock();clockTimer=setInterval(updateClock,1000);
+    cleanup();
+    gameSession?.dispose();
+    game=next;
+    gameSession=gameExperience?.createSession('oficina-'+game,{root:status});
+    gameSession?.transition('start');
+    started=Date.now();updateClock();clockTimer=setInterval(updateClock,1000);
     const [category,title,help]=names[next];
     $('oficinaCategory').textContent=category;$('oficinaTitle').textContent=title;$('oficinaHelp').textContent=help;
     choice.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.oficina===game)));
@@ -481,7 +490,7 @@
   }
   // Iniciar sem exigir login nem salvar dados dos alunos.
   window.addEventListener('pagehide',()=>{
-    cleanup();if(photoURL)URL.revokeObjectURL(photoURL);if(audioCtx)audioCtx.close().catch(()=>{});
+    cleanup();gameSession?.dispose();if(photoURL)URL.revokeObjectURL(photoURL);
   },{once:true});
   let initial='blocks';
   try{const g=new URLSearchParams(location.search).get('game');if(names[g])initial=g}catch{}
