@@ -126,6 +126,17 @@
     for(const session of [...sessions])session.dispose();
     if(audio){try{void audio.close()?.catch?.(()=>{})}catch{}audio=null}
   }
+  // Botões disponíveis apenas nas telas de jogos; sem persistir preferências.
+  document.addEventListener('click',async event=>{
+    const button=event.target?.closest?.('[data-agv-game-sound]');
+    if(!button)return;
+    const next=await setSound(!soundEnabled);
+    document.querySelectorAll('[data-agv-game-sound]').forEach(el=>{
+      el.setAttribute('aria-pressed',String(next));
+      el.textContent=next?'♫ Som dos jogos ligado':'♫ Som dos jogos desligado';
+    });
+    if(next)tone(610,'triangle',.13);
+  });
   window.addEventListener('pagehide',stop,{once:true});
   window.AGVGameExperience=Object.freeze({
     events:EVENTS,
