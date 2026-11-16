@@ -397,6 +397,7 @@ const PUZZLE_LEVELS=[
 ];
 let puzzleStarted=false,puzzleLevel=1,puzzleMatched=new Set(),puzzleSelected=null;
 let puzzleMistakes=0,puzzleDone=false,puzzleSuppressClickUntil=0,puzzleHintTimer=0;
+const puzzleSession=window.AGVGameExperience?.createSession('encaixe',{root:document.getElementById('puzzleMessage')});
 const puzzleDrags=new Map();
 const puzzlePiecesForLevel=()=>PUZZLE_LEVELS[puzzleLevel-1].ids.map(id=>PIECES.find(p=>p.id===id));
 function puzzleShuffle(items){const out=[...items];for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
@@ -407,6 +408,7 @@ function cancelPuzzleDrag(id){
 }
 function cancelPuzzleDrags(){for(const id of [...puzzleDrags.keys()])cancelPuzzleDrag(id);}
 function resetPuzzle(){
+  puzzleSession?.transition('reset');puzzleSession?.transition('start');
   cancelPuzzleDrags();clearTimeout(puzzleHintTimer);puzzleHintTimer=0;puzzleStarted=true;puzzleMatched=new Set();puzzleSelected=null;puzzleMistakes=0;puzzleDone=false;
   const pieces=puzzlePiecesForLevel(),hard=puzzleLevel===3;
   $('#puzzleSlots').innerHTML=puzzleShuffle(pieces).map(p=>
@@ -435,6 +437,7 @@ function attemptMatch(pieceId,slotId){
   const slot=$('[data-slot="'+slotId+'"]');
   if(pieceId!==slotId){
     puzzleMistakes++;
+    puzzleSession?.emit('wrong',{target:$('#puzzleMessage')});
     updatePuzzle('Essa peça não corresponde à sombra. Compare o número de lados e tente novamente.');
     return false;
   }
@@ -443,9 +446,10 @@ function attemptMatch(pieceId,slotId){
   puzzleSelected=null;
   if(puzzleMatched.size===puzzlePiecesForLevel().length&&!puzzleDone){
     puzzleDone=true;$('#puzzleNext').disabled=puzzleLevel===3;
+    puzzleSession?.transition('win');puzzleSession?.emit('win',{target:$('#puzzleMessage')});
     updatePuzzle(puzzleLevel===3?'Todas as formas encaixadas. Você concluiu os três níveis.':'Nível completo. Continue para o próximo desafio.');
     window.dispatchEvent(new CustomEvent('tvt:activity-completed',{detail:{id:'encaixe',level:puzzleLevel,errors:puzzleMistakes}}));
-  }else updatePuzzle('Encaixe correto. Continue com outra forma.');
+  }else{puzzleSession?.emit('correct',{target:$('#puzzleMessage')});updatePuzzle('Encaixe correto. Continue com outra forma.');}
   return true;
 }
 function initPuzzle(){
@@ -511,14 +515,18 @@ const QUIZ=[
   {q:'Após observar um incidente sem lesão, o que a equipe deve fazer?',options:['Não comentar, porque ninguém se machucou.','Continuar e apagar os registros.','Comunicar, registrar e apoiar a avaliação do ocorrido para prevenir repetição.'],correct:2,explain:'Registrar incidentes e quase acidentes ajuda a identificar causas e melhorar processos e barreiras de proteção.'}
 ];
 let quizStarted=false,quizIndex=0,quizCorrect=0,quizAnswered=false;
-function resetQuiz(){quizStarted=true;quizIndex=0;quizCorrect=0;renderQuiz();}
+const quizSession=window.AGVGameExperience?.createSession('porto',{root:document.getElementById('quizFeedback')});
+function resetQuiz(){
+  quizSession?.transition('reset');quizSession?.transition('start');
+  quizStarted=true;quizIndex=0;quizCorrect=0;renderQuiz();
+}
 function renderQuiz(){quizAnswered=false;const q=QUIZ[quizIndex];$('#quizStep').textContent=`SITUAÇÃO ${quizIndex+1} DE ${QUIZ.length}`;$('#quizProgressBar').style.width=`${quizIndex/QUIZ.length*100}%`;$('#quizQuestion').textContent=q.q;$('#quizScore').textContent=`Acertos: ${quizCorrect}`;$('#quizFeedback').hidden=true;$('#quizNext').hidden=true;$('#quizAnswers').innerHTML=q.options.map((opt,i)=>`<button type="button" class="quiz-answer" data-answer="${i}">${String.fromCharCode(65+i)}. ${html(opt)}</button>`).join('');}
 function initQuiz(){
-  $('#quizAnswers').addEventListener('click',e=>{const btn=e.target.closest('[data-answer]');if(!btn||quizAnswered)return;quizAnswered=true;const answer=Number(btn.dataset.answer),q=QUIZ[quizIndex],right=answer===q.correct;if(right)quizCorrect++;$$('[data-answer]').forEach(b=>{b.disabled=true;if(Number(b.dataset.answer)===q.correct)b.classList.add('correct');else if(b===btn)b.classList.add('wrong');});$('#quizFeedback').hidden=false;$('#quizFeedback').textContent=`${right?'✓ Resposta correta!':'ⓘ Vamos aprender com a situação.'} ${q.explain}`;$('#quizNext').hidden=false;$('#quizNext').textContent=quizIndex===QUIZ.length-1?'Ver resultado →':'Próxima situação →';$('#quizScore').textContent=`Acertos: ${quizCorrect}`;$('#quizProgressBar').style.width=`${(quizIndex+1)/QUIZ.length*100}%`;});
-  $('#quizNext').onclick=()=>{quizIndex++;if(quizIndex===QUIZ.length){$('#quizStep').textContent='DESAFIO CONCLUÍDO';$('#quizQuestion').textContent=`Você acertou ${quizCorrect} de ${QUIZ.length} situações!`;$('#quizAnswers').innerHTML='<p style="color:#b9cad8">Discuta com a turma quais decisões aumentam a segurança e a eficiência operacional.</p>';$('#quizFeedback').hidden=true;$('#quizNext').textContent='↺ Jogar novamente';$('#quizNext').hidden=false;$('#quizNext').onclick=()=>{resetQuiz();initQuizNextHandler();};}else renderQuiz();};
+  $('#quizAnswers').addEventListener('click',e=>{const btn=e.target.closest('[data-answer]');if(!btn||quizAnswered)return;quizAnswered=true;const answer=Number(btn.dataset.answer),q=QUIZ[quizIndex],right=answer===q.correct;if(right)quizCorrect++;quizSession?.emit(right?'correct':'wrong',{target:$('#quizFeedback')});$('[data-answer]').forEach(b=>{b.disabled=true;if(Number(b.dataset.answer)===q.correct)b.classList.add('correct');else if(b===btn)b.classList.add('wrong');});$('#quizFeedback').hidden=false;$('#quizFeedback').textContent=`${right?'✓ Resposta correta!':'ⓘ Vamos aprender com a situação.'} ${q.explain}`;$('#quizNext').hidden=false;$('#quizNext').textContent=quizIndex===QUIZ.length-1?'Ver resultado →':'Próxima situação →';$('#quizScore').textContent=`Acertos: ${quizCorrect}`;$('#quizProgressBar').style.width=`${(quizIndex+1)/QUIZ.length*100}%`;});
+  $('#quizNext').onclick=()=>{quizIndex++;if(quizIndex===QUIZ.length){quizSession?.transition('win');quizSession?.emit('win',{target:$('#quizStep')});$('#quizStep').textContent='DESAFIO CONCLUÍDO';$('#quizQuestion').textContent=`Você acertou ${quizCorrect} de ${QUIZ.length} situações!`;$('#quizAnswers').innerHTML='<p style="color:#b9cad8">Discuta com a turma quais decisões aumentam a segurança e a eficiência operacional.</p>';$('#quizFeedback').hidden=true;$('#quizNext').textContent='↺ Jogar novamente';$('#quizNext').hidden=false;$('#quizNext').onclick=()=>{resetQuiz();initQuizNextHandler();};}else renderQuiz();};
 }
 function initQuizNextHandler(){ /* substitui o handler reatribuído ao terminar */ $('#quizNext').onclick=()=>{quizIndex++;if(quizIndex===QUIZ.length){finishQuiz();}else renderQuiz();}; }
-function finishQuiz(){ $('#quizStep').textContent='DESAFIO CONCLUÍDO';$('#quizQuestion').textContent=`Você acertou ${quizCorrect} de ${QUIZ.length} situações!`;$('#quizAnswers').innerHTML='<p style="color:#b9cad8">Discuta com a turma quais decisões aumentam a segurança e a eficiência operacional.</p>';$('#quizFeedback').hidden=true;$('#quizNext').textContent='↺ Jogar novamente';$('#quizNext').hidden=false;$('#quizNext').onclick=()=>{resetQuiz();initQuizNextHandler();}; }
+function finishQuiz(){quizSession?.transition('win');quizSession?.emit('win',{target:$('#quizStep')}); $('#quizStep').textContent='DESAFIO CONCLUÍDO';$('#quizQuestion').textContent=`Você acertou ${quizCorrect} de ${QUIZ.length} situações!`;$('#quizAnswers').innerHTML='<p style="color:#b9cad8">Discuta com a turma quais decisões aumentam a segurança e a eficiência operacional.</p>';$('#quizFeedback').hidden=true;$('#quizNext').textContent='↺ Jogar novamente';$('#quizNext').hidden=false;$('#quizNext').onclick=()=>{resetQuiz();initQuizNextHandler();}; }
 
 startShell();initDrawing();initSolids();initPuzzle();initQuiz();
 window.TVTouchNavigation=Object.freeze({
