@@ -53,6 +53,10 @@ try{
     ]){
       const page=await ctx.newPage();
       page.setDefaultTimeout(8500);
+      // Testes de jogos não devem disputar foco com a abertura automática do tutorial.
+      if(pageName==='portal')await page.addInitScript(()=>{
+        try{localStorage.setItem('tvt:tutorial:v2.1','done')}catch{}
+      });
       console.log('SMOKE START',profile.name,pageName);
       const errors=[];
       page.on('pageerror',e=>errors.push(String(e)));
@@ -92,6 +96,12 @@ try{
         if(await skip.isVisible())await skip.click({timeout:3500}).catch(()=>{});
         await page.waitForTimeout(180);
         if(!profile.smokeOnly){
+          // O tutorial segue disponível e testável pelo comando explícito.
+          await page.evaluate(()=>window.TVTouchTutorial.open());
+          assert.equal(await page.locator('#tvtTutorial').evaluate(el=>el.open),true);
+          await page.locator('#tvtTourClose').click();
+          assert.equal(await page.locator('#tvtTutorial').evaluate(el=>el.open),false);
+          note(profile.name+' Tutorial abre e fecha','pass');
           await page.evaluate(()=>window.TVTouchNavigation.go('memoria'));
           const portalSound=page.locator('#page-memoria [data-agv-game-sound]');
           await portalSound.click();
