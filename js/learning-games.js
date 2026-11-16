@@ -15,8 +15,12 @@
     {id:'anel',name:'Anel',glyph:'◉',color:'#42805c'}
   ];
   const memory={selected:[],matched:new Set(),turns:0,locked:false,pending:null};
+  const memorySession=window.AGVGameExperience?.createSession('memory',{root:message});
+  if(message)message.classList.add('agv33-game-status');
   const shuffle=arr=>{for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
   function memoryReset(){
+    memorySession?.transition('reset');memorySession?.transition('start');
+    memorySession?.emit('start',{audio:false,visual:false});
     clearTimeout(memory.pending);memory.pending=null;memory.selected=[];memory.matched.clear();memory.turns=0;memory.locked=false;
     movesOut.textContent='0';matchesOut.innerHTML='0 <small>/ 6 pares</small>';
     message.textContent='Toque em duas cartas para começar.';
@@ -27,6 +31,7 @@
     if(memory.locked||card.classList.contains('is-open')||card.classList.contains('is-matched'))return;
     card.classList.add('is-open');card.setAttribute('aria-pressed','true');card.setAttribute('aria-label','Carta '+([...grid.querySelectorAll('.memory-card')].indexOf(card)+1)+': '+card.querySelector('.memory-name').textContent);
     memory.selected.push(card);
+    memorySession?.emit('select',{target:card,visual:false});
     if(memory.selected.length!==2)return;
     memory.turns++;movesOut.textContent=String(memory.turns);
     const [a,b]=memory.selected;memory.locked=true;
@@ -35,9 +40,14 @@
       memory.selected=[];memory.locked=false;
       matchesOut.innerHTML=`${memory.matched.size} <small>/ 6 pares</small>`;
       message.textContent=memory.matched.size===6?`Concluído em ${memory.turns} jogadas. Inicie outra rodada.`:'Par encontrado. Continue.';
+      if(memory.matched.size===6){
+        memorySession?.transition('win');
+        memorySession?.emit('win',{target:message});
+      }else memorySession?.emit('correct',{target:message});
       if(memory.matched.size===6)window.dispatchEvent(new CustomEvent('tvt:activity-completed',{detail:{id:'memoria',moves:memory.turns}}));
     }else{
       message.textContent='Não combinam. Observe e tente novamente.';
+      memorySession?.emit('wrong',{target:message});
       memory.pending=setTimeout(()=>{
         for(const el of memory.selected){el.classList.remove('is-open');el.setAttribute('aria-pressed','false');el.setAttribute('aria-label','Carta '+([...grid.querySelectorAll('.memory-card')].indexOf(el)+1)+' oculta; toque para revelar');}
         memory.selected=[];memory.locked=false;memory.pending=null;
