@@ -18,7 +18,7 @@ test('Identidade e crédito permanente nas três entradas',()=>{
 });
 test('Marca AGV TOUCH e qualidade Arcade preservadas',()=>{
  assert.match(read('public/index.html'),/<h1 id="homeTitle">AGV <span>TOUCH\.<\/span>/);
- assert.match(read('public/arcade.html'),/js\/arcade\.js\?v=3\.0\.0/);
+ assert.match(read('public/arcade.html'),/js\/arcade\.js\?v=3\.3\.0/);
  assert.match(read('public/arcade.html'),/id="arcadeCanvas"/);
 });
 test('Som no botão Começar agora e ausência de vídeo',()=>{
