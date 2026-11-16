@@ -14,28 +14,15 @@
   };
   let game='snake',state,playing=false,ended=false,mode3d=false,lastTime=0,raf=0,press=null,directionHold=null;
   let qualityFactor=1,slowFrames=0,fastFrames=0;
-  let soundEnabled=false,soundContext=null,lastFxAt=0;
+  let soundEnabled=false;
+  const gameExperience=window.AGVGameExperience;
+  const gameSession=gameExperience?.createSession('arcade',{root:document.getElementById('arcadeStage')});
   const sparks=[];
   const motionReduced=()=>window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches===true||
     document.body.classList.contains('agv-quiet-mode');
   function effect(type){
-    if(!soundEnabled||!soundContext)return;
-    const now=performance.now();
-    if(now-lastFxAt<68&&type!=='end')return;
-    lastFxAt=now;
-    try{
-      const audio=soundContext;if(audio.state!=='running')return;
-      const notes={hit:[320,.065],score:[780,.19],end:[580,.35],start:[450,.1]};
-      const [frequency,duration]=notes[type]||notes.hit;
-      const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime;
-      o.type=type==='end'?'triangle':'sine';
-      o.frequency.setValueAtTime(frequency,t);
-      o.frequency.exponentialRampToValueAtTime(frequency*(type==='end'?1.32:.72),t+duration);
-      g.gain.setValueAtTime(.0001,t);
-      g.gain.exponentialRampToValueAtTime(.033,t+.015);
-      g.gain.exponentialRampToValueAtTime(.0001,t+duration);
-      o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+duration+.015);
-    }catch{}
+    const event=type==='end'?'win':type;
+    gameSession?.emit(event,{target:type==='end'?$('arcadeMessage'):null,visual:type==='end'});
   }
   function burst(x,y,color='#ff9b68',amount=10){
     if(motionReduced()||navigator.connection?.saveData===true)return;
@@ -64,17 +51,10 @@
   }
   async function toggleSound(){
     const button=$('arcadeSound');
-    if(soundEnabled){
-      soundEnabled=false;button.setAttribute('aria-pressed','false');
-      button.textContent='♫ Som desligado';return;
-    }
-    const Audio=window.AudioContext||window.webkitAudioContext;
-    if(!Audio){button.textContent='Som indisponível';button.disabled=true;return}
-    try{
-      soundContext??=new Audio();await soundContext.resume();
-      soundEnabled=true;button.setAttribute('aria-pressed','true');
-      button.textContent='♫ Som ligado';effect('start');
-    }catch{soundEnabled=false;button.textContent='Som indisponível'}
+    soundEnabled=await gameExperience?.setSound(!soundEnabled)===true;
+    button.setAttribute('aria-pressed',String(soundEnabled));
+    button.textContent=soundEnabled?'♫ Som ligado':'♫ Som desligado';
+    if(soundEnabled)effect('start');
   }
 
   const rand=(min,max)=>min+Math.random()*(max-min);
@@ -303,7 +283,15 @@
     text('ARRASTE DA BRANCA NA DIREÇÃO DA TACADA',480,31,16,'#c0dfef');
   }
   function draw(){clear();if(game==='snake')drawSnake();else if(game==='pong')drawPong();else if(game==='basket')drawBasket();else drawPool();paintSparks()}
-  function finish(info){playing=false;ended=true;burst(W/2,H/2,'#ff986a',22);effect('end');message(info+' Toque em Jogar para reiniciar.');$('arcadePlay').textContent='▶ Jogar novamente'}
+  function finish(info){
+    playing=false;ended=true;
+    const lost=info.includes('A CPU venceu');
+    gameSession?.transition(lost?'lose':'win');
+    burst(W/2,H/2,'#ff986a',22);
+    message(info+' Toque em Jogar para reiniciar.');
+    gameSession?.emit(lost?'lose':'win',{target:$('arcadeMessage')});
+    $('arcadePlay').textContent='▶ Jogar novamente';
+  }
   function update(dt){if(game==='snake')updateSnake(dt);else if(game==='pong')updatePong(dt);else if(game==='basket')updateBasket(dt);else updatePool(dt)}
   function schedule(){if(!raf)raf=requestAnimationFrame(frame)}
   function frame(now){
@@ -325,6 +313,7 @@
     if(playing||sparks.length)schedule();
   }
   function initialize(){
+    gameSession?.transition('reset');
     playing=false;ended=false;press=null;directionHold=null;sparks.length=0;
     if(game==='snake')initSnake();else if(game==='pong')initPong();else if(game==='basket')initBasket();else initPool();
     const cfg=configuration[game];
@@ -345,8 +334,12 @@
   function togglePlay(){
     if(ended)initialize();
     playing=!playing;
+    const action=playing?(gameSession?.state==='paused'?'resume':'start'):'pause';
+    gameSession?.transition(action);
+    gameSession?.emit(action,{audio:action!=='start'});
     $('arcadePlay').textContent=playing?'Ⅱ Pausar':'▶ Jogar';
-    if(playing){hideMessage();lastTime=0;schedule()}else{message('Pausado. Toque em Jogar para continuar.');draw()}
+    if(playing){hideMessage();lastTime=0;schedule()}
+    else{message('Pausado. Toque em Jogar para continuar.');draw()}
     canvas.focus({preventScroll:true});
   }
   function changeMode(next){
@@ -418,7 +411,7 @@
   window.addEventListener('resize',resizeCanvas,{passive:true});
   document.addEventListener('fullscreenchange',()=>requestAnimationFrame(resizeCanvas));
   if(typeof ResizeObserver!=='undefined')new ResizeObserver(resizeCanvas).observe(canvas);
-  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);soundEnabled=false;void soundContext?.close()?.catch(()=>{});},{once:true});
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);soundEnabled=false;gameSession?.dispose();},{once:true});
   try{mode3d=localStorage.getItem('tvt:arcade:view:v1')==='3d'}catch{}
   resizeCanvas();initialize();changeMode(mode3d?'3d':'2d');
   try{

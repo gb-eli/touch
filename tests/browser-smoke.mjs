@@ -79,6 +79,10 @@ try{
       });
       assert.equal(layout.credit,true,pageName+' credit');
       assert.equal(layout.stylesheet,true,pageName+' design system');
+      if(pageName!=='admin'){
+        assert.equal(await page.evaluate(()=>typeof window.AGVGameExperience?.createSession),'function',
+          pageName+' shared game engine');
+      }
       const overflow=Math.max(0,layout.scrollWidth-layout.viewport);
       if(overflow>16)report.issues.push({pageName,profile:profile.name,
         type:'horizontal-overflow',pixels:overflow});
@@ -87,6 +91,29 @@ try{
         const skip=page.locator('#tvtEntrySkip');
         if(await skip.isVisible())await skip.click({timeout:3500}).catch(()=>{});
         await page.waitForTimeout(180);
+        if(!profile.smokeOnly){
+          await page.evaluate(()=>window.TVTouchNavigation.go('memoria'));
+          const portalSound=page.locator('#page-memoria [data-agv-game-sound]');
+          await portalSound.click();
+          assert.equal(await portalSound.getAttribute('aria-pressed'),'true');
+          const pair=await page.locator('#memoryGrid [data-pair]').first().getAttribute('data-pair');
+          await page.locator('#memoryGrid [data-pair="'+pair+'"]').nth(0).click();
+          await page.locator('#memoryGrid [data-pair="'+pair+'"]').nth(1).click();
+          assert.match(await page.locator('#memoryMessage').textContent(),/Par encontrado|Concluído/);
+          note(profile.name+' Memória: som e par correto','pass');
+          await page.evaluate(()=>window.TVTouchNavigation.tool('encaixe'));
+          const piece=await page.locator('#puzzlePieces [data-piece]').first().getAttribute('data-piece');
+          await page.locator('#puzzlePieces [data-piece="'+piece+'"]').click();
+          await page.locator('#puzzleSlots [data-slot="'+piece+'"]').click();
+          assert.match(await page.locator('#puzzleMessage').textContent(),/Encaixe correto|Nível completo/);
+          note(profile.name+' Encaixe: resposta correta','pass');
+          await page.evaluate(()=>window.TVTouchNavigation.tool('porto'));
+          await page.locator('#quizAnswers [data-answer="1"]').click();
+          assert.match(await page.locator('#quizFeedback').textContent(),/Resposta correta/);
+
+          note(profile.name+' Porto: feedback pedagógico','pass');
+          await page.evaluate(()=>window.TVTouchNavigation.go('inicio'));
+        }
       }
       if(pageName==='arcade'&&!profile.smokeOnly){
         console.log('SMOKE ARCADE',profile.name);
@@ -99,10 +126,13 @@ try{
         await page.locator('#arcadeSound').click();
         const sound=await page.locator('#arcadeSound').getAttribute('aria-pressed');
         note(profile.name+' Arcade sound UI','pass','aria-pressed='+sound);
+        assert.equal(await page.evaluate(()=>window.AGVGameExperience.soundEnabled()),true);
         await page.locator('#arcadeRestart').click();
       }
       if(pageName==='oficina'&&!profile.smokeOnly){
         console.log('SMOKE OFICINA',profile.name);
+        await page.locator('#oficinaSound').click();
+        assert.equal(await page.evaluate(()=>window.AGVGameExperience.soundEnabled()),true);
         await page.locator('[data-oficina="ttt"]').click();
         assert.equal((await page.locator('#oficinaTitle').textContent()).trim(),'Jogo da velha');
         await page.locator('[data-square="0"]').click();

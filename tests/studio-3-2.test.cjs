@@ -58,8 +58,10 @@ test('Arcade tem áudio próprio opcional ativado por clique, sem áudio de terc
   assert.match(html,/id="arcadeSound" aria-pressed="false"/);
   assert.match(js,/\$\('arcadeSound'\)\?\.addEventListener\('click',toggleSound\)/);
   assert.match(js,/soundEnabled=false/);
-  assert.match(js,/new Audio\(\)/);
-  assert.match(js,/audio\.createOscillator\(\)/);
+  const engine=read('public/js/game-experience.js');
+  assert.match(js,/gameExperience\?\.setSound/);
+  assert.match(engine,/new AC\(\)/);
+  assert.match(engine,/audio\.createOscillator\(\)/);
   assert.doesNotMatch(js,/youtube\.com|<iframe|Dolby|unfold/i);
 });
 test('Partículas do Arcade são limitadas e não retiram o suporte 4K',()=>{
@@ -80,7 +82,7 @@ test('Jogo da velha e damas animam apenas a jogada recente',()=>{
 });
 test('Cache do PWA atualiza sem incluir controle administrativo no pré-cache',()=>{
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.2\.0-design-system/);
+  assert.match(sw,/tvtouch-studio-v3\.3\.0-game-experience/);
   for(const asset of ['agv-design-system.css','agv-touch-feedback.js','arcade.js','oficina.js'])
     assert.ok(sw.includes(asset));
   assert.doesNotMatch(sw,/"\.\/admin\.html"/);
