@@ -109,7 +109,19 @@ try{
           note(profile.name+' Encaixe: resposta correta','pass');
           await page.evaluate(()=>window.TVTouchNavigation.tool('porto'));
           await page.locator('#quizAnswers [data-answer="1"]').click();
-          assert.match(await page.locator('#quizFeedback').textContent(),/Resposta correta/);
+          const portoFeedback=await page.locator('#quizFeedback').textContent();
+          const portoDiagnostic=await page.evaluate(()=>({
+            activeTool:window.TVTouchNavigation?.activeTool?.(),
+            feedbackHidden:document.getElementById('quizFeedback')?.hidden,
+            feedbackHTML:document.getElementById('quizFeedback')?.innerHTML,
+            question:document.getElementById('quizQuestion')?.textContent,
+            answers:[...document.querySelectorAll('#quizAnswers [data-answer]')].map(el=>({
+              id:el.dataset.answer,disabled:el.disabled,classes:el.className
+            })),
+            page:window.TVTouchNavigation?.current?.()
+          }));
+          console.log('PORTO DIAGNOSTIC',profile.name,JSON.stringify({portoDiagnostic,errors}));
+          assert.match(portoFeedback,/Resposta correta/);
           note(profile.name+' Porto: feedback pedagógico','pass');
           await page.evaluate(()=>window.TVTouchNavigation.go('inicio'));
         }
