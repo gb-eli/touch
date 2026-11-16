@@ -137,6 +137,7 @@ test('A integração compartilha o motor entre Arcade, Oficina, Memória, Encaix
   assert.match(app,/createSession\('encaixe'/);
   assert.match(app,/createSession\('porto'/);
   assert.match(app,/quizSession\?\.emit\(right\?'correct':'wrong'/);
+  assert.match(app,/\$\$\('\[data-answer\]'\)\.forEach/);
 });
 test('Páginas de jogos carregam motor antes dos próprios módulos',()=>{
   for(const [page,app] of [['index','js/app.js'],['arcade','js/arcade.js'],['oficina','js/oficina.js']]){
