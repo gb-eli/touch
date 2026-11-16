@@ -50,3 +50,27 @@
   .agv33-game-status{transition:none}
 }
 .agv-quiet-mode .agv33-effect{display:none!important}
+
+.agv33-sound-toggle{
+  min-height:48px;
+  padding:10px 15px;
+  border:1px solid #b46bdb;
+  border-radius:10px;
+  background:linear-gradient(135deg,#2e1b42,#18102c);
+  color:#fff8ff;
+  font:800 clamp(12px,.9vw,16px)/1.25 system-ui,sans-serif;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.agv33-sound-toggle[aria-pressed="true"]{
+  background:linear-gradient(130deg,#ffad79,#ff714b);
+  border-color:#ffc7a8;
+  color:#27101b;
+}
+.agv33-sound-toggle:focus-visible{
+  outline:3px solid #ffe184;outline-offset:3px;
+}
+@media(max-width:680px){
+  .agv33-sound-toggle{min-height:46px;padding:8px 12px}
+  .activity-bar .agv33-sound-toggle{order:3;flex-basis:100%}
+}
