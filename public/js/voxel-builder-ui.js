@@ -18,12 +18,12 @@
   root.className='voxel-workspace';
   root.innerHTML=[
    '<div class="voxel-toolbar" role="group" aria-label="Controles de construção">',
-    '<fieldset><legend>Editar</legend>',
+    '<fieldset class="voxel-edit-mode"><legend>Editar</legend>',
      '<button type="button" data-voxel-mode="place" aria-pressed="true">＋ Colocar</button>',
      '<button type="button" data-voxel-mode="move" aria-pressed="false">↔ Mover</button>',
      '<button type="button" data-voxel-mode="erase" aria-pressed="false">− Remover</button>',
      '</fieldset>',
-    '<fieldset><legend>Projeto</legend>',
+    '<fieldset class="voxel-project-actions"><legend>Projeto</legend>',
      '<button type="button" data-voxel-action="undo">↶ Desfazer</button>',
      '<button type="button" data-voxel-action="redo">↷ Refazer</button>',
      '<button type="button" data-voxel-action="save">Salvar aqui</button>',
@@ -41,6 +41,7 @@
     '"></span>'+escape(m.label)+'</button>'),
    '</div>'
   ].join('');
+  tools.classList.add('voxel-active');board.classList.add('voxel-active');
   tools.appendChild(root);
   const scene=document.createElement('div');scene.className='voxel-scene';scene.dataset.mode='place';
   scene.innerHTML=[
@@ -181,7 +182,7 @@
   };
   missionChanged('free');renderStatus();
   announce('Construção 3D pronta. Selecione um material e toque na grade.','success');
-  return{dispose(){disposed=true;signal()}};
+  return{dispose(){disposed=true;signal();tools.classList.remove('voxel-active');board.classList.remove('voxel-active')}};
  }
  window.AGVVoxelBuilder=Object.freeze({mount});
 })();
