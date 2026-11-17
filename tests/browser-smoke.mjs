@@ -137,7 +137,26 @@ try{
         const sound=await page.locator('#arcadeSound').getAttribute('aria-pressed');
         note(profile.name+' Arcade sound UI','pass','aria-pressed='+sound);
         assert.equal(await page.evaluate(()=>window.AGVGameExperience.soundEnabled()),true);
+        assert.equal(await page.evaluate(()=>typeof window.AGVArcadePhysics?.poolStep),'function');
         await page.locator('#arcadeRestart').click();
+        await page.locator('[data-game="basket"]').click();
+        await page.locator('#arcadePlay').click();
+        const arcadeCanvas=page.locator('#arcadeCanvas');
+        await arcadeCanvas.scrollIntoViewIfNeeded();
+        const court=await arcadeCanvas.boundingBox();
+        assert.ok(court,'basket canvas rect');
+        const fromX=court.x+court.width*210/960,fromY=court.y+court.height*440/540;
+        await page.mouse.move(fromX,fromY);
+        await page.mouse.down();
+        await page.mouse.move(fromX+court.width*330/960,fromY-court.height*360/540,{steps:12});
+        await page.mouse.up();
+        assert.match(await page.locator('#arcadeScore').textContent(),/\/ 1/,
+          'basket throw registered');
+        note(profile.name+' Basquete: drag e arremesso','pass');
+        await page.locator('[data-game="pool"]').click();
+        await page.locator('#arcadePlay').click();
+        assert.equal(await page.evaluate(()=>window.AGVArcadePhysics.TABLE.pockets.length),6);
+        note(profile.name+' Sinuca: motor de caçapas carregado','pass');
       }
       if(pageName==='oficina'&&!profile.smokeOnly){
         console.log('SMOKE OFICINA',profile.name);
@@ -172,6 +191,9 @@ try{
         await page.mouse.up();
         assert.equal(await page.locator('[data-column="1"] .oficina-cube').count(),1,
           'bloco movido de coluna no mouse');
+        assert.equal(await page.locator('[data-column="1"] .oficina-cube.landed').count(),1,
+          'somente último bloco recebe animação');
+        note(profile.name+' Construção: animação localizada','pass');
         note(profile.name+' Blocos toque e arraste','pass');
       }
       if(profile.smokeOnly&&pageName==='arcade'){
@@ -180,6 +202,7 @@ try{
           return {pixels:c.width*c.height,width:c.width,height:c.height,
             cssWidth:Math.round(r.width),cssHeight:Math.round(r.height)};
         });
+        assert.ok(buffer.pixels<=3840*2160,'Canvas deve respeitar limite de 4K');
         note('tv-3840 Arcade canvas buffer','pass',JSON.stringify(buffer));
       }
       const large=profile.smokeOnly===true;
