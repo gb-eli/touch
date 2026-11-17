@@ -4,6 +4,8 @@
   if(!canvas)return;
   const ctx=canvas.getContext('2d');
   const W=960,H=540,TAU=Math.PI*2;
+  const physics=window.AGVArcadePhysics;
+  if(!physics)throw new Error('Motor de física do Arcade indisponível');
   const MAX_PIXELS=3840*2160,MAX_DPR=4;
   const $=id=>document.getElementById(id);
   const configuration={
@@ -187,22 +189,48 @@
     block(50,state.leftY,27,112,'#75ecff');block(883,state.rightY,27,112,'#ffb46c');ball(state.ball.x,state.ball.y,13,'#fff9bb');
     text('VOCÊ',110,37,17,'#81e9ff');text('CPU',846,37,17,'#ffb46c');
   }
-  function initBasket(){state={x:210,y:440,vx:0,vy:0,shots:0,points:0,air:false,scored:false,reset:0,aim:null};updateScore('0 / 0')}
-  function resetBasketBall(){state.x=210;state.y=440;state.vx=0;state.vy=0;state.air=false;state.scored=false;state.reset=0;state.aim=null}
+  function initBasket(){
+    state={x:210,y:440,vx:0,vy:0,shots:0,points:0,air:false,scored:false,
+      reset:0,aim:null,lastRimAt:0,carry:0};
+    updateScore('0 / 0');
+  }
+  function resetBasketBall(){
+    Object.assign(state,{x:210,y:440,vx:0,vy:0,air:false,scored:false,reset:0,aim:null,carry:0});
+  }
   function throwBasket(dx,dy){
-    if(state.air)return;
-    state.vx=clamp(dx*1.0,120,900);state.vy=clamp(dy*2.3,-920,-150);
-    state.air=true;state.shots++;updateScore(state.points+' / '+state.shots);
+    if(state.air||Math.hypot(dx,dy)<18)return;
+    const shot=physics.basketLaunch(dx,dy);
+    state.vx=shot.vx;state.vy=shot.vy;
+    state.air=true;state.shots++;
+    updateScore(state.points+' / '+state.shots);
+    gameSession?.emit('move',{visual:false});
   }
   function updateBasket(dt){
-    if(state.reset>0){state.reset-=dt;if(state.reset<=0)resetBasketBall();return}
     if(!state.air)return;
-    const previousY=state.y;
-    state.vy+=650*dt;state.x+=state.vx*dt;state.y+=state.vy*dt;
-    if(!state.scored&&state.vy>0&&previousY<237&&state.y>=237&&state.x>708&&state.x<786){
-      state.scored=true;state.points++;burst(745,236,'#ffb968',18);updateScore(state.points+' / '+state.shots);state.reset=1.1;
+    // Passos curtos preservam colisões no aro em displays de alta taxa.
+    const step=1/120;
+    state.carry=Math.min(.09,state.carry+dt);
+    for(let i=0;state.carry>=step&&i<8;i++){
+      state.carry-=step;
+      const result=physics.basketStep(state,step);
+      Object.assign(state,result.ball);
+      if(result.rim&&performance.now()-state.lastRimAt>100){
+        state.lastRimAt=performance.now();effect('hit');
+        burst(state.x,state.y,'#ff9466',5);
+      }
+      if(result.scored&&!state.scored){
+        state.scored=true;state.points++;
+        burst(state.x,state.y,'#9cffa8',18);
+        updateScore(state.points+' / '+state.shots);
+        state.reset=.9;
+      }
+      if(result.floor&&!state.reset)state.reset=.6;
+      if((state.x>1020||state.x<-60)&&!state.reset)state.reset=.5;
     }
-    if(state.y>488||state.x>990||state.x<-30)state.reset=.7;
+    if(state.reset>0){
+      state.reset-=dt;
+      if(state.reset<=0)resetBasketBall();
+    }
   }
   function drawBasket(){
     drawField('#10253a');
@@ -210,19 +238,34 @@
     ctx.strokeStyle='#7493ae55';ctx.lineWidth=5;ctx.beginPath();ctx.arc(450,490,320,Math.PI,TAU);ctx.stroke();
     ctx.fillStyle='#dce9ff';ctx.fillRect(808,126,14,173);
     ctx.fillStyle='#c3d6e7';ctx.fillRect(804,125,80,108);ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.strokeRect(804,125,80,108);
-    ctx.strokeStyle='#fc785e';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(695,235);ctx.lineTo(799,235);ctx.stroke();
+    // Aro aberto no centro: a bola atravessa a cesta de verdade.
+    ctx.strokeStyle='#fc785e';ctx.lineWidth=8;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(691,237);ctx.lineTo(700,237);
+    ctx.moveTo(794,237);ctx.lineTo(803,237);ctx.stroke();
     ctx.strokeStyle='#b7cde2';ctx.lineWidth=2;
     for(let i=0;i<6;i++){const x=700+i*19;ctx.beginPath();ctx.moveTo(x,240);ctx.lineTo(744+(i-2.5)*9,292);ctx.stroke();}
     ctx.beginPath();ctx.moveTo(701,264);ctx.lineTo(791,264);ctx.stroke();
-    if(state.aim&&!state.air){
-      ctx.setLineDash([9,9]);ctx.strokeStyle='#a5eaff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(state.x,state.y);ctx.lineTo(state.aim.x,state.aim.y);ctx.stroke();ctx.setLineDash([]);
+    if(state.aim&&!state.air&&press){
+      const shot=physics.basketLaunch(state.aim.x-press.x,state.aim.y-press.y);
+      const forecast=physics.basketPreview(state.x,state.y,shot.vx,shot.vy);
+      ctx.fillStyle=forecast.scored?'#93ffbc':'#7fe9ff';
+      for(let i=6;i<forecast.points.length;i+=6){
+        const p=forecast.points[i];
+        ctx.globalAlpha=.4+.55*i/forecast.points.length;
+        ctx.beginPath();ctx.arc(p.x,p.y,Math.min(5,1.5+i/9),0,TAU);ctx.fill();
+      }
+      ctx.globalAlpha=1;
+      const power=Math.min(1,Math.hypot(state.aim.x-press.x,state.aim.y-press.y)/560);
+      ctx.fillStyle='#21172e';ctx.fillRect(52,478,224,14);
+      ctx.fillStyle=forecast.scored?'#99ffae':'#ff9868';ctx.fillRect(54,480,220*power,10);
+      text('FORÇA',87,467,13,'#fff1f8');
     }
     ball(state.x,state.y,24,'#f88c37');
     ctx.strokeStyle='#622a12';ctx.lineWidth=2;ctx.beginPath();ctx.arc(state.x,state.y,23,Math.PI*.5,Math.PI*1.5);ctx.stroke();ctx.beginPath();ctx.moveTo(state.x-22,state.y);ctx.lineTo(state.x+22,state.y);ctx.stroke();
-    text('ARRASTE DA BOLA ATÉ A CESTA',315,57,17,'#bde6ff');
+    text('ARRASTE A BOLA EM DIREÇÃO À CESTA',315,57,17,'#bde6ff');
     text('ESPAÇO = ARREMESSO DE EXEMPLO',315,87,14,'#8fbdd7');
   }
-  const pockets=[{x:98,y:82},{x:480,y:82},{x:862,y:82},{x:98,y:458},{x:480,y:458},{x:862,y:458}];
+  const pockets=physics.TABLE.pockets;
   function initPool(){
     const balls=[{x:292,y:270,vx:0,vy:0,r:12,color:'#fff',cue:true,pocketed:false}];
     const colors=['#ffd54d','#54ceff','#fc6f76','#9c83fb','#ffb67d','#4bd6a0','#f7a4ee','#f7f7f7','#88c6ff','#f3ca72'];
@@ -243,29 +286,19 @@
     state.shots++;
   }
   function updatePool(dt){
-    const active=state.balls.filter(b=>!b.pocketed);
-    const friction=Math.pow(.984,dt*60);
-    for(const b of active){
-      b.x+=b.vx*dt;b.y+=b.vy*dt;b.vx*=friction;b.vy*=friction;
-      if(Math.abs(b.vx)<5)b.vx=0;
-      if(Math.abs(b.vy)<5)b.vy=0;
-      if(pockets.some(p=>dist(b,p)<26)){
-        b.pocketed=true;b.vx=b.vy=0;if(!b.cue){burst(b.x,b.y,b.color,9);state.pocketed++;updateScore(state.pocketed);if(state.pocketed===10)finish('Mesa limpa! Todas as bolas foram encaçapadas.')}continue;
-      }
-      if(b.x<113||b.x>847){b.x=clamp(b.x,113,847);b.vx*=-.86}
-      if(b.y<97||b.y>443){b.y=clamp(b.y,97,443);b.vy*=-.86}
+    const outcome=physics.poolStep(state.balls,dt);
+    for(const ball of outcome.pocketed){
+      burst(ball.x,ball.y,ball.color,9);
+      state.pocketed++;
+      updateScore(state.pocketed);
     }
-    for(let i=0;i<active.length;i++)for(let j=i+1;j<active.length;j++){
-      const a=active[i],b=active[j];if(a.pocketed||b.pocketed)continue;
-      const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||.00001;
-      if(d>=a.r+b.r)continue;
-      const nx=dx/d,ny=dy/d,overlap=(a.r+b.r-d)/2;
-      a.x-=nx*overlap;a.y-=ny*overlap;b.x+=nx*overlap;b.y+=ny*overlap;
-      const velocity=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
-      if(velocity<0){const impulse=velocity*.97;a.vx+=impulse*nx;a.vy+=impulse*ny;b.vx-=impulse*nx;b.vy-=impulse*ny}
+    if(outcome.collisions)effect('hit');
+    if(outcome.bounces&&state.shots)gameSession?.emit('hit',{audio:false,visual:false});
+    if(state.pocketed===10){finish('Mesa limpa! Todas as bolas foram encaçapadas.');return}
+    if(state.balls[0].pocketed&&!isMoving()){
+      const placed=physics.cueRespawn(state.balls);
+      if(placed)gameSession?.emit('reset',{audio:false,visual:false});
     }
-    const cue=state.balls[0];
-    if(cue.pocketed&&!isMoving()){cue.x=290;cue.y=270;cue.pocketed=false}
   }
   function drawPool(){
     drawField('#070f1c');
@@ -276,11 +309,23 @@
     ctx.strokeStyle='#ffffff23';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(280,84);ctx.lineTo(280,456);ctx.stroke();
     const cue=state.balls[0];
     if(state.aim&&!isMoving()&&!cue.pocketed){
-      ctx.setLineDash([10,9]);ctx.strokeStyle='#fff5bf';ctx.lineWidth=3;
-      ctx.beginPath();ctx.moveTo(cue.x,cue.y);ctx.lineTo(state.aim.x,state.aim.y);ctx.stroke();ctx.setLineDash([]);
+      const guide=physics.poolGuide(cue,state.aim,state.balls);
+      if(guide){
+        ctx.setLineDash([9,8]);ctx.strokeStyle=guide.hit?'#adffa7':'#fff1b0';
+        ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cue.x,cue.y);
+        ctx.lineTo(guide.x,guide.y);ctx.stroke();ctx.setLineDash([]);
+        ctx.strokeStyle='#f9dab3';ctx.lineWidth=8;ctx.lineCap='round';
+        const dx=state.aim.x-cue.x,dy=state.aim.y-cue.y,len=Math.hypot(dx,dy)||1;
+        const ux=dx/len,uy=dy/len;
+        ctx.beginPath();ctx.moveTo(cue.x-ux*32,cue.y-uy*32);
+        ctx.lineTo(cue.x-ux*(95+55*guide.power),cue.y-uy*(95+55*guide.power));ctx.stroke();
+        ctx.fillStyle='#1d192a';ctx.fillRect(340,493,280,12);
+        ctx.fillStyle='#ff9a62';ctx.fillRect(342,495,276*guide.power,8);
+        text('FORÇA DA TACADA',480,521,14,'#e5dcf9');
+      }
     }
     for(const b of state.balls)if(!b.pocketed){ball(b.x,b.y,b.r,b.color);if(b.cue){ctx.strokeStyle='#8492a3';ctx.beginPath();ctx.arc(b.x,b.y,3,0,TAU);ctx.stroke()}}
-    text('ARRASTE DA BRANCA NA DIREÇÃO DA TACADA',480,31,16,'#c0dfef');
+    text('ARRASTE A BOLA BRANCA PARA MIRAR E TACAR',480,31,16,'#c0dfef');
   }
   function draw(){clear();if(game==='snake')drawSnake();else if(game==='pong')drawPong();else if(game==='basket')drawBasket();else drawPool();paintSparks()}
   function finish(info){

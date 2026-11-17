@@ -109,14 +109,14 @@
   // === MATERIAIS E CONSTRUÇÃO ===
   const goals=[[2,3,4,2,1,3,1,2],[1,2,3,4,4,3,2,1],[3,1,3,1,3,1,3,1],[2,2,2,2,2,2,2,2]];
   function initializeBlocks(){
-    state={columns:Array.from({length:8},()=>[]),material:'grass',source:null,dragFrom:null,dragMaterial:null,mode:'free',goal:goals[rand(goals.length)],history:[],suppressUntil:0,dragPointerId:null};
+    state={columns:Array.from({length:8},()=>[]),material:'grass',source:null,dragFrom:null,dragMaterial:null,mode:'free',goal:goals[rand(goals.length)],history:[],suppressUntil:0,dragPointerId:null,lastChange:null};
     button('Construção livre',()=>{state.mode='free';state.source=null;renderBlocks()},true);
     button('Desafio de alturas',()=>{state.mode='goal';state.goal=goals[rand(goals.length)];renderBlocks()});
     button('↶ Desfazer',()=>{
       const snap=state.history.pop();
-      if(snap){state.columns=snap;state.source=null;renderBlocks();setStatus('Última ação desfeita.')}
+      if(snap){state.columns=snap;state.source=null;state.lastChange=null;renderBlocks();setStatus('Última ação desfeita.')}
     });
-    button('Limpar blocos',()=>{saveBlocks();state.columns=Array.from({length:8},()=>[]);renderBlocks();setStatus('Área limpa. Monte outra estrutura.')});
+    button('Limpar blocos',()=>{saveBlocks();state.columns=Array.from({length:8},()=>[]);state.lastChange=null;renderBlocks();setStatus('Área limpa. Monte outra estrutura.')});
     const palette=document.createElement('div');palette.className='oficina-palette';palette.setAttribute('aria-label','Materiais para construção');
     for(const [id,name] of Object.entries(materialNames)){
       const chip=document.createElement('button');chip.type='button';chip.dataset.material=id;
@@ -190,13 +190,16 @@
   function saveBlocks(){state.history.push(state.columns.map(c=>[...c]));if(state.history.length>30)state.history.shift()}
   function addBlock(col){
     if(state.columns[col].length>=6){setStatus('Essa coluna já alcançou a altura máxima de seis blocos.','warn');playTone(160);return}
-    saveBlocks();state.columns[col].push(state.material);state.source=null;renderBlocks();playTone(420);checkBlockGoal();
+    saveBlocks();state.columns[col].push(state.material);
+    state.lastChange={col,row:state.columns[col].length-1,kind:'new'};
+    state.source=null;renderBlocks();playTone(420);checkBlockGoal();
   }
   function moveBlock(from,to){
     if(from===to)return;
     if(!state.columns[from].length||state.columns[to].length>=6){setStatus('Movimento não permitido: escolha uma coluna com espaço.','warn');return}
     saveBlocks();
     state.columns[to].push(state.columns[from].pop());
+    state.lastChange={col:to,row:state.columns[to].length-1,kind:'move'};
     state.source=null;renderBlocks();playTone(530);checkBlockGoal();
   }
   function renderPalette(){
@@ -210,11 +213,21 @@
       tools.querySelectorAll('button').forEach(b=>{if(b.textContent==='Construção livre'||b.textContent==='Desafio de alturas')b.setAttribute('aria-pressed',String(b.textContent==='Desafio de alturas'))});
     }else tools.querySelectorAll('button').forEach(b=>{if(b.textContent==='Construção livre'||b.textContent==='Desafio de alturas')b.setAttribute('aria-pressed',String(b.textContent==='Construção livre'))});
     const target=$('oficinaBlockGoal');if(target)target.textContent=state.mode==='goal'?'Missão — alturas: '+state.goal.join(' · ')+' (da esquerda para a direita)':'Construção livre — 8 colunas × 6 andares · 9 materiais';
+    const focused=board.contains(document.activeElement)&&document.activeElement?.closest?.('[data-column]')?.dataset.column;
     board.innerHTML='<div class="oficina-builder" id="oficinaBlockBoard" role="group" aria-label="Área de construção de oito colunas">'+state.columns.map((blocks,index)=>{
-      const contents=blocks.map((mat,row)=>'<span class="oficina-cube'+(state.source===index&&row===blocks.length-1?' grabbed':'')+'" data-material="'+mat+'" data-row="'+row+'" aria-hidden="true"></span>').join('');
-      return '<div role="button" tabindex="0" class="oficina-column'+(state.mode==='goal'?' target':'')+'" data-column="'+index+'" aria-label="Coluna '+(index+1)+', '+blocks.length+' blocos">'+contents+'</div>';
+      const contents=blocks.map((mat,row)=>'<span class="oficina-cube'+(state.source===index&&row===blocks.length-1?' grabbed':'')+(state.lastChange?.col===index&&state.lastChange?.row===row?' landed':'')+'" data-material="'+mat+'" data-row="'+row+'" aria-hidden="true"></span>').join('');
+      return '<div role="button" tabindex="0" class="oficina-column'
+        +(state.mode==='goal'?' target':'')
+        +(blocks.length>=6?' at-limit':'')
+        +(state.source!==null&&state.source!==index&&blocks.length<6?' available':'')
+        +'" data-column="'+index+'" aria-label="Coluna '+(index+1)+', '
+        +blocks.length+' blocos'+(state.source!==null?', selecione para mover o bloco':'')+'">'
+        +contents+'</div>';
     }).join('')+'</div>';
     renderPalette();
+    if(focused!==undefined){
+      board.querySelector('[data-column="'+focused+'"]')?.focus({preventScroll:true});
+    }
   }
   function checkBlockGoal(){
     if(state.mode!=='goal')return;
