@@ -123,3 +123,24 @@
 }
 .voxel-scene{width:100%;max-width:100%}
 .voxel-canvas{width:100%;max-width:100%}
+
+@media(max-width:700px){
+ .voxel-toolbar fieldset:has([data-voxel-action]),
+ .voxel-toolbar fieldset:has([data-voxel-mode]){
+   display:grid;
+   grid-template-columns:repeat(3,minmax(0,1fr));
+   align-items:stretch;
+   gap:6px;
+ }
+ .voxel-toolbar fieldset button{
+   display:flex;align-items:center;justify-content:center;
+   min-width:0;width:100%;padding:9px 5px;
+   white-space:normal;overflow-wrap:break-word;
+   text-align:center;font-size:12px;line-height:1.3;
+ }
+ .voxel-toolbar label{width:100%;display:flex;align-items:center;gap:12px}
+ .voxel-toolbar label select{flex:1}
+ .voxel-mini{display:grid;grid-template-columns:minmax(0,1fr);justify-items:start}
+ .voxel-plan{grid-template-columns:repeat(8,20px);grid-template-rows:repeat(8,20px)}
+ .voxel-access-grid{max-width:100%;overflow:clip}
+}
