@@ -34,7 +34,7 @@
     if(n.y>=462){n.y=462;if(n.vy>0){n.vy=-n.vy*.36;n.vx*=.78;floor=true;}}
     return {ball:n,scored,rim,floor};
   }
-  function basketPreview(x,y,vx,vy,{duration=2.65,step=.045}={}){
+  function basketPreview(x,y,vx,vy,{duration=2.65,step=1/120}={}){
     let ball={x,y,vx,vy},scored=false;
     const points=[{x,y}];
     for(let time=0;time<duration;time+=step){
