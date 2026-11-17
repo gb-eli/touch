@@ -160,6 +160,37 @@ try{
       }
       if(pageName==='oficina'&&!profile.smokeOnly){
         console.log('SMOKE OFICINA',profile.name);
+        await page.locator('[data-oficina="builder3d"]').click();
+        assert.equal(await page.locator('#voxelCanvas').count(),1);
+        await page.waitForTimeout(320);
+        const webgl=await page.locator('#voxelCanvas').evaluate(c=>({
+          available:!!c.getContext('webgl'),w:c.width,h:c.height
+        }));
+        assert.equal(webgl.available,true,'WebGL deve iniciar no Chrome de CI');
+        assert.ok(webgl.w*webgl.h>10000,'Canvas 3D desenhado');
+        note(profile.name+' Construção 3D WebGL','pass',JSON.stringify(webgl));
+        await page.locator('[data-voxel-material="stone"]').click();
+        await page.locator('.voxel-access-grid summary').click();
+        const spot=page.locator('[data-voxel-cell="3,3"]');
+        await spot.click();await spot.click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^2 blocos/);
+        await page.locator('[data-voxel-action="undo"]').click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^1 blocos/);
+        await page.locator('[data-voxel-action="redo"]').click();
+        await page.locator('[data-voxel-action="save"]').click();
+        await page.locator('[data-voxel-action="clear"]').click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^0 blocos/);
+        await page.locator('[data-voxel-action="load"]').click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^2 blocos/);
+        await page.locator('#voxelMission').selectOption('tower');
+        await spot.click();await spot.click();await spot.click();
+        assert.match(await page.locator('#voxelMissionStatus').textContent(),/5 \/ 5/);
+        note(profile.name+' Construção 3D: histórico, persistência explícita e missão','pass');
+        await page.screenshot({path:path.join(out,profile.name+'-builder3d.png'),
+          animations:'disabled',fullPage:false});
+        await page.locator('[data-voxel-action="2d"]').click();
+        assert.equal(await page.locator('[data-column]').count(),8,'fallback 2D acessível');
+        note(profile.name+' Construção 3D para 2D','pass');
         await page.locator('#oficinaSound').click();
         assert.equal(await page.evaluate(()=>window.AGVGameExperience.soundEnabled()),true);
         await page.locator('[data-oficina="ttt"]').click();
@@ -195,6 +226,18 @@ try{
           'somente último bloco recebe animação');
         note(profile.name+' Construção: animação localizada','pass');
         note(profile.name+' Blocos toque e arraste','pass');
+      }
+      if(profile.smokeOnly&&pageName==='oficina'){
+        assert.equal(await page.locator('#voxelCanvas').count(),1);
+        await page.waitForTimeout(350);
+        const buffer=await page.locator('#voxelCanvas').evaluate(c=>({
+          webgl:!!c.getContext('webgl'),pixels:c.width*c.height,
+          width:c.width,height:c.height
+        }));
+        assert.equal(buffer.webgl,true,'WebGL 4K obrigatório');
+        assert.ok(buffer.pixels>10000&&buffer.pixels<=3200000,
+          'Orçamento GPU do construtor deve permanecer <= 3,2 MP');
+        note('tv-3840 WebGL voxel buffer','pass',JSON.stringify(buffer));
       }
       if(profile.smokeOnly&&pageName==='arcade'){
         const buffer=await page.locator('#arcadeCanvas').evaluate(c=>{
