@@ -114,7 +114,7 @@
   if(!renderer){
    announce('WebGL indisponível. Abrindo a construção 2D.','warn');
    queueMicrotask(onFallback);
-   return{dispose(){}};
+   return{dispose(){disposed=true;tools.classList.remove('voxel-active');board.classList.remove('voxel-active')}};
   }
   function chooseMode(next){
    if(!['place','move','erase'].includes(next))return;
