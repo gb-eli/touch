@@ -128,7 +128,7 @@
   let gl,p,tex,buffers,observer,lost=false,disposed=false,raf=0,dirty=true,count=0;
   let yaw=.72,pitch=.69,zoom=19,mode='place',material='grass',selected=null,hover=null;
   const focus=[0,2.1,0],pointers=new Map(),abort=new AbortController();
-  let origin=null,pinch=0,pinchZoom=19,afterMulti=false;
+  let origin=null,pinch=0,pinchZoom=19,afterMulti=false,dragSource=null;
   const eye=()=>[Math.sin(yaw)*Math.cos(pitch)*zoom,focus[1]+Math.sin(pitch)*zoom,
      Math.cos(yaw)*Math.cos(pitch)*zoom];
   function ray(clientX,clientY){
@@ -193,7 +193,7 @@
     if(!selected){
      if(hit?.block){selected=hit.block;onStatus('Origem selecionada: toque no destino ou arraste.');invalidate()}
      else onStatus('Escolha o bloco de origem.','warning');
-    }else if(hit?.block&&V.key(...Object.values(hit.block))===V.key(...Object.values(selected))){
+    }else if(hit?.block&&V.key(hit.block.x,hit.block.y,hit.block.z)===V.key(selected.x,selected.y,selected.z)){
      selected=null;onStatus('Seleção cancelada.');invalidate();
     }else if(hit?.target&&world.move(selected,hit.target)){
      selected=null;change('move');onStatus('Bloco reposicionado.','success');
@@ -206,10 +206,13 @@
    if(e.pointerType==='mouse'&&e.button!==0)return;
    e.preventDefault();try{canvas.setPointerCapture(e.pointerId)}catch{}
    pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-   if(pointers.size===1){origin={x:e.clientX,y:e.clientY,time:performance.now(),moved:false};afterMulti=false}
+   if(pointers.size===1){
+    origin={x:e.clientX,y:e.clientY,time:performance.now(),moved:false};afterMulti=false;
+    dragSource=mode==='move'?ray(e.clientX,e.clientY)?.block||null:null;
+   }
    if(pointers.size===2){
     afterMulti=true;origin=null;const [a,b]=[...pointers.values()];
-    pinch=Math.hypot(a.x-b.x,a.y-b.y)||1;pinchZoom=zoom;
+    pinch=Math.hypot(a.x-b.x,a.y-b.y)||1;pinchZoom=zoom;dragSource=null;
    }
   }
   function move(e){
@@ -221,7 +224,7 @@
     zoom=clamp(pinchZoom*pinch/(Math.hypot(a.x-b.x,a.y-b.y)||1),8,32);invalidate();return;
    }
    if(origin&&Math.hypot(e.clientX-origin.x,e.clientY-origin.y)>9)origin.moved=true;
-   if(mode==='move'&&selected){hover=ray(e.clientX,e.clientY);invalidate();return}
+   if(mode==='move'&&(selected||dragSource)){hover=ray(e.clientX,e.clientY);invalidate();return}
    if(origin?.moved){yaw-=dx*.006;pitch=clamp(pitch+dy*.006,.19,1.45);invalidate()}
   }
   function up(e){
@@ -229,13 +232,20 @@
    const single=pointers.size===1;
    const tapped=single&&!afterMulti&&origin&&!origin.moved&&
     Math.hypot(e.clientX-origin.x,e.clientY-origin.y)<10&&performance.now()-origin.time<700;
-   const hit=tapped?ray(e.clientX,e.clientY):null;
+   const dragged=single&&!afterMulti&&origin?.moved&&Boolean(dragSource);
+   const hit=tapped||dragged?ray(e.clientX,e.clientY):null;
+   const from=dragSource;
    pointers.delete(e.pointerId);
    if(!pointers.size){origin=null;afterMulti=false}
    else{origin=null;afterMulti=true}
-   if(tapped)tap(hit);hover=null;invalidate();
+   if(dragged){
+    if(hit?.target&&world.move(from,hit.target)){
+     selected=null;change('move');onStatus('Bloco arrastado e encaixado.','success');
+    }else onStatus('Não foi possível encaixar o bloco nesse destino.','warning');
+   }else if(tapped)tap(hit);
+   dragSource=null;hover=null;invalidate();
   }
-  function cancel(e){pointers.delete(e.pointerId);origin=null;afterMulti=true;hover=null;invalidate()}
+  function cancel(e){pointers.delete(e.pointerId);origin=null;dragSource=null;afterMulti=true;hover=null;invalidate()}
   const signal=abort.signal;
   try{if(!init())return null}catch(e){onStatus('WebGL não disponível: use o construtor 2D.','warning');return null}
   canvas.addEventListener('pointerdown',down,{signal});
