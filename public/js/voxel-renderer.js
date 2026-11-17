@@ -80,7 +80,8 @@
    }
   });
   const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
-  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+  // Atlas desenhado com origem no topo; UVs da malha já usam essa orientação.
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
