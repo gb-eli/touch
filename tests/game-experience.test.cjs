@@ -151,7 +151,7 @@ test('Páginas de jogos carregam motor antes dos próprios módulos',()=>{
 });
 test('PWA guarda novo motor, CSS e scripts versionados sem fazer precache do admin',()=>{
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.3\.0-game-experience/);
+  assert.match(sw,/tvtouch-studio-v3\.4\.0-arcade-physics/);
   assert.match(sw,/\.\/js\/game-experience\.js/);
   assert.match(sw,/\.\/css\/game-experience\.css/);
   assert.doesNotMatch(sw,/"\.\/admin\.html"/);
