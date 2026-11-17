@@ -116,7 +116,7 @@
       queueMicrotask(()=>start('blocks'));return;
     }
     voxelMount=window.AGVVoxelBuilder.mount({
-      tools,board,onStatus:setStatus,
+      tools,board,onStatus:(message,kind)=>setStatus(message,kind==='success'?'':kind),
       onFallback:()=>start('blocks'),
       onEvent:type=>gameSession?.emit(type,{target:status,audio:false})
     });
