@@ -126,9 +126,9 @@
  }
  function create(canvas,world,{onStatus=()=>{},onChange=()=>{}}={}){
   let gl,p,tex,buffers,observer,lost=false,disposed=false,raf=0,dirty=true,count=0;
-  let yaw=.72,pitch=.69,zoom=19,mode='place',material='grass',selected=null,hover=null;
-  const focus=[0,2.1,0],pointers=new Map(),abort=new AbortController();
-  let origin=null,pinch=0,pinchZoom=19,afterMulti=false,dragSource=null;
+  let yaw=.72,pitch=.69,zoom=14,mode='place',material='grass',selected=null,hover={target:{x:3,y:0,z:3}};
+  const focus=[0,1.7,0],pointers=new Map(),abort=new AbortController();
+  let origin=null,pinch=0,pinchZoom=14,afterMulti=false,dragSource=null;
   const eye=()=>[Math.sin(yaw)*Math.cos(pitch)*zoom,focus[1]+Math.sin(pitch)*zoom,
      Math.cos(yaw)*Math.cos(pitch)*zoom];
   function ray(clientX,clientY){
@@ -221,7 +221,7 @@
    p0.x=e.clientX;p0.y=e.clientY;
    if(pointers.size>=2){
     const [a,b]=[...pointers.values()];
-    zoom=clamp(pinchZoom*pinch/(Math.hypot(a.x-b.x,a.y-b.y)||1),8,32);invalidate();return;
+    zoom=clamp(pinchZoom*pinch/(Math.hypot(a.x-b.x,a.y-b.y)||1),7,30);invalidate();return;
    }
    if(origin&&Math.hypot(e.clientX-origin.x,e.clientY-origin.y)>9)origin.moved=true;
    if(mode==='move'&&(selected||dragSource)){hover=ray(e.clientX,e.clientY);invalidate();return}
@@ -253,7 +253,7 @@
   canvas.addEventListener('pointerup',up,{signal});
   canvas.addEventListener('pointercancel',cancel,{signal});
   canvas.addEventListener('lostpointercapture',cancel,{signal});
-  canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=clamp(zoom*Math.exp(e.deltaY*.0012),8,32);invalidate()},{signal,passive:false});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=clamp(zoom*Math.exp(e.deltaY*.0012),7,30);invalidate()},{signal,passive:false});
   canvas.addEventListener('contextmenu',e=>e.preventDefault(),{signal});
   canvas.addEventListener('webglcontextlost',e=>{
    e.preventDefault();lost=true;if(raf)cancelAnimationFrame(raf);raf=0;
@@ -271,8 +271,8 @@
    get mode(){return mode},get camera(){return{yaw,pitch,zoom}},get supported(){return !lost},
    setMode(value){if(['place','move','erase'].includes(value)){mode=value;selected=null;hover=null;invalidate()}},
    setMaterial(value){if(V.MATERIALS.some(m=>m.id===value)){material=value;selected=null;mode='place';invalidate()}},
-   rotate(value){yaw+=value;invalidate()},zoom(value){zoom=clamp(zoom+value,8,32);invalidate()},
-   resetCamera(){yaw=.72;pitch=.69;zoom=19;invalidate()},
+   rotate(value){yaw+=value;invalidate()},zoom(value){zoom=clamp(zoom+value,7,30);invalidate()},
+   resetCamera(){yaw=.72;pitch=.69;zoom=14;invalidate()},
    refresh:()=>invalidate(true),
    dispose(){
     disposed=true;abort.abort();observer?.disconnect();
