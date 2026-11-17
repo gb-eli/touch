@@ -18,7 +18,7 @@ test('Identidade e crédito permanente nas três entradas',()=>{
 });
 test('Marca AGV TOUCH e qualidade Arcade preservadas',()=>{
  assert.match(read('public/index.html'),/<h1 id="homeTitle">AGV <span>TOUCH\.<\/span>/);
- assert.match(read('public/arcade.html'),/js\/arcade\.js\?v=3\.3\.0/);
+ assert.match(read('public/arcade.html'),/js\/arcade\.js\?v=3\.4\.0/);
  assert.match(read('public/arcade.html'),/id="arcadeCanvas"/);
 });
 test('Som no botão Começar agora e ausência de vídeo',()=>{
@@ -52,7 +52,7 @@ test('Performance limitada, reduzida e pausa',()=>{
 test('Cache offline inclui os novos ativos',()=>{
  const cache=read('public/service-worker.js');
  for(const asset of ['agv-identity.css','site-synapses.js','agv-synapse-crystal.svg'])assert.ok(cache.includes(asset),asset);
- assert.match(cache,/tvtouch-studio-v3\.3\.0-game-experience/);
+ assert.match(cache,/tvtouch-studio-v3\.4\.0-arcade-physics/);
 });
 test('JS alterado passa no parser',()=>{
  for(const file of ['public/js/site-synapses.js','public/js/experience-intro.js','public/service-worker.js']){
