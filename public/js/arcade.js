@@ -191,11 +191,11 @@
   }
   function initBasket(){
     state={x:210,y:440,vx:0,vy:0,shots:0,points:0,air:false,scored:false,
-      reset:0,aim:null,lastRimAt:0};
+      reset:0,aim:null,lastRimAt:0,carry:0};
     updateScore('0 / 0');
   }
   function resetBasketBall(){
-    Object.assign(state,{x:210,y:440,vx:0,vy:0,air:false,scored:false,reset:0,aim:null});
+    Object.assign(state,{x:210,y:440,vx:0,vy:0,air:false,scored:false,reset:0,aim:null,carry:0});
   }
   function throwBasket(dx,dy){
     if(state.air||Math.hypot(dx,dy)<18)return;
@@ -208,9 +208,10 @@
   function updateBasket(dt){
     if(!state.air)return;
     // Passos curtos preservam colisões no aro em displays de alta taxa.
-    const steps=Math.max(1,Math.ceil(dt/.008));
-    const step=dt/steps;
-    for(let i=0;i<steps;i++){
+    const step=1/120;
+    state.carry=Math.min(.09,state.carry+dt);
+    for(let i=0;state.carry>=step&&i<8;i++){
+      state.carry-=step;
       const result=physics.basketStep(state,step);
       Object.assign(state,result.ball);
       if(result.rim&&performance.now()-state.lastRimAt>100){
@@ -248,7 +249,7 @@
       const shot=physics.basketLaunch(state.aim.x-press.x,state.aim.y-press.y);
       const forecast=physics.basketPreview(state.x,state.y,shot.vx,shot.vy);
       ctx.fillStyle=forecast.scored?'#93ffbc':'#7fe9ff';
-      for(let i=2;i<forecast.points.length;i+=2){
+      for(let i=6;i<forecast.points.length;i+=6){
         const p=forecast.points[i];
         ctx.globalAlpha=.4+.55*i/forecast.points.length;
         ctx.beginPath();ctx.arc(p.x,p.y,Math.min(5,1.5+i/9),0,TAU);ctx.fill();
