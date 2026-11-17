@@ -168,6 +168,9 @@ try{
         }));
         assert.equal(webgl.available,true,'WebGL deve iniciar no Chrome de CI');
         assert.ok(webgl.w*webgl.h>10000,'Canvas 3D desenhado');
+        const canvasRect=await page.locator('#voxelCanvas').boundingBox();
+        assert.ok(canvasRect.width>Math.min(900,profile.width*.75),
+          'Canvas 3D deve preencher horizontalmente a Oficina');
         note(profile.name+' Construção 3D WebGL','pass',JSON.stringify(webgl));
         await page.locator('[data-voxel-material="stone"]').click();
         await page.locator('.voxel-access-grid summary').click();
@@ -237,6 +240,8 @@ try{
         assert.equal(buffer.webgl,true,'WebGL 4K obrigatório');
         assert.ok(buffer.pixels>10000&&buffer.pixels<=3200000,
           'Orçamento GPU do construtor deve permanecer <= 3,2 MP');
+        const rect=await page.locator('#voxelCanvas').boundingBox();
+        assert.ok(rect.width>1200,'Cena 3D muito estreita para a TV 4K');
         note('tv-3840 WebGL voxel buffer','pass',JSON.stringify(buffer));
       }
       if(profile.smokeOnly&&pageName==='arcade'){
