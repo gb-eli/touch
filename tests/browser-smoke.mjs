@@ -189,6 +189,9 @@ try{
         await spot.click();await spot.click();await spot.click();
         assert.match(await page.locator('#voxelMissionStatus').textContent(),/5 \/ 5/);
         note(profile.name+' Construção 3D: histórico, persistência explícita e missão','pass');
+        await page.locator('.voxel-access-grid summary').click();
+        await page.locator('#voxelCanvas').scrollIntoViewIfNeeded();
+        await page.waitForTimeout(180);
         await page.screenshot({path:path.join(out,profile.name+'-builder3d.png'),
           animations:'disabled',fullPage:false});
         await page.locator('[data-voxel-action="2d"]').click();
@@ -232,6 +235,9 @@ try{
       }
       if(profile.smokeOnly&&pageName==='oficina'){
         assert.equal(await page.locator('#voxelCanvas').count(),1);
+        await page.evaluate(()=>{
+          document.querySelector('[data-voxel-cell="3,3"]')?.click();
+        });
         await page.waitForTimeout(350);
         const buffer=await page.locator('#voxelCanvas').evaluate(c=>({
           webgl:!!c.getContext('webgl'),pixels:c.width*c.height,
