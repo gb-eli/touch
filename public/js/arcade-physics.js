@@ -108,7 +108,7 @@
     for(const other of balls){
       if(other===cue||other.pocketed)continue;
       const ox=other.x-cue.x,oy=other.y-cue.y;
-      const along=ox*ux+oy*uy,perp=ox*oy*0+(ox*ox+oy*oy)-along*along;
+      const along=ox*ux+oy*uy,perp=(ox*ox+oy*oy)-along*along;
       const limit=cue.r+other.r;
       if(along<0||perp>limit*limit)continue;
       const distance=along-Math.sqrt(Math.max(0,limit*limit-perp));
