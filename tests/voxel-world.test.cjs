@@ -107,6 +107,7 @@ test('Renderer WebGL contém projeção, iluminação, mapa de materiais e fallb
   assert.ok(source.includes(term),term);
  assert.match(source,/Math\.min\(window\.devicePixelRatio\|\|1,2\)/);
  assert.ok(!source.includes('https://'));
+ assert.match(source,/UNPACK_FLIP_Y_WEBGL,false/,'material index must match atlas row');
 });
 test('PWA inclui modelo, renderer e UI sem login',()=>{
  const sw=read('public/service-worker.js');
