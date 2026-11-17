@@ -103,3 +103,23 @@
 @media(prefers-reduced-motion:reduce){
  .voxel-progress i{transition:none}
 }
+
+/* A Oficina antiga usa display:flex na direção horizontal.
+   O construtor tem quatro regiões verticais que precisam ocupar toda a largura. */
+.oficina-tools:has(.voxel-workspace){display:block;width:100%}
+.oficina-board:has(.voxel-scene){
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  gap:12px;
+  width:100%;
+  min-width:0;
+}
+.oficina-board:has(.voxel-scene)>:is(.voxel-scene,.voxel-help,.voxel-mini,.voxel-access-grid){
+  width:100%;
+  min-width:0;
+  flex:0 0 auto;
+}
+.voxel-scene{width:100%;max-width:100%}
+.voxel-canvas{width:100%;max-width:100%}
