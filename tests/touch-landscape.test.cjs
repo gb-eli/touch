@@ -10,7 +10,7 @@ test('Studio 3.7: os tres ambientes carregam o mesmo controle de tela cheia',()=
     const html=read(page);
     assert.match(html,/touch-fullscreen\.js\?v=3\.7\.0/);
     assert.match(html,/touch-layout\.js\?v=3\.7\.0/);
-    assert.match(html,/touch-vivid\.css\?v=3\.7\.0/);
+    assert.match(html,/touch-vivid\.css\?v=3\.7\.1/);
     assert.match(html,/data-touch-fullscreen/);
   }
 });
