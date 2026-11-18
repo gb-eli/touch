@@ -111,7 +111,7 @@ test('Renderer WebGL contém projeção, iluminação, mapa de materiais e fallb
 });
 test('PWA inclui modelo, renderer e UI sem login',()=>{
  const sw=read('public/service-worker.js');
- assert.match(sw,/tvtouch-studio-v3\.7\.0-landscape-vivid/);
+ assert.match(sw,/tvtouch-studio-v3\.7\.1-canvas-landscape/);
  for(const p of ['voxel-world.js','voxel-renderer.js','voxel-builder-ui.js','voxel-builder.css'])
   assert.ok(sw.includes(p),p);
  assert.doesNotMatch(sw,/"\.\/admin\.html"/);
