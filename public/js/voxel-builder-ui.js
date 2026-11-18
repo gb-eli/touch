@@ -23,14 +23,14 @@
      '<button type="button" data-voxel-mode="move" aria-pressed="false">↔ Mover</button>',
      '<button type="button" data-voxel-mode="erase" aria-pressed="false">− Remover</button>',
      '</fieldset>',
-    '<fieldset class="voxel-project-actions"><legend>Projeto</legend>',
+    '<details class="voxel-project-details"><summary>⋯ Projeto</summary><fieldset class="voxel-project-actions"><legend>Projeto</legend>',
      '<button type="button" data-voxel-action="undo">↶ Desfazer</button>',
      '<button type="button" data-voxel-action="redo">↷ Refazer</button>',
      '<button type="button" data-voxel-action="save">Salvar aqui</button>',
      '<button type="button" data-voxel-action="load">Carregar</button>',
      '<button type="button" data-voxel-action="clear">Limpar</button>',
      '<button type="button" data-voxel-action="2d">Modo 2D</button>',
-    '</fieldset>',
+    '</fieldset></details>',
     '<label>Desafio <select id="voxelMission" aria-label="Selecionar desafio 3D">',
      ...MISSIONS.map(([id,title])=>'<option value="'+id+'">'+escape(title)+'</option>'),
      '</select></label>',
@@ -58,8 +58,8 @@
   ].join('');
   const instructions=document.createElement('div');instructions.className='voxel-help';
   instructions.innerHTML='<strong>Controles:</strong> toque para posicionar · arraste para girar · pinça para zoom · modo Mover: escolha origem e destino';
-  const mini=document.createElement('div');mini.className='voxel-mini';
-  mini.innerHTML='<div><h3 id="voxelMissionTitle">Construção livre</h3><p id="voxelMissionDescription">Use a grade para construir.</p></div><div class="voxel-plan" id="voxelPlan" aria-label="Mapa superior do desafio"></div>';
+  const mini=document.createElement('details');mini.className='voxel-mini';
+  mini.innerHTML='<summary>🎯 Objetivo e mapa do desafio</summary><div class="voxel-mini-content"><div><h3 id="voxelMissionTitle">Construção livre</h3><p id="voxelMissionDescription">Use a grade para construir.</p></div><div class="voxel-plan" id="voxelPlan" aria-label="Mapa superior do desafio"></div></div>';
   const accessible=document.createElement('details');accessible.className='voxel-access-grid';
   accessible.innerHTML='<summary>Posicionar por coordenadas (acessível por teclado)</summary><div class="voxel-quick-grid" role="group" aria-label="Posições X e Z"></div>';
   board.append(scene,instructions,mini,accessible);
