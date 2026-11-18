@@ -32,10 +32,13 @@ test('CPU bloqueia tabuleiro durante processamento e anuncia estado',()=>{
 test('Tela cheia é um gesto explícito, reversível e com fallback Android',()=>{
  const html=read('public/oficina.html'),css=read('public/css/oficina.css');
  assert.match(html,/id="oficinaFullscreen"/);
- assert.match(js,/fullscreenButton\.addEventListener\('click'/);
- assert.match(js,/document\.exitFullscreen\?/);
- assert.match(js,/stage\.requestFullscreen\?/);
- assert.match(js,/document\.addEventListener\('fullscreenchange'/);
+ const controller=read('public/js/touch-fullscreen.js');
+ assert.match(html,/data-touch-fullscreen/);
+ assert.match(controller,/root\.requestFullscreen/);
+ assert.match(controller,/document\.exitFullscreen/);
+ assert.match(controller,/document\.addEventListener\('fullscreenchange'/);
+ assert.match(controller,/agvFullscreenExit/);
+ assert.doesNotMatch(js,/stage\.requestFullscreen/);
  assert.match(css,/\.oficina-panel:fullscreen/);
  assert.match(css,/\.oficina-panel:fullscreen::after/);
  assert.match(css,/Desenvolvido por Gabriel Elienai/);
