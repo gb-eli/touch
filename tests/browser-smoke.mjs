@@ -132,6 +132,46 @@ try{
         }
         note(profile.name+' '+pageName+' visual viewport real','pass',JSON.stringify(landscape));
       }
+      if(pageName==='portal'&&profile.width>=760&&profile.height<=650){
+        const shortcuts=await page.evaluate(()=>{
+          const root=document.querySelector('.home-shortcuts');
+          const items=[...root.querySelectorAll(':scope > button, :scope > a')];
+          const rects=items.map(el=>el.getBoundingClientRect());
+          return {
+            count:items.length,
+            arcades:items.filter(el=>el.matches('a[href="arcade.html"]')).length,
+            replays:items.filter(el=>el.matches('[data-touch-replay]')).length,
+            tops:rects.map(r=>Math.round(r.top)),
+            minHeight:Math.min(...rects.map(r=>r.height)),
+            bottoms:rects.map(r=>Math.round(r.bottom))
+          };
+        });
+        assert.equal(shortcuts.count,8,'launcher deve ter 8 atalhos sem Arcade duplicado: '+JSON.stringify(shortcuts));
+        assert.equal(shortcuts.arcades,1,'somente um Arcade');
+        assert.equal(shortcuts.replays,1,'reabrir teste de toque permanece disponível');
+        assert.ok(Math.max(...shortcuts.tops)-Math.min(...shortcuts.tops)<=3,
+          'atalhos precisam ficar em uma unica linha na paisagem: '+JSON.stringify(shortcuts));
+        assert.ok(shortcuts.minHeight>=27,'alvos touch nao podem ficar pequenos: '+JSON.stringify(shortcuts));
+        note(profile.name+' launcher 8 atalhos em uma linha','pass',JSON.stringify(shortcuts));
+      }
+      if(pageName==='oficina'&&profile.width>=760&&profile.height<=650){
+        const scene=await page.evaluate(()=>{
+          const rect=el=>{const r=el.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom}};
+          return {scene:rect(document.querySelector('.voxel-scene')),
+            canvas:rect(document.querySelector('#voxelCanvas')),
+            panel:rect(document.querySelector('.oficina-panel')),
+            closed:document.querySelectorAll('.oficina-board.voxel-active > details:not([open])').length,
+            visibleTop:rect(document.querySelector('.voxel-scene')).y};
+        });
+        assert.ok(scene.canvas.height>=115,
+          'canvas 3D exige area visivel util mesmo no tablet horizontal: '+JSON.stringify(scene));
+        assert.ok(scene.scene.height>=115,
+          'a cena nao pode colapsar por controles: '+JSON.stringify(scene));
+        assert.ok(scene.canvas.bottom<=scene.panel.bottom-12,
+          'canvas 3D precisa estar dentro do painel: '+JSON.stringify(scene));
+        assert.equal(scene.closed,2,'mapa e coordenadas ficam recolhidos por padrao');
+        note(profile.name+' canvas 3D ocupa area util','pass',JSON.stringify(scene));
+      }
       if(['portal','oficina','arcade'].includes(pageName)&&profile.width>=760&&profile.height<=650){
         const toggleId=pageName==='portal'?'#fullscreenButton':pageName==='oficina'?'#oficinaFullscreen':'#arcadeFullscreen';
         assert.equal(await page.locator(toggleId).getAttribute('data-touch-fullscreen'),'','controle de tela cheia disponível');
