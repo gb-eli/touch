@@ -177,6 +177,7 @@ try{
         const spot=page.locator('[data-voxel-cell="3,3"]');
         await spot.click();await spot.click();
         assert.match(await page.locator('#voxelCounter').textContent(),/^2 blocos/);
+        await page.locator('.voxel-project-details summary').click();
         await page.locator('[data-voxel-action="undo"]').click();
         assert.match(await page.locator('#voxelCounter').textContent(),/^1 blocos/);
         await page.locator('[data-voxel-action="redo"]').click();
@@ -184,6 +185,7 @@ try{
         await page.locator('[data-voxel-action="clear"]').click();
         assert.match(await page.locator('#voxelCounter').textContent(),/^0 blocos/);
         await page.locator('[data-voxel-action="load"]').click();
+        await page.locator('.voxel-project-details summary').click();
         assert.match(await page.locator('#voxelCounter').textContent(),/^2 blocos/);
         await page.locator('#voxelMission').selectOption('tower');
         await spot.click();await spot.click();await spot.click();
@@ -194,6 +196,7 @@ try{
         await page.waitForTimeout(180);
         await page.screenshot({path:path.join(out,profile.name+'-builder3d.png'),
           animations:'disabled',fullPage:false});
+        await page.locator('.voxel-project-details summary').click();
         await page.locator('[data-voxel-action="2d"]').click();
         assert.equal(await page.locator('[data-column]').count(),8,'fallback 2D acessível');
         note(profile.name+' Construção 3D para 2D','pass');
