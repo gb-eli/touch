@@ -10,7 +10,7 @@ test('Studio 3.7: os tres ambientes carregam o mesmo controle de tela cheia',()=
     const html=read(page);
     assert.match(html,/touch-fullscreen\.js\?v=3\.7\.0/);
     assert.match(html,/touch-layout\.js\?v=3\.7\.0/);
-    assert.match(html,/touch-vivid\.css\?v=3\.7\.0/);
+    assert.match(html,/touch-vivid\.css\?v=3\.7\.1/);
     assert.match(html,/data-touch-fullscreen/);
   }
 });
@@ -48,7 +48,19 @@ test('Contraste da paleta e cache da interface permanecem locais',()=>{
     assert.ok(css.includes(color),color+' preserva acento vibrante');
   assert.doesNotMatch(css,/https?:\/\//);
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.7\.0-landscape-vivid/);
+  assert.match(sw,/tvtouch-studio-v3\.7\.1-canvas-landscape/);
   assert.ok(sw.includes('./css/touch-vivid.css'));
   assert.ok(sw.includes('./js/touch-fullscreen.js'));
+});
+
+test('Studio 3.7.1: onboarding nao duplica Arcade e preserva reteste de toque',()=>{
+  const js=read('public/js/experience-intro.js');
+  assert.match(js,/shortcuts\.querySelector\('\.agv-arcade-shortcut/);
+  assert.match(js,/shortcuts\.querySelector\('\[data-touch-replay\]'/);
+  assert.match(js,/replay\.addEventListener\('click',open\)/);
+  const css=read('public/css/touch-vivid.css');
+  assert.match(css,/grid-template-columns:repeat\(8,minmax\(0,1fr\)\)/);
+  assert.match(css,/min-height:clamp\(115px,36dvh,225px\)/);
+  assert.match(css,/\.voxel-mini:not\(\[open\]\)/);
+  assert.match(css,/\.voxel-access-grid:not\(\[open\]\)/);
 });
