@@ -22,6 +22,9 @@
   <link rel="stylesheet" href="css/agv34-interactions.css?v=3.4.0">
 <link rel="stylesheet" href="css/voxel-builder.css?v=3.5.0">
 <link rel="stylesheet" href="css/touch-app-shell.css?v=3.6.0">
+<link rel="stylesheet" href="css/touch-vivid.css?v=3.7.0">
+<script defer src="js/touch-layout.js?v=3.7.0"></script>
+<script defer src="js/touch-fullscreen.js?v=3.7.0"></script>
   <script src="js/agv-touch-feedback.js?v=3.2.0" defer></script>
 </head>
 <body class="oficina-body">
@@ -48,7 +51,7 @@
 <section class="oficina-panel" id="oficinaStage" aria-labelledby="oficinaTitle">
 <header class="oficina-panel-head">
 <div><span class="oficina-eyebrow" id="oficinaCategory">CRIATIVIDADE · 3D</span><h2 id="oficinaTitle">Construção 3D</h2><p id="oficinaHelp">Selecione um material e monte sua construção.</p></div>
-<div class="oficina-panel-actions"><span class="oficina-clock" id="oficinaClock" aria-label="Tempo da rodada">00:00</span><button type="button" id="oficinaRestart">↻ Reiniciar</button><button type="button" id="oficinaFullscreen" aria-label="Expandir a atividade em tela cheia" aria-pressed="false">⛶ Tela cheia</button></div>
+<div class="oficina-panel-actions"><span class="oficina-clock" id="oficinaClock" aria-label="Tempo da rodada">00:00</span><button type="button" id="oficinaRestart">↻ Reiniciar</button><button type="button" id="oficinaFullscreen" class="agv-fullscreen-toggle" data-touch-fullscreen aria-label="Ativar tela cheia" aria-pressed="false"><span data-fullscreen-label>Tela cheia</span></button></div>
 </header>
 <div id="oficinaTools" class="oficina-tools"></div>
 <div id="oficinaBoard" class="oficina-board"></div>

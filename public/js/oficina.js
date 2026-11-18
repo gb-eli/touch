@@ -88,27 +88,7 @@
   }
   choice.forEach(b=>b.addEventListener('click',()=>start(b.dataset.oficina)));
   $('oficinaRestart').addEventListener('click',()=>start(game));
-  const fullscreenButton=$('oficinaFullscreen'),stage=$('oficinaStage');
-  if(fullscreenButton&&stage){
-    fullscreenButton.addEventListener('click',()=>{
-      const expanded=document.fullscreenElement===stage;
-      const action=expanded?document.exitFullscreen?.bind(document):stage.requestFullscreen?.bind(stage);
-      if(!action){setStatus('Este navegador não disponibiliza tela cheia para a atividade.','warn');return;}
-      try{
-        Promise.resolve(action()).catch(()=>{
-          setStatus('O Android não permitiu expandir esta atividade. Use a visualização normal.','warn');
-        });
-      }catch{
-        setStatus('Não foi possível ativar a tela cheia neste navegador.','warn');
-      }
-    });
-    document.addEventListener('fullscreenchange',()=>{
-      const expanded=document.fullscreenElement===stage;
-      fullscreenButton.textContent=expanded?'⤢ Sair da tela cheia':'⛶ Tela cheia';
-      fullscreenButton.setAttribute('aria-pressed',String(expanded));
-      fullscreenButton.setAttribute('aria-label',expanded?'Sair da tela cheia':'Expandir a atividade em tela cheia');
-    });
-  }
+  // Tela cheia global do aplicativo: saída sempre disponível no cabeçalho e no botão flutuante.
   // === CONSTRUTOR WEBGL 3D (isolado dos demais jogos) ===
   function initializeVoxelBuilder(){
     if(!window.AGVVoxelBuilder){

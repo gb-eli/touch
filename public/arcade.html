@@ -19,6 +19,9 @@
   <link rel="stylesheet" href="css/game-experience.css?v=3.3.0">
   <link rel="stylesheet" href="css/agv34-interactions.css?v=3.4.0">
   <link rel="stylesheet" href="css/touch-app-shell.css?v=3.6.0">
+  <link rel="stylesheet" href="css/touch-vivid.css?v=3.7.0">
+  <script src="js/touch-layout.js?v=3.7.0" defer></script>
+  <script src="js/touch-fullscreen.js?v=3.7.0" defer></script>
   <script src="js/agv-touch-feedback.js?v=3.2.0" defer></script>
 </head>
 <body>
@@ -53,7 +56,7 @@
         <div class="arcade-message" id="arcadeMessage" role="status" aria-live="polite">Toque em Jogar para começar.</div>
       </div>
       <div class="arcade-toolbar">
-        <div class="arcade-actions"><button type="button" class="arcade-primary" id="arcadePlay">▶ Jogar</button><button type="button" id="arcadeRestart">↻ Reiniciar</button><button type="button" id="arcadeSound" aria-pressed="false" aria-label="Ativar efeitos sonoros dos jogos">♫ Som desligado</button><button type="button" id="arcadeFullscreen">⛶ Tela cheia</button></div>
+        <div class="arcade-actions"><button type="button" class="arcade-primary" id="arcadePlay">▶ Jogar</button><button type="button" id="arcadeRestart">↻ Reiniciar</button><button type="button" id="arcadeSound" aria-pressed="false" aria-label="Ativar efeitos sonoros dos jogos">♫ Som desligado</button><button type="button" id="arcadeFullscreen" class="agv-fullscreen-toggle" data-touch-fullscreen aria-pressed="false"><span data-fullscreen-label>Tela cheia</span></button></div>
         <div class="arcade-keypad" id="arcadeKeypad" aria-label="Controles do jogo">
           <button type="button" data-direction="up" aria-label="Mover para cima">↑</button><button type="button" data-direction="left" aria-label="Mover para esquerda">←</button><button type="button" data-direction="down" aria-label="Mover para baixo">↓</button><button type="button" data-direction="right" aria-label="Mover para direita">→</button>
         </div>

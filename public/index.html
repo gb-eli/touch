@@ -21,11 +21,13 @@
   <link rel="stylesheet" href="css/experience-intro.css?v=2.9.0">
   <link rel="stylesheet" href="css/agv-identity.css?v=2.9.0">
   <link rel="stylesheet" href="css/agv-ux.css?v=3.1.0">
-  <title>AGV TOUCH Studio 3.2 | Laboratório Interativo</title>
+  <title>AGV TOUCH Studio 3.7 | Laboratório Interativo</title>
   <link rel="stylesheet" href="css/agv-design-system.css?v=3.2.0">
   <link rel="stylesheet" href="css/game-experience.css?v=3.3.0">
   <link rel="stylesheet" href="css/touch-app-shell.css?v=3.6.0">
-  <script src="js/touch-layout.js?v=3.6.0" defer></script>
+  <link rel="stylesheet" href="css/touch-vivid.css?v=3.7.0">
+  <script src="js/touch-layout.js?v=3.7.0" defer></script>
+  <script src="js/touch-fullscreen.js?v=3.7.0" defer></script>
   <script src="js/agv-touch-feedback.js?v=3.2.0" defer></script>
 </head>
 <body data-theme="dark" class="studio-ui">
@@ -55,7 +57,7 @@
           <button class="lesson-chip" id="lessonChip" type="button" title="Selecionar disciplina"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/></svg><span>Definir aula</span></button>
           <div class="theme-switch" id="themeSwitch" role="group" aria-label="Visual do portal"><button type="button" class="theme-button active" data-theme-mode="dark" aria-pressed="true">Black</button><button type="button" class="theme-button" data-theme-mode="light" aria-pressed="false">Claro</button><button type="button" class="theme-button" data-theme-mode="colorful" aria-pressed="false">Vivo</button></div>
           <button type="button" class="color-pause" data-color-pause hidden aria-pressed="false">Pausar</button>
-          <button type="button" class="top-action" id="fullscreenButton" title="Tela cheia"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></svg><span>Tela cheia</span></button>
+          <button type="button" class="top-action agv-fullscreen-toggle" id="fullscreenButton" data-touch-fullscreen aria-pressed="false" title="Ativar tela cheia"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></svg><span data-fullscreen-label>Tela cheia</span></button>
           <span class="date-pill" id="todayDate"></span>
         </div>
       </header>
@@ -72,7 +74,7 @@
               <button type="button" class="studio-tile tile-video" data-go="videos" aria-label="Abrir vídeos em 360 graus"><span class="tile-top"><span class="tile-index">VÍDEOS IMERSIVOS</span><span class="tile-corner" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></span><div class="video-art" aria-hidden="true"><span class="video-ring"></span><span class="video-label">360°</span><span class="video-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m8 5 11 7-11 7z"/></svg></span></div><span class="tile-content"><strong>Vídeos 360°</strong><small>Explore lugares em 360°.</small></span></button>
               <button type="button" class="studio-tile tile-calibration" data-go="diagnostico" aria-label="Abrir teste de toque e diagnóstico do painel"><span class="tile-top"><span class="tile-index">PAINEL TOUCH</span><span class="tile-corner" aria-hidden="true">✦</span></span><span class="tile-calibration-art" aria-hidden="true"><span class="calibration-target"><i></i></span><span class="calibration-point p1"></span><span class="calibration-point p2"></span><span class="calibration-point p3"></span></span><span class="tile-content"><strong>Testar toque</strong><small>Precisão · Multitoque · Diagnóstico</small></span></button>
             </div>
-            <div class="home-bottom"><div class="home-bottom-title">Também disponíveis</div><div class="home-shortcuts"><a class="agv-oficina-shortcut" href="oficina.html"><span class="shortcut-icon">▦</span> Oficina de jogos</a><a class="agv-arcade-shortcut" href="arcade.html"><span class="shortcut-icon">◈</span> Arcade</a><button type="button" data-go="piano" aria-label="Abrir piano multitoque"><span class="shortcut-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M7 3v12m5-12v12m5-12v12M5 15h14"/></svg></span> Piano</button><button type="button" data-tool="encaixe"><span class="shortcut-icon">◇</span> Encaixe</button><button type="button" data-tool="porto"><span class="shortcut-icon">▥</span> Desafio portuário</button><button type="button" data-go="fisica"><span class="shortcut-icon">◉</span> Física 2D</button><button type="button" data-go="biblioteca"><span class="shortcut-icon">≡</span> Biblioteca</button></div></div>
+            <div class="home-bottom"><div class="home-bottom-title">Também disponíveis</div><div class="home-shortcuts"><a class="agv-oficina-shortcut" href="oficina.html"><span class="shortcut-icon">▦</span> Oficina</a><a class="agv-arcade-shortcut" href="arcade.html"><span class="shortcut-icon">◈</span> Arcade</a><button type="button" data-go="piano" aria-label="Abrir piano multitoque"><span class="shortcut-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="3"/><path d="M7 3v12m5-12v12m5-12v12M5 15h14"/></svg></span> Piano</button><button type="button" data-tool="encaixe"><span class="shortcut-icon">◇</span> Encaixe</button><button type="button" data-tool="porto"><span class="shortcut-icon">▥</span> Portos</button><button type="button" data-go="fisica"><span class="shortcut-icon">◉</span> Física 2D</button><button type="button" data-go="biblioteca"><span class="shortcut-icon">≡</span> Biblioteca</button></div></div>
           </div>
           <div id="featuredCards" hidden></div>
         </section>

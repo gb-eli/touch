@@ -1,0 +1,456 @@
+/* AGV TOUCH Studio 3.7 — paisagem real, alto contraste e interação de aplicativo.
+   A altura é a área visível do navegador; tela cheia é opcional e acionada pelo usuário. */
+:root{--agv-live-vh:100dvh;--agv-header-h:60px}
+html{background:#070a13}
+body.studio-ui{
+ --bg:#080b14;--surface:#111724;--surface2:#172033;--surface3:#1d2a40;
+ --stroke:#4d6382;--text:#f6fbff;--muted:#dfecfa;--dim:#acc3dc;
+ --cyan:#00e5ff;--studio-line:#3b516f;
+ background:#080b14;color:#f6fbff
+}
+body.studio-ui .topbar{background:#0a1225ee;border-color:#36577e;box-shadow:0 4px 24px #0007}
+body.studio-ui .sidebar{
+ border:1px solid #4d608b;background:#101b31f3;
+ box-shadow:0 14px 52px #000a,inset 0 1px 0 #ffffff22;
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+body.studio-ui .nav-item{color:#d4e9ff}
+body.studio-ui .nav-item.active{
+ color:#05121f;background:linear-gradient(150deg,#7cf3ff,#00bedb);
+ border-color:#a3f9ff;box-shadow:inset 0 1px 0 #fff9,0 0 23px #00d8ff4a
+}
+body.studio-ui .home-lead h1 span{color:#dfff46;text-shadow:0 0 24px #b6fb2947}
+body.studio-ui .studio-tile{
+ --tile-accent:#00e5ff;
+ color:#fff!important;border:1px solid var(--tile-accent)!important;
+ box-shadow:inset 0 2px 0 #ffffff26,0 14px 33px #0009,0 0 0 1px #0005;
+ transition:transform .21s cubic-bezier(.2,.8,.2,1),box-shadow .21s,border-color .21s;
+ text-shadow:0 2px 10px #000b;
+ background-color:#0b1428
+}
+body.studio-ui .studio-tile::before{
+ content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.21;
+ background:repeating-linear-gradient(120deg,transparent 0 13px,#ffffff17 14px,#ffffff07 15px,transparent 16px 33px)
+}
+body.studio-ui .studio-tile::after{
+ background:linear-gradient(180deg,#050d1b00 16%,#03071444 46%,#030713e8 100%)!important
+}
+body.studio-ui .studio-tile:hover,body.studio-ui .studio-tile:focus-visible{
+ transform:translateY(-3px);
+ box-shadow:inset 0 2px 0 #ffffff55,0 17px 38px #000c,0 0 20px color-mix(in srgb,var(--tile-accent),transparent 55%)
+}
+body.studio-ui .studio-tile:active{transform:scale(.977)}
+body.studio-ui .tile-top{z-index:3}
+body.studio-ui .tile-index{color:#f2fbff;text-shadow:0 1px 5px #000}
+body.studio-ui .tile-corner{background:#090e1cc7;border-color:#ffffff66;color:#fff}
+body.studio-ui .tile-content small{color:#ebf6ff;font-weight:660}
+body.studio-ui .tile-cosmos{--tile-accent:#986bff;background:radial-gradient(circle at 72% 30%,#7136ec,#2c146c 45%,#0a1027 100%)!important}
+body.studio-ui .tile-board{--tile-accent:#00eaf8;background:radial-gradient(circle at 78% 22%,#007bab,#054877 45%,#08172f 100%)!important}
+body.studio-ui .tile-solids{--tile-accent:#ff4ab8;background:radial-gradient(circle at 71% 24%,#ba228f,#661378 49%,#160f38 100%)!important}
+body.studio-ui .tile-memory{--tile-accent:#ffae24;background:radial-gradient(circle at 77% 22%,#de5d09,#8a2e12 44%,#28111e 100%)!important}
+body.studio-ui .tile-video{--tile-accent:#258dff;background:radial-gradient(circle at 75% 20%,#195ff2,#153b94 50%,#081733 100%)!important}
+body.studio-ui .tile-calibration{
+ --tile-accent:#1cffb9;background:radial-gradient(circle at 78% 20%,#087d70,#064b58 46%,#081c29 100%)!important;
+ color:#fff!important;border-color:#1cffb9!important
+}
+body.studio-ui .tile-calibration :is(.tile-index,.tile-corner,.tile-content small){color:#f0fff9}
+body.studio-ui .tile-calibration .tile-corner{background:#062b30b8;border-color:#37ffc0}
+body.studio-ui .tile-calibration::after{background:linear-gradient(180deg,transparent,#061222e5)!important}
+body.studio-ui .calibration-target{border-color:#a3ffe8;box-shadow:0 0 0 15px #11ffb52e,0 0 0 33px #00efac2b,0 0 34px #00ffc16d}
+body.studio-ui .calibration-target:before,body.studio-ui .calibration-target:after{background:#b0fff0}
+body.studio-ui .calibration-target i{background:#e7fff5;box-shadow:0 0 20px #00ffba}
+body.studio-ui .calibration-point{background:#eafff7;border-color:#00efb3}
+body.studio-ui .home-shortcuts :is(a,button),body.studio-ui .home-lesson{
+ border-color:#4b6785;background:linear-gradient(160deg,#1e2c42,#0e1c2e);color:#fff;
+ box-shadow:inset 0 1px 0 #ffffff2a,0 5px 11px #0005;
+ transition:background .18s,transform .18s,border-color .18s
+}
+body.studio-ui .home-shortcuts :is(a,button):active,body.studio-ui .home-lesson:active{transform:scale(.972)}
+body.studio-ui .home-shortcuts :is(a,button):hover,body.studio-ui .home-shortcuts :is(a,button):focus-visible{
+ background:#263d59;border-color:#00dafa
+}
+body.studio-ui .shortcut-icon{color:#00e3ff}
+body.studio-ui :is(.resource-card,.lab-card,.discovery-card){
+ border-color:#41617e;background:linear-gradient(150deg,#17243b,#0d1525 85%);box-shadow:inset 0 1px 0 #ffffff16,0 10px 27px #0007
+}
+body.studio-ui :is(.resource-card,.lab-card,.discovery-card):focus-within{border-color:#19dfff}
+body.studio-ui :is(.lesson-chip,.top-action,.theme-switch button){border-color:#496585}
+body.studio-ui .top-action{background:linear-gradient(150deg,#1e3654,#12243a)}
+body.studio-ui .top-action:focus-visible,body.studio-ui button:focus-visible,body.studio-ui a:focus-visible{
+ outline:3px solid #ffcf30;outline-offset:3px
+}
+/* Feedback visível sem animar a cena 3D ou degradar o toque. */
+body.studio-ui .page.active{animation:agv37-open .22s ease-out both}
+@keyframes agv37-open{from{opacity:.78}to{opacity:1}}
+body.oficina-body,body:has(.arcade-shell){background:#080d19;color:#f7fbff}
+body.oficina-body :is(.oficina-header,.oficina-panel),.arcade-shell :is(.arcade-panel,.arcade-header){
+ border-color:#436386;background:linear-gradient(160deg,#14243b,#091525 85%);
+ box-shadow:inset 0 1px 0 #ffffff24,0 8px 25px #0008
+}
+body.oficina-body .oficina-choices button,.arcade-shell .arcade-game{
+ border:1px solid #43628a;background:linear-gradient(145deg,#1a2a42,#0d192b);
+ box-shadow:inset 0 1px 0 #ffffff17,0 5px 10px #0004;color:#fff;
+ transition:transform .17s ease-out,border-color .17s,background .17s,box-shadow .17s
+}
+body.oficina-body .oficina-choices button[aria-pressed="true"],.arcade-shell .arcade-game.active{
+ background:linear-gradient(115deg,#123f62,#10263c)!important;border:2px solid #0edfff!important;
+ box-shadow:inset 4px 0 0 #00efff,0 0 22px #00dcff42,0 9px 19px #0009;color:#fff
+}
+body.oficina-body .oficina-choices button:active,.arcade-shell .arcade-game:active{transform:scale(.974)}
+body.oficina-body .oficina-choices button strong,.arcade-shell .arcade-game strong{color:#fff}
+body.oficina-body .oficina-choices button small,.arcade-shell .arcade-game small{color:#c6dff9}
+body.oficina-body .oficina-panel-actions button,body.oficina-body .oficina-sound,.arcade-shell .arcade-actions button,.arcade-shell .arcade-keypad button{
+ border:1px solid #52769e;background:linear-gradient(155deg,#203b5c,#11233b);color:#fff;
+ box-shadow:inset 0 1px 0 #ffffff24,0 4px 12px #0005;
+ transition:transform .15s ease-out,background .15s,border-color .15s
+}
+body.oficina-body .oficina-panel-actions button:active,body.oficina-body .oficina-sound:active,
+.arcade-shell .arcade-actions button:active,.arcade-shell .arcade-keypad button:active{transform:scale(.962)}
+.arcade-shell .arcade-primary{background:#00ccf0!important;color:#041320!important;font-weight:900}
+.arcade-shell .arcade-scene,body.oficina-body .voxel-scene{
+ border-color:#456c98;box-shadow:inset 0 0 35px #0008,0 0 0 1px #0007,0 11px 25px #0008
+}
+body.oficina-body .oficina-status,.arcade-shell .arcade-message{color:#f0f9ff}
+body.oficina-body .oficina-eyebrow,.arcade-shell .arcade-eyebrow{color:#00e4fa}
+body.oficina-body .oficina-brand span,.arcade-shell .arcade-identity em{color:#ff7443}
+/* Controles de tela cheia sempre alcançáveis: expandir a raiz, nunca só o canvas. */
+.agv-fullscreen-toggle{cursor:pointer;touch-action:manipulation}
+.agv-fullscreen-exit{
+ position:fixed;z-index:10080;top:calc(8px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));
+ min-height:46px;min-width:142px;padding:9px 14px;border-radius:11px;
+ border:2px solid #fff2b2;background:#ffcb2a;color:#071323;
+ box-shadow:0 6px 20px #000a;font:850 14px/1.1 Inter,system-ui,sans-serif;
+ cursor:pointer;touch-action:manipulation
+}
+.agv-fullscreen-exit[hidden],.agv-fullscreen-notice[hidden]{display:none!important}
+.agv-fullscreen-exit:focus-visible{outline:3px solid #00edff;outline-offset:3px}
+.agv-fullscreen-notice{
+ position:fixed;z-index:10090;top:calc(65px + env(safe-area-inset-top,0px));right:12px;
+ max-width:min(470px,calc(100vw - 24px));padding:15px 18px;border-radius:12px;
+ border:1px solid #ffce44;background:#251b12;color:#fff;font:700 14px/1.5 system-ui,sans-serif;
+ box-shadow:0 12px 32px #0009
+}
+body.agv-is-fullscreen{overscroll-behavior:none}
+body.agv-is-fullscreen .agv-fullscreen-toggle{border-color:#e2ff4d}
+/* Barra contextual da versão web estava consumindo ~120px da tela:
+   o launcher já tem navegação no cabeçalho e no dock, então ela é redundante.
+   Nas demais seções vira uma faixa de comandos curta, não um segundo cabeçalho. */
+@media (orientation:landscape) and (min-width:760px){
+ body.studio-ui.agv-landscape-app.studio-home-active #agvExperienceBar{display:none!important}
+ body.studio-ui.agv-landscape-app:not(.studio-home-active) #agvExperienceBar{
+  min-height:0;margin:0 0 6px;padding:5px 9px;gap:8px;
+  flex-wrap:nowrap;border-radius:9px;background:#102038
+ }
+ body.studio-ui.agv-landscape-app #agvExperienceBar .agv-context-copy{
+  display:flex;flex-wrap:nowrap;min-width:0;align-items:center;gap:6px
+ }
+ body.studio-ui.agv-landscape-app #agvExperienceBar :is(#agvContextType,#agvContextHelp){display:none}
+ body.studio-ui.agv-landscape-app #agvExperienceBar .agv-context-copy strong{
+  font-size:clamp(12px,1vw,21px);line-height:1.1
+ }
+ body.studio-ui.agv-landscape-app #agvExperienceBar .agv-context-actions{
+  display:flex;flex-wrap:nowrap;width:auto;min-width:0;gap:5px
+ }
+ body.studio-ui.agv-landscape-app #agvExperienceBar .agv-command-button{
+  min-height:clamp(30px,4.7dvh,46px);padding:5px clamp(6px,.7vw,12px);
+  font-size:clamp(10px,.75vw,16px)
+ }
+}
+/* Shell baseado na área REAL útil, com ou sem barra do navegador.
+   Não depende do antigo corte de 680px de altura. */
+@media (orientation:landscape) and (min-width:760px){
+ html:has(body.agv-landscape-app),body.agv-landscape-app{height:var(--agv-live-vh,100dvh);overscroll-behavior:none}
+ body.studio-ui.agv-landscape-app.studio-home-active{height:var(--agv-live-vh,100dvh);overflow:hidden}
+ body.studio-ui.agv-landscape-app .topbar{
+  height:clamp(44px,7.8dvh,74px);min-height:0;padding:0 clamp(9px,1.15vw,28px);
+  gap:5px
+ }
+ body.studio-ui.agv-landscape-app .top-right{gap:clamp(3px,.5vw,10px);flex-wrap:nowrap}
+ body.studio-ui.agv-landscape-app .top-left{min-width:0}
+ body.studio-ui.agv-landscape-app .top-current{font-size:clamp(12px,1.18vw,24px)}
+ body.studio-ui.agv-landscape-app .top-action,
+ body.studio-ui.agv-landscape-app .lesson-chip{min-height:clamp(36px,5.8dvh,56px);padding:5px clamp(7px,.8vw,14px);border-radius:10px}
+ body.studio-ui.agv-landscape-app .theme-switch button{min-height:clamp(32px,5.5dvh,50px);padding:5px clamp(7px,.7vw,13px)}
+ body.studio-ui.agv-landscape-app .sidebar{
+  position:fixed;top:auto;bottom:calc(4px + env(safe-area-inset-bottom,0px));
+  left:50%;transform:translateX(-50%);height:auto;max-height:none;
+  width:min(1050px,calc(100vw - 20px));padding:clamp(3px,.5vh,7px);
+  border-radius:clamp(11px,1.15vw,20px)
+ }
+ body.studio-ui.agv-landscape-app .nav-items{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(2px,.3vw,6px)}
+ body.studio-ui.agv-landscape-app .nav-item{
+  height:clamp(44px,7.2dvh,96px);min-height:0;max-height:96px;
+  padding:3px;border-radius:clamp(8px,.85vw,14px);gap:2px
+ }
+ body.studio-ui.agv-landscape-app .nav-item svg{width:clamp(17px,1.45vw,36px);height:clamp(17px,1.45vw,36px)}
+ body.studio-ui.agv-landscape-app .nav-item .nav-caption{font-size:clamp(10px,.72vw,19px)}
+ body.studio-ui.agv-landscape-app main#conteudo{
+  height:calc(var(--agv-live-vh,100dvh) - var(--agv-header-h,56px));
+  padding:0 clamp(8px,1.4vw,32px);overflow:hidden
+ }
+ body.studio-ui.agv-landscape-app.studio-home-active .studio-home{
+  box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;
+  height:var(--agv-touch-home-available-height,calc(var(--agv-live-vh,100dvh) - 132px));
+  min-height:0!important;max-height:none;padding:clamp(2px,.5vh,9px) 0;
+  gap:clamp(5px,.65vh,11px);overflow:hidden
+ }
+ body.studio-ui.agv-landscape-app .home-lead{flex:0 0 auto;min-height:0;align-items:center;gap:8px}
+ body.studio-ui.agv-landscape-app .home-lead h1{
+  font-size:clamp(27px,5.5dvh,78px);margin:0;line-height:1
+ }
+ body.studio-ui.agv-landscape-app .studio-overline{font-size:clamp(9px,.66vw,14px);letter-spacing:.08em}
+ body.studio-ui.agv-landscape-app .home-lead-right{gap:6px}
+ body.studio-ui.agv-landscape-app .home-lesson{
+  min-height:clamp(32px,5dvh,48px);padding:4px 10px;font-size:clamp(11px,.78vw,16px)
+ }
+ body.studio-ui.agv-landscape-app .studio-tiles{
+  flex:1 1 auto;min-height:0;height:auto!important;max-height:none!important;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(5px,.75vh,13px)
+ }
+ body.studio-ui.agv-landscape-app .studio-tiles>.studio-tile{
+  grid-column:auto!important;grid-row:auto!important;
+  min-width:0;min-height:0;height:auto;max-height:none;overflow:hidden;
+  padding:clamp(8px,.9vw,25px);border-radius:clamp(10px,1vw,21px)
+ }
+ body.studio-ui.agv-landscape-app .tile-top{
+  top:clamp(7px,.75vw,21px);left:clamp(8px,.8vw,23px);right:clamp(8px,.8vw,23px)
+ }
+ body.studio-ui.agv-landscape-app .tile-content{
+  left:clamp(9px,.9vw,24px);right:clamp(9px,.9vw,24px);
+  bottom:clamp(6px,.75vw,22px);gap:2px
+ }
+ body.studio-ui.agv-landscape-app .tile-content strong{
+  font-size:clamp(14px,1.8vw,43px);line-height:1.08;letter-spacing:-.035em
+ }
+ body.studio-ui.agv-landscape-app .tile-content small{
+  font-size:clamp(10px,.88vw,19px);line-height:1.12
+ }
+ body.studio-ui.agv-landscape-app .tile-cta{display:none}
+ body.studio-ui.agv-landscape-app .tile-index{font-size:clamp(9px,.7vw,15px)}
+ body.studio-ui.agv-landscape-app .tile-corner{width:clamp(25px,2.3vw,46px);height:clamp(25px,2.3vw,46px)}
+ body.studio-ui.agv-landscape-app .home-bottom{
+  display:flex;flex:0 0 auto;min-height:0;margin:0;gap:0
+ }
+ body.studio-ui.agv-landscape-app .home-bottom-title{display:none}
+ body.studio-ui.agv-landscape-app .home-shortcuts{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+  grid-template-rows:minmax(0,1fr);gap:clamp(3px,.45vw,9px);
+  width:100%;min-width:0;min-height:0;align-items:stretch
+ }
+ body.studio-ui.agv-landscape-app .home-shortcuts :is(button,a){
+  display:flex;min-width:0;min-height:clamp(33px,5.4dvh,65px);
+  width:100%;white-space:normal;line-height:1.08;text-align:center;justify-content:center;
+  padding:5px 4px;gap:clamp(2px,.35vw,8px);
+  font-size:clamp(10px,.79vw,18px);border-radius:clamp(7px,.65vw,12px)
+ }
+ body.studio-ui.agv-landscape-app .home-shortcuts .shortcut-icon{font-size:clamp(14px,1.1vw,22px);flex:0 0 auto}
+ body.studio-ui.agv-landscape-app .sidebar .nav-more{display:none}
+ /* O cabeçalho real e os controles são deduzidos da viewport do Android/Chrome. */
+ body.oficina-body.agv-landscape-app,body.agv-landscape-app:has(.arcade-shell){
+  height:var(--agv-live-vh,100dvh);overflow:hidden
+ }
+ body.oficina-body.agv-landscape-app .oficina-shell{
+  box-sizing:border-box;max-width:none;width:100%;height:var(--agv-live-vh,100dvh);min-height:0;
+  padding:clamp(5px,.65vw,18px);display:grid;
+  grid-template-rows:auto minmax(0,1fr);gap:clamp(5px,.7vh,12px);overflow:hidden
+ }
+ body.oficina-body.agv-landscape-app .oficina-header{
+  min-height:0;flex-wrap:nowrap;padding:0 3px;gap:clamp(5px,.7vw,13px)
+ }
+ body.oficina-body.agv-landscape-app .oficina-brand{font-size:clamp(16px,1.5vw,30px)}
+ body.oficina-body.agv-landscape-app .oficina-brand small{font-size:clamp(8px,.65vw,13px);margin-top:2px}
+ body.oficina-body.agv-landscape-app .oficina-header :is(.oficina-back,.oficina-sound){
+  min-height:clamp(34px,6dvh,54px);padding:4px 9px;font-size:clamp(10px,.9vw,15px)
+ }
+ body.oficina-body.agv-landscape-app #oficinaMain{
+  display:grid;grid-template-columns:clamp(118px,13.4vw,245px) minmax(0,1fr);
+  grid-template-rows:minmax(0,1fr);gap:clamp(5px,.75vw,14px);
+  min-width:0;min-height:0;overflow:hidden
+ }
+ body.oficina-body.agv-landscape-app :is(.oficina-intro,.oficina-more,.oficina-footer,.agv-dev-credit){display:none!important}
+ body.oficina-body.agv-landscape-app .oficina-choices{
+  display:grid;grid-column:1;grid-row:1;grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:repeat(6,minmax(0,1fr));gap:clamp(3px,.5vh,9px);
+  min-width:0;min-height:0;overflow:hidden;margin:0
+ }
+ body.oficina-body.agv-landscape-app .oficina-choices button{
+  min-width:0;min-height:0;padding:clamp(4px,.6vw,13px);border-radius:10px;
+  grid-template-columns:clamp(19px,2vw,39px) minmax(0,1fr);
+  grid-template-rows:auto auto;gap:1px 5px;align-content:center;text-align:left
+ }
+ body.oficina-body.agv-landscape-app .oficina-choices .oficina-icon{
+  font-size:clamp(19px,2vw,36px);grid-row:span 2;line-height:1
+ }
+ body.oficina-body.agv-landscape-app .oficina-choices strong{font-size:clamp(11px,1vw,18px);line-height:1.1}
+ body.oficina-body.agv-landscape-app .oficina-choices small{font-size:clamp(9px,.65vw,14px);line-height:1.1}
+ body.oficina-body.agv-landscape-app .oficina-panel{
+  display:flex;grid-column:2;grid-row:1;flex-direction:column;
+  height:100%;min-width:0;min-height:0;overflow:hidden;padding:clamp(6px,.85vw,18px);
+  border-radius:14px
+ }
+ body.oficina-body.agv-landscape-app .oficina-panel-head{
+  flex:0 0 auto;min-height:0;gap:6px;margin:0 0 5px;flex-wrap:nowrap
+ }
+ body.oficina-body.agv-landscape-app .oficina-panel-head h2{font-size:clamp(17px,1.8vw,34px);margin:1px 0}
+ body.oficina-body.agv-landscape-app .oficina-panel-head .oficina-eyebrow{font-size:clamp(9px,.67vw,12px)}
+ body.oficina-body.agv-landscape-app .oficina-panel-head p{display:none}
+ body.oficina-body.agv-landscape-app .oficina-panel-actions{gap:clamp(4px,.5vw,9px);flex-shrink:0}
+ body.oficina-body.agv-landscape-app .oficina-panel-actions button{
+  min-height:clamp(33px,5.5dvh,47px);padding:4px clamp(5px,.65vw,12px);
+  font-size:clamp(10px,.72vw,16px)
+ }
+ body.oficina-body.agv-landscape-app .oficina-clock{font-size:clamp(12px,1vw,21px)}
+ body.oficina-body.agv-landscape-app .oficina-tools{
+  flex:0 0 auto;min-height:0;max-height:min(19dvh,140px);
+  overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;gap:4px;margin:0 0 5px
+ }
+ body.oficina-body.agv-landscape-app .oficina-tools.voxel-active{
+  display:block;max-height:min(24dvh,162px);overflow-y:auto;overflow-x:hidden
+ }
+ body.oficina-body.agv-landscape-app .voxel-workspace{gap:4px}
+ body.oficina-body.agv-landscape-app .voxel-toolbar{display:flex;gap:4px;flex-wrap:wrap}
+ body.oficina-body.agv-landscape-app .voxel-toolbar fieldset{padding:1px 4px;gap:3px;min-width:0;flex-wrap:wrap}
+ body.oficina-body.agv-landscape-app .voxel-toolbar button,
+ body.oficina-body.agv-landscape-app .voxel-toolbar select,
+ body.oficina-body.agv-landscape-app .voxel-project-details>summary{
+  min-height:clamp(28px,5dvh,41px);padding:4px 7px;font-size:clamp(10px,.7vw,15px)
+ }
+ body.oficina-body.agv-landscape-app .voxel-materials{
+  display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:3px;min-width:0
+ }
+ body.oficina-body.agv-landscape-app .voxel-materials button{
+  display:flex;min-width:0;min-height:clamp(28px,5dvh,42px);
+  padding:2px;gap:3px;justify-content:center;font-size:clamp(9px,.67vw,13px)
+ }
+ body.oficina-body.agv-landscape-app .voxel-material-dot{width:clamp(9px,1vw,17px);height:clamp(9px,1vw,17px);flex:0 0 auto}
+ body.oficina-body.agv-landscape-app .oficina-board{
+  flex:1 1 auto;min-width:0;min-height:0;overflow:hidden
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active{
+  display:flex;flex-direction:column;align-items:stretch;gap:4px;position:relative
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-scene{
+  display:block;flex:1 1 auto;min-width:0;min-height:0;max-height:none;height:auto
+ }
+ body.oficina-body.agv-landscape-app .voxel-scene .voxel-canvas{height:100%;min-height:0;max-height:none}
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-help{display:none}
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>:is(.voxel-mini,.voxel-access-grid){
+  flex:0 0 auto;padding:1px 7px;min-height:0;border-radius:7px;background:#12243a
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini[open],
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid[open]{
+  position:absolute;z-index:18;bottom:5px;right:5px;left:auto;
+  width:min(480px,calc(100% - 10px));max-height:80%;overflow:auto;
+  border:2px solid #19e7ff;background:#10243c;box-shadow:0 12px 28px #000c
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini[open]{left:5px;right:auto}
+ body.oficina-body.agv-landscape-app .oficina-status{
+  flex:0 0 auto;min-height:0;max-height:40px;margin-top:4px;padding:5px 9px;
+  overflow:hidden;font-size:clamp(10px,.8vw,15px);line-height:1.25
+ }
+ body.agv-landscape-app .arcade-shell{
+  display:grid;grid-template-columns:clamp(115px,13.5vw,240px) minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);column-gap:clamp(5px,.8vw,17px);
+  row-gap:clamp(5px,.8vh,14px);
+  box-sizing:border-box;width:100%;max-width:none;height:var(--agv-live-vh,100dvh);
+  padding:clamp(5px,.7vw,19px);margin:0;overflow:hidden
+ }
+ body.agv-landscape-app .arcade-shell>:is(.agv-crosslink,.arcade-intro,.arcade-note,footer){display:none!important}
+ body.agv-landscape-app .arcade-shell .arcade-header{
+  grid-column:1/-1;grid-row:1;min-height:0;gap:7px
+ }
+ body.agv-landscape-app .arcade-shell .arcade-home{
+  min-height:clamp(33px,5.5dvh,52px);padding:5px 9px;font-size:clamp(10px,.9vw,17px)
+ }
+ body.agv-landscape-app .arcade-shell .arcade-identity strong{font-size:clamp(17px,1.6vw,33px)}
+ body.agv-landscape-app .arcade-shell .arcade-identity span{font-size:clamp(8px,.6vw,13px)}
+ body.agv-landscape-app .arcade-shell .arcade-view button{min-height:clamp(32px,5.5dvh,53px);padding:5px 9px;font-size:clamp(10px,.86vw,17px)}
+ body.agv-landscape-app .arcade-shell .arcade-games{
+  grid-column:1;grid-row:2;display:grid;grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:repeat(4,minmax(0,1fr));gap:clamp(3px,.6vh,11px);
+  min-width:0;min-height:0;overflow:hidden;margin:0
+ }
+ body.agv-landscape-app .arcade-shell .arcade-game{
+  min-height:0;padding:clamp(4px,.7vw,15px);border-radius:10px;
+  grid-template-columns:clamp(20px,2vw,38px) minmax(0,1fr);
+  grid-template-rows:auto auto;gap:1px 5px;align-content:center
+ }
+ body.agv-landscape-app .arcade-shell .arcade-game span{font-size:clamp(20px,2vw,38px)}
+ body.agv-landscape-app .arcade-shell .arcade-game strong{font-size:clamp(12px,1.06vw,21px)}
+ body.agv-landscape-app .arcade-shell .arcade-game small{font-size:clamp(9px,.76vw,15px)}
+ body.agv-landscape-app .arcade-shell .arcade-panel{
+  grid-column:2;grid-row:2;display:flex;flex-direction:column;
+  min-width:0;min-height:0;height:100%;overflow:hidden;
+  padding:clamp(5px,.85vw,18px);border-radius:14px
+ }
+ body.agv-landscape-app .arcade-shell .arcade-panel-top{
+  flex:0 0 auto;gap:8px;margin:0 0 5px
+ }
+ body.agv-landscape-app .arcade-shell .arcade-panel-top h2{font-size:clamp(17px,1.8vw,35px);margin:0}
+ body.agv-landscape-app .arcade-shell .arcade-panel-top p{display:none}
+ body.agv-landscape-app .arcade-shell .arcade-panel-top span{font-size:clamp(9px,.7vw,13px)}
+ body.agv-landscape-app .arcade-shell .arcade-metrics{padding:4px 8px;min-width:60px}
+ body.agv-landscape-app .arcade-shell .arcade-metrics strong{font-size:clamp(16px,1.5vw,33px)}
+ body.agv-landscape-app .arcade-shell .arcade-scene{
+  flex:1 1 auto;min-width:0;min-height:0;
+  width:min(100%,calc((var(--agv-live-vh,100dvh) - 162px)*1.777778));
+  height:auto;max-height:100%;aspect-ratio:16/9;margin:auto;
+  border-radius:9px
+ }
+ body.agv-landscape-app .arcade-shell .arcade-scene canvas{
+  display:block;width:100%;height:100%;aspect-ratio:16/9;object-fit:fill
+ }
+ body.agv-landscape-app .arcade-shell .arcade-toolbar{
+  flex:0 0 auto;gap:5px;min-height:0;flex-wrap:nowrap;padding-top:4px
+ }
+ body.agv-landscape-app .arcade-shell .arcade-actions{gap:clamp(3px,.45vw,9px);flex-wrap:nowrap}
+ body.agv-landscape-app .arcade-shell .arcade-actions button,
+ body.agv-landscape-app .arcade-shell .arcade-keypad button{
+  min-height:clamp(32px,6dvh,60px);
+  padding:clamp(4px,.55vw,12px);font-size:clamp(10px,.85vw,18px)
+ }
+ body.agv-landscape-app .arcade-shell .arcade-keypad{gap:4px}
+ body.agv-landscape-app .arcade-shell .arcade-keypad button{
+  min-width:clamp(28px,3vw,60px);font-size:clamp(18px,1.4vw,28px)
+ }
+}
+@media (orientation:landscape) and (min-width:760px) and (max-height:620px){
+ body.studio-ui.agv-landscape-app .topbar{height:clamp(42px,9dvh,56px)}
+ body.studio-ui.agv-landscape-app .top-right .connection{display:none}
+ body.studio-ui.agv-landscape-app .studio-overline{display:none}
+ body.studio-ui.agv-landscape-app .home-lead-right .studio-context-note{display:none}
+ body.studio-ui.agv-landscape-app .tile-content small{font-size:10px}
+ body.studio-ui.agv-landscape-app .tile-content strong{font-size:clamp(14px,1.6vw,24px)}
+ body.studio-ui.agv-landscape-app .home-lead h1{font-size:clamp(24px,5.8dvh,42px)}
+ body.studio-ui.agv-landscape-app .tile-calibration-art{opacity:.67}
+ body.studio-ui.agv-landscape-app .studio-tile .tile-top{top:6px}
+ body.studio-ui.agv-landscape-app .nav-item{height:clamp(43px,9.5dvh,56px)}
+ body.studio-ui.agv-landscape-app .nav-item svg{width:18px;height:18px}
+ body.studio-ui.agv-landscape-app .home-shortcuts :is(a,button){min-height:32px;font-size:10px}
+ body.oficina-body.agv-landscape-app .oficina-choices button small,
+ body.agv-landscape-app .arcade-shell .arcade-game small{display:none}
+ body.oficina-body.agv-landscape-app .oficina-choices button,
+ body.agv-landscape-app .arcade-shell .arcade-game{grid-template-rows:1fr}
+ body.oficina-body.agv-landscape-app .voxel-toolbar{flex-wrap:nowrap;gap:3px}
+ body.oficina-body.agv-landscape-app .voxel-toolbar fieldset{flex-wrap:nowrap}
+ body.oficina-body.agv-landscape-app .voxel-toolbar button,
+ body.oficina-body.agv-landscape-app .voxel-toolbar select{min-height:29px;padding:3px}
+ body.oficina-body.agv-landscape-app .oficina-tools.voxel-active{max-height:92px}
+ body.agv-landscape-app .arcade-shell .arcade-scene{
+  width:min(100%,calc((var(--agv-live-vh,100dvh) - 152px)*1.777778))
+ }
+}
+@media (orientation:landscape) and (min-width:760px) and (max-width:1050px){
+ body.studio-ui.agv-landscape-app .topbar .connection,
+ body.studio-ui.agv-landscape-app .topbar .date-pill{display:none}
+ body.studio-ui.agv-landscape-app .top-action span{display:inline}
+ body.studio-ui.agv-landscape-app .studio-tile .tile-content strong{font-size:clamp(14px,1.75vw,22px)}
+ body.studio-ui.agv-landscape-app .tile-index{font-size:9px}
+ body.studio-ui.agv-landscape-app .home-shortcuts :is(button,a){gap:3px;font-size:10px}
+ body.studio-ui.agv-landscape-app .home-shortcuts .shortcut-icon{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+ body.studio-ui .page.active,body.studio-ui .studio-tile,.arcade-shell .arcade-game,
+ body.oficina-body .oficina-choices button,.agv-fullscreen-exit{animation:none!important;transition:none!important}
+}
