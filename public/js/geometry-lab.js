@@ -1,4 +1,4 @@
-/* TV TOUCH — renderer geométrico 2.4. Canvas2D, sem WebGL/CDN.
+/* TV TOUCH — renderer geométrico 3.6. Canvas2D, sem WebGL/CDN.
    Projeção 3D com sombreamento por face e textura procedural aproximada (não PBR). */
 (() => {
 'use strict';
@@ -132,6 +132,33 @@ function grain(ctx,kind){
   }
   const result=ctx.createPattern(cv,'repeat');patternCache.set(kind,result);return result;
 }
+/* Mapeamento UV em coordenadas locais do objeto: o pigmento gira com a face,
+   sem ficar preso aos pixels da tela enquanto a câmera/modelo se movimenta. */
+function paintObjectGrain(ctx,pattern,vertices,indices,points,alpha){
+  if(!pattern||indices.length<3)return;
+  const local=indices.map(i=>vertices[i]);
+  const d1=subtract(local[1],local[0]),d2=subtract(local[2],local[0]);
+  const n=normalize(cross(d1,d2));
+  const abs=n.map(Math.abs),drop=abs[0]>=abs[1]&&abs[0]>=abs[2]?0:abs[1]>=abs[2]?1:2;
+  const axes=drop===0?[2,1]:drop===1?[0,2]:[0,1];
+  const uv=local.map(p=>[p[axes[0]]*48,p[axes[1]]*48]);
+  const [u0,v0]=uv[0],[u1,v1]=uv[1],[u2,v2]=uv[2];
+  const [du1,dv1,du2,dv2]=[u1-u0,v1-v0,u2-u0,v2-v0],det=du1*dv2-du2*dv1;
+  if(Math.abs(det)<.001)return;
+  const dx1=points[1].x-points[0].x,dy1=points[1].y-points[0].y;
+  const dx2=points[2].x-points[0].x,dy2=points[2].y-points[0].y;
+  const a=(dx1*dv2-dx2*dv1)/det,b=(dy1*dv2-dy2*dv1)/det;
+  const c=(dx2*du1-dx1*du2)/det,d=(dy2*du1-dy1*du2)/det;
+  const e=points[0].x-a*u0-c*v0,f=points[0].y-b*u0-d*v0;
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  ctx.transform(a,b,c,d,e,f);
+  ctx.fillStyle=pattern;
+  const minU=Math.min(...uv.map(p=>p[0])),maxU=Math.max(...uv.map(p=>p[0]));
+  const minV=Math.min(...uv.map(p=>p[1])),maxV=Math.max(...uv.map(p=>p[1]));
+  ctx.fillRect(minU-72,minV-72,maxU-minU+144,maxV-minV+144);
+  ctx.restore();
+}
 function resize(canvas,quality){
   const q=QUALITY[quality]||QUALITY.balanced;
   const rect=canvas.getBoundingClientRect();const width=rect.width,height=rect.height;
@@ -176,10 +203,10 @@ function render(ctx,canvas,options={}){
     const variation=options.shape==='esfera'?1:1+Math.sin(face.index*7.11)*.04;
     ctx.fillStyle=colorScale(material.base,intensity*variation);ctx.fill();
     if(pattern){
-      ctx.save();ctx.clip();ctx.globalAlpha=['grass','lava','ice','crystal','brick'].includes(material.grain)?.52:material.grain==='wood'?.33:.40;ctx.fillStyle=pattern;
-      const minx=Math.min(...pts.map(v=>v.x)),miny=Math.min(...pts.map(v=>v.y));
-      const maxx=Math.max(...pts.map(v=>v.x)),maxy=Math.max(...pts.map(v=>v.y));
-      ctx.fillRect(minx,miny,maxx-minx,maxy-miny);ctx.restore();
+      ctx.save();ctx.clip();
+      const opacity=['grass','lava','ice','crystal','brick'].includes(material.grain)?.62:material.grain==='wood'?.48:.47;
+      paintObjectGrain(ctx,pattern,mesh.vertices,face.indices,pts,opacity);
+      ctx.restore();
     }
     if(options.shape!=='esfera'&&options.shape!=='cilindro'){
       ctx.strokeStyle='rgba(255,252,237,.36)';ctx.lineWidth=1.3*dpr;ctx.stroke();
