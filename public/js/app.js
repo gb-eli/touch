@@ -177,10 +177,7 @@ function startShell() {
   $('#backToLab').addEventListener('click',()=>go(lastPage));
   $('#menuButton').addEventListener('click',()=>{const open=$('.sidebar').classList.toggle('open');$('#mobileOverlay').hidden=!open;$('#menuButton').setAttribute('aria-expanded',String(open));});
   $('#mobileOverlay').addEventListener('click',closeMenu);
-  $('#fullscreenButton').addEventListener('click',async()=>{
-    try {if(document.fullscreenElement) await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else alert('Este navegador não oferece tela cheia pelo site. Use o modo de tela cheia do navegador ou da TV.');}
-    catch{alert('A TV ou navegador bloqueou o modo de tela cheia. Tente pelas opções do navegador.');}
-  });
+  // Modo tela cheia unificado em touch-fullscreen.js (raiz completa da aplicação).
   window.addEventListener('hashchange',()=>{const target=location.hash.slice(1);if(target !== 'atividade'&&pageTitles[target])go(target,{hash:false});});
   // Não reabre atividades via hash sem inicializar o módulo correto.
   const initial=location.hash.slice(1);go(pageTitles[initial]&&initial!=='atividade'?initial:'inicio',{hash:!location.hash});
