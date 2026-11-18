@@ -38,6 +38,9 @@ try{
     args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader']});
   for(const profile of [
     {name:'mobile-390',width:390,height:844,scale:1},
+    {name:'landscape-844',width:844,height:390,scale:1,smokeOnly:true},
+    {name:'landscape-1024',width:1024,height:600,scale:1,smokeOnly:true},
+    {name:'browser-1366',width:1366,height:630,scale:1,smokeOnly:true},
     {name:'desktop-1920',width:1920,height:1080,scale:1},
     {name:'tv-3840',width:3840,height:2160,scale:1,smokeOnly:true}
   ]){
@@ -91,7 +94,7 @@ try{
       if(overflow>16)report.issues.push({pageName,profile:profile.name,
         type:'horizontal-overflow',pixels:overflow});
       note(profile.name+' '+pageName+' loaded','pass',JSON.stringify(layout));
-      if(profile.width>=1920&&['portal','oficina','arcade'].includes(pageName)){
+      if((profile.width>=1920||(profile.width>=760&&profile.height<=650))&&['portal','oficina','arcade'].includes(pageName)){
         const fit=await page.evaluate(name=>{
           const selector=name==='portal'?'.studio-home':name==='oficina'?'.oficina-panel':'.arcade-panel';
           const rect=document.querySelector(selector)?.getBoundingClientRect();
@@ -107,6 +110,37 @@ try{
           assert.equal(fit.calibrator,true,'acesso ao diagnóstico do touch deve estar na tela inicial');
         }
         note(profile.name+' '+pageName+' app sem deslocamento do painel','pass',JSON.stringify(fit));
+        const landscape=await page.evaluate(name=>{
+          const root=name==='portal'?document.querySelector('.studio-home'):
+            name==='oficina'?document.querySelector('#oficinaMain'):document.querySelector('.arcade-shell .arcade-panel');
+          const rect=root?.getBoundingClientRect();
+          const dock=name==='portal'?document.querySelector('.sidebar')?.getBoundingClientRect():null;
+          const tiles=name==='portal'?document.querySelector('.studio-tiles')?.getBoundingClientRect():null;
+          return {active:document.body.classList.contains('agv-landscape-app'),
+            h:innerHeight,w:innerWidth,rootTop:rect?.top,rootBottom:rect?.bottom,
+            dockTop:dock?.top,tilesBottom:tiles?.bottom,
+            bodyOverflow:getComputedStyle(document.body).overflow};
+        },pageName);
+        assert.equal(landscape.active,true,'paisagem app ativa: '+JSON.stringify(landscape));
+        assert.ok(landscape.rootBottom<=landscape.h+3,'app cabe na viewport real: '+JSON.stringify(landscape));
+        if(pageName==='portal'){
+          assert.ok(landscape.tilesBottom<=landscape.dockTop-2,'cartões não podem ficar atrás do dock: '+JSON.stringify(landscape));
+          assert.equal(landscape.bodyOverflow,'hidden','home sem rolagem em paisagem');
+        }
+        note(profile.name+' '+pageName+' visual viewport real','pass',JSON.stringify(landscape));
+      }
+      if(['portal','oficina','arcade'].includes(pageName)&&profile.width>=760&&profile.height<=650){
+        const toggleId=pageName==='portal'?'#fullscreenButton':pageName==='oficina'?'#oficinaFullscreen':'#arcadeFullscreen';
+        assert.equal(await page.locator(toggleId).getAttribute('data-touch-fullscreen'),'','controle de tela cheia disponível');
+        await page.locator(toggleId).click();
+        await page.waitForTimeout(120);
+        assert.equal(await page.evaluate(()=>document.fullscreenElement===document.documentElement),true,
+          'a tela cheia deve expandir a interface toda: '+pageName);
+        assert.equal(await page.locator('#agvFullscreenExit').isVisible(),true,'saída de tela cheia acessível');
+        await page.locator('#agvFullscreenExit').click();
+        await page.waitForTimeout(80);
+        assert.equal(await page.evaluate(()=>Boolean(document.fullscreenElement)),false,'sair da tela cheia restaura o navegador');
+        note(profile.name+' '+pageName+' tela cheia real / sair','pass');
       }
       if(pageName==='portal'){
         const skip=page.locator('#tvtEntrySkip');
