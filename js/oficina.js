@@ -4,7 +4,8 @@
   const board=$('oficinaBoard'),tools=$('oficinaTools'),status=$('oficinaStatus');
   if(!board||!tools)return;
   const names={
-    blocks:['CRIAR · MATERIAIS','Blocos texturizados','Escolha um material, empilhe, arraste e crie estruturas.'],
+    builder3d:['CONSTRUÇÃO · WEBGL','Construção 3D','Gire a câmera, escolha texturas e encaixe blocos na grade X, Y e Z.'],
+    blocks:['CONSTRUÇÃO · 2D','Blocos em colunas 2D','Empilhe materiais em oito colunas e resolva os desafios de altura.'],
     pattern:['PRECISÃO · TOQUE','Conexões neurais','Observe uma sequência de pontos e reconstrua o caminho.'],
     ttt:['ESTRATÉGIA · TURNOS','Jogo da velha','Duas pessoas ou contra a máquina, com jogadas variadas.'],
     checkers:['ESTRATÉGIA · TABULEIRO','Damas','Capture peças, promova damas e pense antes de mover.'],
@@ -12,7 +13,7 @@
   };
   const materialNames={grass:'Grama',dirt:'Terra',sand:'Areia',stone:'Pedra',lava:'Lava',ice:'Gelo',wood:'Madeira',brick:'Tijolo',crystal:'Cristal'};
   const choice=[...document.querySelectorAll('[data-oficina]')];
-  let game='blocks',state=null,controller=null,asyncId=0,started=0,clockTimer=0,thinkingTimer=0,sound=false,photoURL=null;
+  let game='builder3d',state=null,controller=null,voxelMount=null,asyncId=0,started=0,clockTimer=0,thinkingTimer=0,sound=false,photoURL=null;
   const gameExperience=window.AGVGameExperience;
   let gameSession=null;
   const rand=n=>Math.floor(Math.random()*n);
@@ -58,6 +59,7 @@
     field.value=value;field.addEventListener('change',()=>change(field.value));l.appendChild(field);tools.appendChild(l);return field;
   }
   function cleanup(){
+    voxelMount?.dispose();voxelMount=null;
     if(controller){controller.abort();controller=null}
     if(thinkingTimer)clearTimeout(thinkingTimer);thinkingTimer=0;
     if(clockTimer)clearInterval(clockTimer);clockTimer=0;
@@ -76,6 +78,7 @@
     choice.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.oficina===game)));
     tools.replaceChildren();board.replaceChildren();board.classList.remove('oficina-shake','oficina-flash');
     controller=new AbortController();
+    if(game==='builder3d')initializeVoxelBuilder();
     if(game==='blocks')initializeBlocks();
     if(game==='pattern')initializePattern();
     if(game==='ttt')initializeTtt();
@@ -104,6 +107,18 @@
       fullscreenButton.textContent=expanded?'⤢ Sair da tela cheia':'⛶ Tela cheia';
       fullscreenButton.setAttribute('aria-pressed',String(expanded));
       fullscreenButton.setAttribute('aria-label',expanded?'Sair da tela cheia':'Expandir a atividade em tela cheia');
+    });
+  }
+  // === CONSTRUTOR WEBGL 3D (isolado dos demais jogos) ===
+  function initializeVoxelBuilder(){
+    if(!window.AGVVoxelBuilder){
+      setStatus('Construtor 3D indisponível. Abrindo a versão 2D.','warn');
+      queueMicrotask(()=>start('blocks'));return;
+    }
+    voxelMount=window.AGVVoxelBuilder.mount({
+      tools,board,onStatus:(message,kind)=>setStatus(message,kind==='success'?'':kind),
+      onFallback:()=>start('blocks'),
+      onEvent:type=>gameSession?.emit(type,{target:status,audio:false})
     });
   }
   // === MATERIAIS E CONSTRUÇÃO ===
@@ -505,7 +520,7 @@
   window.addEventListener('pagehide',()=>{
     cleanup();gameSession?.dispose();if(photoURL)URL.revokeObjectURL(photoURL);
   },{once:true});
-  let initial='blocks';
+  let initial='builder3d';
   try{const g=new URLSearchParams(location.search).get('game');if(names[g])initial=g}catch{}
   start(initial);
   window.AGVTouchPlayground=Object.freeze({

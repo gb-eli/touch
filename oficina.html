@@ -13,10 +13,15 @@
 <script defer src="js/site-synapses.js?v=3.1.0"></script>
 <script defer src="js/platform-ux.js?v=3.1.0"></script>
 <script defer src="js/game-experience.js?v=3.3.0"></script>
-<script defer src="js/oficina.js?v=3.4.0"></script>
+<script defer src="js/voxel-world.js?v=3.5.0"></script>
+<script defer src="js/voxel-renderer.js?v=3.5.0"></script>
+<script defer src="js/voxel-builder-ui.js?v=3.5.0"></script>
+<script defer src="js/oficina.js?v=3.5.0"></script>
   <link rel="stylesheet" href="css/agv-design-system.css?v=3.2.0">
   <link rel="stylesheet" href="css/game-experience.css?v=3.3.0">
   <link rel="stylesheet" href="css/agv34-interactions.css?v=3.4.0">
+<link rel="stylesheet" href="css/voxel-builder.css?v=3.5.0">
+<link rel="stylesheet" href="css/touch-app-shell.css?v=3.6.0">
   <script src="js/agv-touch-feedback.js?v=3.2.0" defer></script>
 </head>
 <body class="oficina-body">
@@ -33,7 +38,8 @@
 <p>Jogos com animações, desafios de precisão e blocos texturizados. Use os dedos, a caneta touch ou o mouse. As partidas são locais, sem cadastro e sem placar público.</p>
 </div>
 <nav class="oficina-choices" aria-label="Escolher atividade">
-<button type="button" data-oficina="blocks" aria-pressed="true"><span class="oficina-icon">▦</span><strong>Blocos 3D</strong><small>Construir e encaixar</small></button>
+<button type="button" data-oficina="builder3d" aria-pressed="true"><span class="oficina-icon">⬡</span><strong>Construção 3D</strong><small>Blocos em XYZ</small></button>
+<button type="button" data-oficina="blocks" aria-pressed="false"><span class="oficina-icon">▦</span><strong>Blocos 2D</strong><small>Empilhar e alinhar</small></button>
 <button type="button" data-oficina="pattern" aria-pressed="false"><span class="oficina-icon">⌁</span><strong>Conexões</strong><small>Trace o padrão</small></button>
 <button type="button" data-oficina="ttt" aria-pressed="false"><span class="oficina-icon">✕</span><strong>Jogo da velha</strong><small>2 pessoas ou máquina</small></button>
 <button type="button" data-oficina="checkers" aria-pressed="false"><span class="oficina-icon">◉</span><strong>Damas</strong><small>Estratégia e capturas</small></button>
@@ -41,7 +47,7 @@
 </nav>
 <section class="oficina-panel" id="oficinaStage" aria-labelledby="oficinaTitle">
 <header class="oficina-panel-head">
-<div><span class="oficina-eyebrow" id="oficinaCategory">CRIATIVIDADE</span><h2 id="oficinaTitle">Blocos 3D</h2><p id="oficinaHelp">Selecione um material e monte sua construção.</p></div>
+<div><span class="oficina-eyebrow" id="oficinaCategory">CRIATIVIDADE · 3D</span><h2 id="oficinaTitle">Construção 3D</h2><p id="oficinaHelp">Selecione um material e monte sua construção.</p></div>
 <div class="oficina-panel-actions"><span class="oficina-clock" id="oficinaClock" aria-label="Tempo da rodada">00:00</span><button type="button" id="oficinaRestart">↻ Reiniciar</button><button type="button" id="oficinaFullscreen" aria-label="Expandir a atividade em tela cheia" aria-pressed="false">⛶ Tela cheia</button></div>
 </header>
 <div id="oficinaTools" class="oficina-tools"></div>
