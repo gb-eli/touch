@@ -55,7 +55,7 @@ try{
       page.setDefaultTimeout(8500);
       // Testes de jogos não devem disputar foco com a abertura automática do tutorial.
       if(pageName==='portal')await page.addInitScript(()=>{
-        try{localStorage.setItem('tvt:tutorial:v2.1','done')}catch{}
+        try{localStorage.setItem('tvt:tutorial:v2.1','done');sessionStorage.setItem('tvt:entry:v3','done')}catch{}
       });
       console.log('SMOKE START',profile.name,pageName);
       const errors=[];
