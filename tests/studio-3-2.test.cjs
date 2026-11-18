@@ -82,7 +82,7 @@ test('Jogo da velha e damas animam apenas a jogada recente',()=>{
 });
 test('Cache do PWA atualiza sem incluir controle administrativo no pré-cache',()=>{
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.6\.0-tablet-materials/);
+  assert.match(sw,/tvtouch-studio-v3\.7\.0-landscape-vivid/);
   for(const asset of ['agv-design-system.css','agv-touch-feedback.js','arcade.js','oficina.js'])
     assert.ok(sw.includes(asset));
   assert.doesNotMatch(sw,/"\.\/admin\.html"/);
