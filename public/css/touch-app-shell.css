@@ -199,3 +199,72 @@
 @media (prefers-reduced-motion:reduce){
  .tile-calibration,.tile-calibration *{animation:none!important;transition:none!important}
 }
+
+/* ARCADE APP LAYOUT — uma única área de jogo, com navegação sempre visível. */
+@media (min-width:1024px) and (min-height:650px){
+ html:has(body .arcade-shell),body:has(.arcade-shell){height:100dvh;overflow:hidden;overscroll-behavior:none}
+ .arcade-shell{
+  display:grid;grid-template-columns:clamp(154px,14vw,265px) minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);
+  column-gap:clamp(10px,1vw,19px);row-gap:clamp(8px,1vh,16px);
+  height:100dvh;width:100%;max-width:none;
+  padding:clamp(8px,.85vw,20px);margin:0;overflow:hidden;
+ }
+ .arcade-shell>:is(.agv-crosslink,.arcade-intro,.arcade-note,footer){display:none!important}
+ .arcade-shell .arcade-header{grid-row:1;grid-column:1/-1;min-height:0}
+ .arcade-shell .arcade-header .arcade-home{min-height:44px;padding:6px 13px;font-size:clamp(12px,.9vw,18px)}
+ .arcade-shell .arcade-identity strong{font-size:clamp(20px,1.5vw,34px)}
+ .arcade-shell .arcade-identity span{font-size:clamp(9px,.65vw,12px)}
+ .arcade-shell .arcade-view button{min-height:43px;padding:7px 12px;font-size:clamp(12px,.85vw,18px)}
+ .arcade-shell .arcade-games{
+  grid-column:1;grid-row:2;display:grid;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:repeat(4,minmax(0,1fr));
+  gap:clamp(6px,.8vh,13px);
+  min-width:0;min-height:0;overflow:hidden;margin:0;
+ }
+ .arcade-shell .arcade-game{
+  min-height:0;padding:clamp(8px,1vw,18px);
+  grid-template-columns:clamp(27px,2vw,40px) minmax(0,1fr);
+  grid-template-rows:auto auto;gap:2px 9px;align-content:center;
+  border-radius:14px;
+ }
+ .arcade-shell .arcade-game span{font-size:clamp(24px,2vw,40px)}
+ .arcade-shell .arcade-game strong{font-size:clamp(14px,1vw,22px);line-height:1.2}
+ .arcade-shell .arcade-game small{font-size:clamp(11px,.75vw,17px);line-height:1.2}
+ .arcade-shell .arcade-panel{
+  grid-column:2;grid-row:2;display:flex;flex-direction:column;
+  height:100%;min-width:0;min-height:0;overflow:hidden;
+  padding:clamp(8px,1vw,19px);
+ }
+ .arcade-shell .arcade-panel-top{margin:0 0 7px;gap:8px;flex:0 0 auto}
+ .arcade-shell .arcade-panel-top h2{font-size:clamp(22px,1.8vw,38px);margin:0}
+ .arcade-shell .arcade-panel-top p{display:none}
+ .arcade-shell .arcade-panel-top span{font-size:clamp(10px,.7vw,13px)}
+ .arcade-shell .arcade-metrics{padding:6px 15px;min-width:110px}
+ .arcade-shell .arcade-metrics strong{font-size:clamp(19px,1.7vw,35px)}
+ .arcade-shell .arcade-scene{
+  width:min(100%,calc((100dvh - 270px)*1.7777778));
+  height:auto;max-height:100%;min-height:0;
+  flex:0 1 auto;aspect-ratio:16/9;margin:auto;
+ }
+ .arcade-shell .arcade-scene canvas{
+  display:block;width:100%;height:100%;aspect-ratio:16/9;object-fit:fill;
+ }
+ .arcade-shell .arcade-toolbar{
+  flex:0 0 auto;gap:8px;min-height:0;flex-wrap:nowrap;
+  padding-top:clamp(5px,.7vh,12px);
+ }
+ .arcade-shell .arcade-actions{gap:clamp(5px,.6vw,11px);flex-wrap:nowrap}
+ .arcade-shell .arcade-actions button,.arcade-shell .arcade-keypad button{
+  padding:clamp(6px,.65vw,13px);min-height:clamp(43px,4.5vh,70px);
+  font-size:clamp(11px,.9vw,20px);
+ }
+ .arcade-shell .arcade-keypad{gap:6px}
+ .arcade-shell .arcade-keypad button{min-width:clamp(42px,3.6vw,70px);font-size:clamp(20px,1.3vw,29px)}
+ .arcade-shell .arcade-resolution{font-size:clamp(10px,.7vw,14px)}
+ .arcade-shell .arcade-scene:fullscreen{
+  width:100vw;height:100dvh;max-height:none;aspect-ratio:auto;
+ }
+ .arcade-shell .arcade-scene:fullscreen canvas{width:min(100vw,177.77778vh);height:auto;aspect-ratio:16/9}
+}
