@@ -91,6 +91,23 @@ try{
       if(overflow>16)report.issues.push({pageName,profile:profile.name,
         type:'horizontal-overflow',pixels:overflow});
       note(profile.name+' '+pageName+' loaded','pass',JSON.stringify(layout));
+      if(profile.width>=1920&&['portal','oficina','arcade'].includes(pageName)){
+        const fit=await page.evaluate(name=>{
+          const selector=name==='portal'?'.studio-home':name==='oficina'?'.oficina-panel':'.arcade-panel';
+          const rect=document.querySelector(selector)?.getBoundingClientRect();
+          return {top:rect?.top,bottom:rect?.bottom,viewport:innerHeight,
+            docHeight:document.documentElement.scrollHeight,
+            tileCount:document.querySelectorAll('.studio-tiles > .studio-tile').length,
+            calibrator:!!document.querySelector('.tile-calibration[data-go="diagnostico"]')};
+        },pageName);
+        assert.ok(fit.top>=-1&&fit.bottom<=fit.viewport+2,
+          pageName+' painel deve caber verticalmente na tela do tablet: '+JSON.stringify(fit));
+        if(pageName==='portal'){
+          assert.equal(fit.tileCount,6,'início deve mostrar 6 blocos na tela');
+          assert.equal(fit.calibrator,true,'acesso ao diagnóstico do touch deve estar na tela inicial');
+        }
+        note(profile.name+' '+pageName+' app sem deslocamento do painel','pass',JSON.stringify(fit));
+      }
       if(pageName==='portal'){
         const skip=page.locator('#tvtEntrySkip');
         if(await skip.isVisible())await skip.click({timeout:3500}).catch(()=>{});
