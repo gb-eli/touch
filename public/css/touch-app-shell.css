@@ -268,3 +268,20 @@
  }
  .arcade-shell .arcade-scene:fullscreen canvas{width:min(100vw,177.77778vh);height:auto;aspect-ratio:16/9}
 }
+
+/* Ajustes de QA: menus sempre dentro do painel, atalhos sem overflow no celular. */
+@media(min-width:1024px) and (min-height:650px){
+ body.oficina-body .voxel-project-details[open]>.voxel-project-actions{
+  left:0;right:auto;width:min(500px,calc(100vw - 360px));
+  max-width:calc(100vw - 360px);z-index:99;
+ }
+}
+@media(max-width:700px){
+ body.studio-ui .home-shortcuts{min-width:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.studio-ui .home-shortcuts :is(button,a){
+  min-width:0;max-width:100%;width:100%;white-space:normal;
+  overflow-wrap:anywhere;justify-content:center;text-align:center;
+  padding:7px 6px;gap:6px;line-height:1.2;
+ }
+ body.studio-ui .studio-home,body.studio-ui .home-bottom{min-width:0;max-width:100%}
+}
