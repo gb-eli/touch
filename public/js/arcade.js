@@ -451,7 +451,7 @@
   $('arcadePlay').addEventListener('click',togglePlay);
   $('arcadeSound')?.addEventListener('click',toggleSound);
   $('arcadeRestart').addEventListener('click',initialize);
-  $('arcadeFullscreen').addEventListener('click',()=>{if(document.fullscreenElement)document.exitFullscreen?.();else $('arcadeStage').requestFullscreen?.().catch(()=>message('Tela cheia indisponível neste navegador.'))});
+  // Tela cheia do aplicativo: gerenciada por touch-fullscreen.js.
   document.addEventListener('visibilitychange',()=>{lastTime=0;slowFrames=0;fastFrames=0;if(document.hidden&&playing){playing=false;$('arcadePlay').textContent='▶ Jogar';message('Jogo pausado ao sair desta página.')}});
   window.addEventListener('resize',resizeCanvas,{passive:true});
   document.addEventListener('fullscreenchange',()=>requestAnimationFrame(resizeCanvas));
