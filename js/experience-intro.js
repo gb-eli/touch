@@ -259,17 +259,24 @@
   function setup() {
     const shortcuts=document.querySelector('.home-shortcuts');
     if (shortcuts) {
+      // O launcher já oferece Arcade; não criar segundo cartão e roubar altura na TV.
+      if (!shortcuts.querySelector('.agv-arcade-shortcut, a[href="arcade.html"]')) {
       const games=document.createElement('a');
       games.href='arcade.html';
       games.className='tvt-arcade-link';
       games.textContent='🎮 Arcade · Pong, Snake, Basquete e Sinuca';
       games.style.cssText='display:inline-flex;align-items:center;min-height:52px;padding:12px 18px;border:1px solid #ff5823;border-radius:6px;background:#1d111c;color:#fff;text-decoration:none;font-weight:850';
       shortcuts.prepend(games);
-      const replay=document.createElement('button');
-      replay.type='button';
-      replay.textContent='◎ Testar toques';
-      replay.addEventListener('click',open);
-      shortcuts.appendChild(replay);
+      }
+      if (!shortcuts.querySelector('[data-touch-replay]')) {
+        const replay=document.createElement('button');
+        replay.type='button';
+        replay.dataset.touchReplay='';
+        replay.textContent='◎ Testar toques';
+        replay.setAttribute('aria-label','Reabrir o teste interativo de toque');
+        replay.addEventListener('click',open);
+        shortcuts.appendChild(replay);
+      }
     }
     if (!seen() && (!location.hash || location.hash==='#inicio')) open();
   }
