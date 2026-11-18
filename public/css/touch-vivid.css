@@ -454,3 +454,77 @@ body.agv-is-fullscreen .agv-fullscreen-toggle{border-color:#e2ff4d}
  body.studio-ui .page.active,body.studio-ui .studio-tile,.arcade-shell .arcade-game,
  body.oficina-body .oficina-choices button,.agv-fullscreen-exit{animation:none!important;transition:none!important}
 }
+
+/* Studio 3.7.1 — QA visual em paisagem curta (844x390):
+   o canvas 3D NÃO pode encolher a uma linha quando objetivos e coordenadas
+   fechados dividem a altura com a cena. Conservar recursos acessíveis como
+   gavetas flutuantes, sem removê-los da árvore de acessibilidade. */
+@media (orientation:landscape) and (min-width:760px) and (max-height:620px){
+ body.studio-ui.agv-landscape-app .home-shortcuts{
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  grid-template-rows:minmax(0,1fr);
+ }
+ body.studio-ui.agv-landscape-app .home-shortcuts :is(button,a){
+  min-height:32px;padding:4px 3px;white-space:normal;
+  line-height:1.1;font-size:clamp(9px,.74vw,13px)
+ }
+ body.oficina-body.agv-landscape-app .oficina-tools.voxel-active{
+  max-height:clamp(66px,19dvh,88px);overflow-y:auto;overflow-x:hidden;
+  margin-bottom:3px
+ }
+ body.oficina-body.agv-landscape-app .voxel-workspace{gap:2px}
+ body.oficina-body.agv-landscape-app .voxel-toolbar{gap:3px;min-width:0}
+ body.oficina-body.agv-landscape-app .voxel-toolbar fieldset{padding:0 4px}
+ body.oficina-body.agv-landscape-app .voxel-toolbar legend{display:none}
+ body.oficina-body.agv-landscape-app .voxel-toolbar label{gap:4px;font-size:11px}
+ body.oficina-body.agv-landscape-app .voxel-toolbar select{max-width:148px}
+ body.oficina-body.agv-landscape-app .voxel-materials{margin:0;gap:3px}
+ body.oficina-body.agv-landscape-app .voxel-materials button{
+  min-height:26px;padding:2px 1px;font-size:clamp(9px,.68vw,12px)
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active{
+  display:flex;flex-direction:column;justify-content:flex-start;
+  position:relative;gap:0;overflow:hidden
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-scene{
+  flex:1 1 auto;min-height:clamp(115px,36dvh,225px);
+  height:auto;max-height:100%
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini:not([open]),
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid:not([open]){
+  position:absolute;z-index:9;left:auto;bottom:auto;right:6px;
+  display:block;flex:none;max-width:min(44%,290px);width:auto;
+  padding:2px 6px;background:#0c1e33e8;border:1px solid #477fa3;
+  border-radius:8px;box-shadow:0 4px 13px #000b
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini:not([open]){
+  top:5px
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid:not([open]){
+  top:39px
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini:not([open])>summary,
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid:not([open])>summary{
+  display:flex;align-items:center;justify-content:center;
+  min-height:25px;max-height:28px;font-size:0;white-space:nowrap
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini:not([open])>summary::after{
+  content:"🎯 Missão / mapa";font-size:11px;color:#f6fcff
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid:not([open])>summary::after{
+  content:"⌨ Coordenadas";font-size:11px;color:#f6fcff
+ }
+ body.oficina-body.agv-landscape-app .voxel-hud{max-width:43%;top:7px;left:7px;gap:2px}
+ body.oficina-body.agv-landscape-app .voxel-hud strong{font-size:clamp(10px,.85vw,15px)}
+ body.oficina-body.agv-landscape-app .voxel-hud small{font-size:10px}
+ body.oficina-body.agv-landscape-app .voxel-progress{height:5px;width:100%}
+ body.oficina-body.agv-landscape-app .voxel-overlay{bottom:6px;right:6px;gap:3px}
+ body.oficina-body.agv-landscape-app .voxel-overlay button{
+  min-width:clamp(29px,3vw,42px);min-height:clamp(28px,5dvh,40px);
+  padding:3px 6px;font-size:clamp(14px,1.2vw,20px)
+ }
+ body.oficina-body.agv-landscape-app .oficina-status{
+  min-height:23px;max-height:25px;margin-top:3px;padding:3px 8px;
+  line-height:1.1;white-space:nowrap;text-overflow:ellipsis
+ }
+}
