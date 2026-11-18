@@ -55,7 +55,7 @@ try{
       page.setDefaultTimeout(8500);
       // Testes de jogos não devem disputar foco com a abertura automática do tutorial.
       if(pageName==='portal')await page.addInitScript(()=>{
-        try{localStorage.setItem('tvt:tutorial:v2.1','done')}catch{}
+        try{localStorage.setItem('tvt:tutorial:v2.1','done');sessionStorage.setItem('tvt:entry:v3','done')}catch{}
       });
       console.log('SMOKE START',profile.name,pageName);
       const errors=[];
@@ -91,6 +91,23 @@ try{
       if(overflow>16)report.issues.push({pageName,profile:profile.name,
         type:'horizontal-overflow',pixels:overflow});
       note(profile.name+' '+pageName+' loaded','pass',JSON.stringify(layout));
+      if(profile.width>=1920&&['portal','oficina','arcade'].includes(pageName)){
+        const fit=await page.evaluate(name=>{
+          const selector=name==='portal'?'.studio-home':name==='oficina'?'.oficina-panel':'.arcade-panel';
+          const rect=document.querySelector(selector)?.getBoundingClientRect();
+          return {top:rect?.top,bottom:rect?.bottom,viewport:innerHeight,
+            docHeight:document.documentElement.scrollHeight,
+            tileCount:document.querySelectorAll('.studio-tiles > .studio-tile').length,
+            calibrator:!!document.querySelector('.tile-calibration[data-go="diagnostico"]')};
+        },pageName);
+        assert.ok(fit.top>=-1&&fit.bottom<=fit.viewport+2,
+          pageName+' painel deve caber verticalmente na tela do tablet: '+JSON.stringify(fit));
+        if(pageName==='portal'){
+          assert.equal(fit.tileCount,6,'início deve mostrar 6 blocos na tela');
+          assert.equal(fit.calibrator,true,'acesso ao diagnóstico do touch deve estar na tela inicial');
+        }
+        note(profile.name+' '+pageName+' app sem deslocamento do painel','pass',JSON.stringify(fit));
+      }
       if(pageName==='portal'){
         const skip=page.locator('#tvtEntrySkip');
         if(await skip.isVisible())await skip.click({timeout:3500}).catch(()=>{});
@@ -160,6 +177,46 @@ try{
       }
       if(pageName==='oficina'&&!profile.smokeOnly){
         console.log('SMOKE OFICINA',profile.name);
+        await page.locator('[data-oficina="builder3d"]').click();
+        assert.equal(await page.locator('#voxelCanvas').count(),1);
+        await page.waitForTimeout(320);
+        const webgl=await page.locator('#voxelCanvas').evaluate(c=>({
+          available:!!c.getContext('webgl'),w:c.width,h:c.height
+        }));
+        assert.equal(webgl.available,true,'WebGL deve iniciar no Chrome de CI');
+        assert.ok(webgl.w*webgl.h>10000,'Canvas 3D desenhado');
+        const canvasRect=await page.locator('#voxelCanvas').boundingBox();
+        assert.ok(canvasRect.width>Math.min(900,profile.width*.75),
+          'Canvas 3D deve preencher horizontalmente a Oficina');
+        note(profile.name+' Construção 3D WebGL','pass',JSON.stringify(webgl));
+        await page.locator('[data-voxel-material="stone"]').click();
+        await page.locator('.voxel-access-grid summary').click();
+        const spot=page.locator('[data-voxel-cell="3,3"]');
+        await spot.click();await spot.click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^2 blocos/);
+        await page.locator('.voxel-project-details summary').click();
+        await page.locator('[data-voxel-action="undo"]').click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^1 blocos/);
+        await page.locator('[data-voxel-action="redo"]').click();
+        await page.locator('[data-voxel-action="save"]').click();
+        await page.locator('[data-voxel-action="clear"]').click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^0 blocos/);
+        await page.locator('[data-voxel-action="load"]').click();
+        await page.locator('.voxel-project-details summary').click();
+        assert.match(await page.locator('#voxelCounter').textContent(),/^2 blocos/);
+        await page.locator('#voxelMission').selectOption('tower');
+        await spot.click();await spot.click();await spot.click();
+        assert.match(await page.locator('#voxelMissionStatus').textContent(),/5 \/ 5/);
+        note(profile.name+' Construção 3D: histórico, persistência explícita e missão','pass');
+        await page.locator('.voxel-access-grid summary').click();
+        await page.locator('#voxelCanvas').scrollIntoViewIfNeeded();
+        await page.waitForTimeout(180);
+        await page.screenshot({path:path.join(out,profile.name+'-builder3d.png'),
+          animations:'disabled',fullPage:false});
+        await page.locator('.voxel-project-details summary').click();
+        await page.locator('[data-voxel-action="2d"]').click();
+        assert.equal(await page.locator('[data-column]').count(),8,'fallback 2D acessível');
+        note(profile.name+' Construção 3D para 2D','pass');
         await page.locator('#oficinaSound').click();
         assert.equal(await page.evaluate(()=>window.AGVGameExperience.soundEnabled()),true);
         await page.locator('[data-oficina="ttt"]').click();
@@ -195,6 +252,23 @@ try{
           'somente último bloco recebe animação');
         note(profile.name+' Construção: animação localizada','pass');
         note(profile.name+' Blocos toque e arraste','pass');
+      }
+      if(profile.smokeOnly&&pageName==='oficina'){
+        assert.equal(await page.locator('#voxelCanvas').count(),1);
+        await page.evaluate(()=>{
+          document.querySelector('[data-voxel-cell="3,3"]')?.click();
+        });
+        await page.waitForTimeout(350);
+        const buffer=await page.locator('#voxelCanvas').evaluate(c=>({
+          webgl:!!c.getContext('webgl'),pixels:c.width*c.height,
+          width:c.width,height:c.height
+        }));
+        assert.equal(buffer.webgl,true,'WebGL 4K obrigatório');
+        assert.ok(buffer.pixels>10000&&buffer.pixels<=3200000,
+          'Orçamento GPU do construtor deve permanecer <= 3,2 MP');
+        const rect=await page.locator('#voxelCanvas').boundingBox();
+        assert.ok(rect.width>1200,'Cena 3D muito estreita para a TV 4K');
+        note('tv-3840 WebGL voxel buffer','pass',JSON.stringify(buffer));
       }
       if(profile.smokeOnly&&pageName==='arcade'){
         const buffer=await page.locator('#arcadeCanvas').evaluate(c=>{

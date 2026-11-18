@@ -9,7 +9,7 @@ const geometrySource=fs.readFileSync(path.join(__dirname,'../public/js/geometry-
 const appSource=fs.readFileSync(path.join(__dirname,'../public/js/app.js'),'utf8');
 class Context2D {
   beginPath(){} moveTo(){} lineTo(){} closePath(){} stroke(){} fill(){} save(){} restore(){}
-  clip(){} fillRect(){} clearRect(){} ellipse(){} arc(){} setTransform(){} bezierCurveTo(){}
+  clip(){} fillRect(){} clearRect(){} ellipse(){} arc(){} setTransform(){} transform(){} bezierCurveTo(){}
   createPattern(){return {id:'pattern'}}
   createRadialGradient(){return {addColorStop(){}}}
 }

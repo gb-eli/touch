@@ -1,0 +1,162 @@
+/* AGV TOUCH 3.5 — construtor 3D, estética prisma e sinapses. */
+.oficina-choices:has([data-oficina="builder3d"]){grid-template-columns:repeat(3,minmax(0,1fr))}
+.voxel-workspace{display:grid;gap:12px;width:100%;min-width:0}
+.voxel-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;width:100%}
+.voxel-toolbar fieldset{display:flex;flex-wrap:wrap;gap:6px;border:1px solid #694d80;
+ padding:8px 10px;border-radius:12px;min-width:0}
+.voxel-toolbar legend{padding:0 6px;font:800 12px/1.2 system-ui,sans-serif;color:#dfbafb}
+.voxel-toolbar button,.voxel-toolbar select,.voxel-overlay button,.voxel-quick-grid button{
+  background:linear-gradient(155deg,#2b1b40,#191128);color:#fff;
+  border:1px solid #a069b7;border-radius:9px;min-height:48px;
+  padding:10px 13px;font:750 clamp(12px,.85vw,15px)/1.25 system-ui,sans-serif;
+  cursor:pointer;touch-action:manipulation;
+}
+.voxel-toolbar button[aria-pressed="true"]{
+  color:#1c101c;background:linear-gradient(120deg,#ffc28d,#ff7448);
+  border-color:#ffd8b2;box-shadow:0 3px 17px #ff754737;
+}
+.voxel-toolbar button:disabled{opacity:.45;cursor:default}
+.voxel-toolbar button:focus-visible,.voxel-toolbar select:focus-visible,
+.voxel-overlay button:focus-visible,.voxel-canvas:focus-visible,.voxel-quick-grid button:focus-visible{
+  outline:3px solid #ffe185;outline-offset:3px}
+.voxel-materials{display:flex;gap:7px;flex-wrap:wrap;margin-block:3px 6px}
+.voxel-materials button{
+  display:inline-flex;gap:7px;align-items:center;
+  min-height:46px;padding:8px 10px;border-radius:10px;
+  color:#fef9ff;background:#251830;border:1px solid #8b609f;
+  cursor:pointer;font:750 12px/1.3 system-ui,sans-serif;
+}
+.voxel-materials button[aria-pressed="true"]{
+  border:2px solid #ffab67;background:#563246;box-shadow:0 0 0 2px #ff965531
+}
+.voxel-material-dot{display:inline-block;width:18px;height:18px;border:1px solid #fffc;
+  background:var(--voxel-color);border-radius:5px;box-shadow:inset -4px -4px 5px #0005}
+.voxel-scene{position:relative;isolation:isolate;overflow:hidden;border-radius:18px;
+ border:2px solid #9160bb;
+ background:radial-gradient(ellipse at 54% 30%,#352052,#0d0a1a 75%);
+ box-shadow:inset 0 0 35px #0007,0 20px 40px #0006;
+ min-height:clamp(380px,50vw,750px)}
+.voxel-scene:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+ background:linear-gradient(135deg,#74d8ff0c,transparent 33%,#ff865e08 75%);
+}
+.voxel-canvas{display:block;width:100%;height:clamp(380px,50vw,750px);
+ touch-action:none;outline-offset:-5px;cursor:crosshair}
+.voxel-scene[data-mode="erase"] .voxel-canvas{cursor:not-allowed}
+.voxel-scene[data-mode="move"] .voxel-canvas{cursor:grab}
+.voxel-hud{pointer-events:none;position:absolute;z-index:3;top:12px;left:12px;
+ display:grid;gap:5px;max-width:calc(100% - 130px)}
+.voxel-hud strong{font:850 clamp(12px,1vw,17px)/1.3 system-ui,sans-serif;color:#fffafc;
+ letter-spacing:.02em;text-shadow:0 2px 12px #000}
+.voxel-hud small{color:#c5edfb;font:700 11px/1.4 system-ui,sans-serif}
+.voxel-progress{display:block;width:min(220px,44vw);height:8px;border:1px solid #9767b8;
+ border-radius:30px;overflow:hidden;background:#27183b}
+.voxel-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff805d,#7ce9ff);
+ transition:width .3s ease}
+.voxel-overlay{position:absolute;right:12px;bottom:12px;display:flex;z-index:4;gap:8px}
+.voxel-overlay button{padding:8px;min-width:48px;min-height:48px;
+ background:#120f26e8;backdrop-filter:blur(5px);color:#fff}
+.voxel-help{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;
+ color:#e2d3f1;font:600 13px/1.5 system-ui,sans-serif;padding:6px 3px}
+.voxel-help strong{color:#8ee8ff}
+.voxel-mini{display:flex;flex-wrap:wrap;align-items:start;gap:12px;
+ padding:12px;border:1px solid #6c4e88;background:#1c122c;border-radius:12px}
+.voxel-mini>div:first-child{min-width:190px;flex:1}
+.voxel-mini h3{margin:0 0 6px;font:850 15px/1.2 system-ui,sans-serif;color:#fff8ff}
+.voxel-mini p{margin:0;color:#cfbddd;font-size:12px;max-width:55ch}
+.voxel-plan{display:grid;grid-template-columns:repeat(8,18px);grid-template-rows:repeat(8,18px);
+ gap:2px;justify-content:center}
+.voxel-plan span{display:grid;place-items:center;border:1px solid #604971;
+ background:#120d1f;color:#fcf8ff;border-radius:3px;font:800 10px/1 system-ui}
+.voxel-plan span[data-target="true"]{
+ background:linear-gradient(145deg,#ff965d,#7546a5);
+ border-color:#ffd3a7;color:#fff
+}
+.voxel-access-grid{padding:10px;border:1px solid #70538f;border-radius:11px}
+.voxel-access-grid summary{cursor:pointer;font-weight:800;color:#cbefff;min-height:30px}
+.voxel-quick-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin-top:10px}
+.voxel-quick-grid button{padding:7px 3px;min-height:44px;font-size:11px}
+.voxel-quick-grid button[aria-current="true"]{border-color:#ff9c6d;background:#4b2a42}
+@media(max-width:950px){
+ .oficina-choices:has([data-oficina="builder3d"]){grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
+ .oficina-choices:has([data-oficina="builder3d"]){grid-template-columns:repeat(2,minmax(0,1fr))}
+ .voxel-toolbar fieldset{width:100%;padding:8px}
+ .voxel-toolbar fieldset button{flex:1;min-width:0}
+ .voxel-toolbar select{max-width:100%}
+ .voxel-materials{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ .voxel-materials button{padding:7px 6px;font-size:11px;min-width:0}
+ .voxel-scene,.voxel-canvas{height:420px;min-height:420px}
+ .voxel-hud{max-width:calc(100% - 110px)}
+ .voxel-overlay{right:7px;bottom:8px}
+ .voxel-overlay button{min-width:44px;min-height:44px}
+ .voxel-plan{grid-template-columns:repeat(8,14px);grid-template-rows:repeat(8,14px)}
+ .voxel-help{font-size:12px}
+ .voxel-quick-grid{gap:3px}
+ .voxel-quick-grid button{font-size:10px}
+}
+@media(min-width:1900px){
+ .voxel-toolbar button,.voxel-overlay button{min-height:64px;font-size:17px}
+ .voxel-materials button{min-height:60px;font-size:16px}
+ .voxel-material-dot{width:25px;height:25px}
+}
+@media(prefers-reduced-motion:reduce){
+ .voxel-progress i{transition:none}
+}
+
+/* A Oficina antiga usa display:flex na direção horizontal.
+   O construtor tem quatro regiões verticais que precisam ocupar toda a largura. */
+.oficina-tools:has(.voxel-workspace){display:block;width:100%}
+.oficina-board:has(.voxel-scene){
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  gap:12px;
+  width:100%;
+  min-width:0;
+}
+.oficina-board:has(.voxel-scene)>:is(.voxel-scene,.voxel-help,.voxel-mini,.voxel-access-grid){
+  width:100%;
+  min-width:0;
+  flex:0 0 auto;
+}
+.voxel-scene{width:100%;max-width:100%}
+.voxel-canvas{width:100%;max-width:100%}
+
+@media(max-width:700px){
+ .voxel-toolbar fieldset:has([data-voxel-action]),
+ .voxel-toolbar fieldset:has([data-voxel-mode]){
+   display:grid;
+   grid-template-columns:repeat(3,minmax(0,1fr));
+   align-items:stretch;
+   gap:6px;
+ }
+ .voxel-toolbar fieldset button{
+   display:flex;align-items:center;justify-content:center;
+   min-width:0;width:100%;padding:9px 5px;
+   white-space:normal;overflow-wrap:break-word;
+   text-align:center;font-size:12px;line-height:1.3;
+ }
+ .voxel-toolbar label{width:100%;display:flex;align-items:center;gap:12px}
+ .voxel-toolbar label select{flex:1}
+ .voxel-mini{display:grid;grid-template-columns:minmax(0,1fr);justify-items:start}
+ .voxel-plan{grid-template-columns:repeat(8,20px);grid-template-rows:repeat(8,20px)}
+ .voxel-access-grid{max-width:100%;overflow:clip}
+}
+
+/* Compatibilidade com navegadores Android que não suportam :has(). */
+.oficina-tools.voxel-active{display:block;width:100%}
+.oficina-board.voxel-active{
+  display:flex;flex-direction:column;align-items:stretch;
+  justify-content:flex-start;gap:12px;width:100%;min-width:0
+}
+.oficina-board.voxel-active>:is(.voxel-scene,.voxel-help,.voxel-mini,.voxel-access-grid){
+  width:100%;min-width:0;flex:0 0 auto
+}
+@media(max-width:700px){
+ .voxel-toolbar .voxel-edit-mode,
+ .voxel-toolbar .voxel-project-actions{
+   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px
+ }
+}
