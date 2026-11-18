@@ -52,3 +52,15 @@ test('Contraste da paleta e cache da interface permanecem locais',()=>{
   assert.ok(sw.includes('./css/touch-vivid.css'));
   assert.ok(sw.includes('./js/touch-fullscreen.js'));
 });
+
+test('Studio 3.7.1: onboarding nao duplica Arcade e preserva reteste de toque',()=>{
+  const js=read('public/js/experience-intro.js');
+  assert.match(js,/shortcuts\.querySelector\('\.agv-arcade-shortcut/);
+  assert.match(js,/shortcuts\.querySelector\('\[data-touch-replay\]'/);
+  assert.match(js,/replay\.addEventListener\('click',open\)/);
+  const css=read('public/css/touch-vivid.css');
+  assert.match(css,/grid-template-columns:repeat\(8,minmax\(0,1fr\)\)/);
+  assert.match(css,/min-height:clamp\(115px,36dvh,225px\)/);
+  assert.match(css,/\.voxel-mini:not\(\[open\]\)/);
+  assert.match(css,/\.voxel-access-grid:not\(\[open\]\)/);
+});
