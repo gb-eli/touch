@@ -52,35 +52,99 @@
    line:gl.getUniformLocation(p,'uLine')};
  }
  function atlas(gl){
+  // Atlas original em resolução estável: nove materiais com padrões próprios.
+  // UV é definido nos vértices locais das faces, não nas coordenadas da câmera.
   const c=document.createElement('canvas');c.width=c.height=512;
-  const ctx=c.getContext('2d');ctx.fillStyle='#0e0c1e';ctx.fillRect(0,0,512,512);
+  const ctx=c.getContext('2d');if(!ctx)throw Error('Canvas 2D indisponível');
+  ctx.fillStyle='#101321';ctx.fillRect(0,0,512,512);
   V.MATERIALS.forEach(({id,color},i)=>{
-   const x=(i%3)*128,y=Math.floor(i/3)*128;ctx.fillStyle=color;ctx.fillRect(x,y,128,128);
-   let seed=9811*(i+1);
-   const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
-   for(let j=0;j<1100;j++){
-    const a=x+rand()*128,b=y+rand()*128;
-    ctx.fillStyle=rand()>.5?'#ffffff26':'#0000002c';
-    ctx.fillRect(a,b,1+rand()*3,id==='grass'?2+rand()*3:1+rand()*2);
-   }
-   if(['wood','brick','lava','ice','crystal'].includes(id)){
-    ctx.strokeStyle=id==='lava'?'#ffc45a':'#1810236b';ctx.lineWidth=id==='brick'?3:1.5;
-    for(let k=0;k<10;k++){
-     const yy=y+k*14;
-     ctx.beginPath();
-     if(id==='ice'||id==='crystal'||id==='lava'){
-      ctx.moveTo(x+rand()*120,yy);ctx.lineTo(x+rand()*120,yy+(rand()-.5)*90);
-     }else{ctx.moveTo(x,yy);ctx.lineTo(x+128,yy+(rand()-.5)*5)}
-     ctx.stroke();
+   let seed=(i+1)*1299721;
+   const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
+   ctx.save();ctx.translate((i%3)*128,Math.floor(i/3)*128);
+   ctx.beginPath();ctx.rect(0,0,128,128);ctx.clip();
+   const grd=ctx.createLinearGradient(0,0,128,128);
+   grd.addColorStop(0,color);grd.addColorStop(1,{
+    grass:'#276f43',dirt:'#503b31',sand:'#b98c57',stone:'#586777',
+    lava:'#371927',ice:'#367e9c',wood:'#704426',brick:'#853e36',crystal:'#573b8e'
+   }[id]||color);
+   ctx.fillStyle=grd;ctx.fillRect(0,0,128,128);
+   const stroke=(points,color,width=1)=>{
+    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;
+    points.forEach(([x,y],j)=>j?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.stroke();
+   };
+   if(id==='grass'){
+    for(let n=0;n<550;n++){
+     const x=rnd()*128,y=rnd()*128,h=2+rnd()*8;
+     stroke([[x,y+h],[x+(rnd()-.5)*5,y-h]],rnd()>.45?'#b5f68a80':'#154e3570',.6+rnd()*1.7);
     }
-    if(id==='brick')for(let row=0;row<9;row++)for(let col=0;col<4;col++){
-     const xx=x+col*40+row%2*20-20,yy=y+row*14;
-     ctx.beginPath();ctx.moveTo(xx,yy);ctx.lineTo(xx,yy+14);ctx.stroke();
+    for(let n=0;n<34;n++){ctx.fillStyle='#d7ffc54d';ctx.fillRect(rnd()*128,rnd()*128,2+rnd()*4,1+rnd()*2)}
+   } else if(id==='dirt'||id==='sand'||id==='stone'){
+    const shades=id==='stone'?['#d0d8dc5a','#24354663','#8594a083']:
+     id==='sand'?['#fff4cc91','#86654152','#e1c48b7a']:
+     ['#dca5776b','#31271d7d','#7f5c487a'];
+    for(let n=0;n<(id==='sand'?600:320);n++){
+     const x=rnd()*128,y=rnd()*128,s=(id==='sand'?.6:1.5)+rnd()*(id==='stone'?11:4);
+     ctx.fillStyle=shades[Math.floor(rnd()*shades.length)];
+     ctx.beginPath();ctx.ellipse(x,y,s,s*(.35+rnd()*.6),rnd()*Math.PI,0,2*Math.PI);ctx.fill();
+    }
+    if(id==='stone')for(let n=0;n<16;n++){
+     const x=rnd()*128,y=rnd()*128;
+     stroke([[x,y],[x+rnd()*18-9,y+rnd()*13],[x+rnd()*32-16,y+rnd()*28]],'#1e263b6a',.7+rnd()*1.2);
+    }
+   } else if(id==='wood'){
+    for(let n=0;n<45;n++){
+     const y=n*3+rnd()*2;
+     ctx.beginPath();ctx.moveTo(-4,y);ctx.bezierCurveTo(30,y+6*rnd(),62,y-9*rnd(),132,y+(rnd()-.5)*7);
+     ctx.strokeStyle=rnd()>.5?'#f9c48c69':'#542c1899';ctx.lineWidth=.7+rnd()*2;ctx.stroke();
+    }
+    for(let n=0;n<3;n++){
+     const x=15+rnd()*100,y=15+rnd()*100;
+     ctx.strokeStyle='#4b241a8c';ctx.lineWidth=1.8;
+     ctx.beginPath();ctx.ellipse(x,y,3+rnd()*5,8+rnd()*11,.22,0,Math.PI*2);ctx.stroke();
+    }
+   } else if(id==='brick'){
+    ctx.strokeStyle='#f4d7bfab';ctx.lineWidth=4;
+    for(let row=0;row<=7;row++){
+     const y=row*20;stroke([[0,y],[128,y]],'#f3d6bfaa',4);
+     for(let col=-1;col<=4;col++){
+      const x=col*44+(row%2)*22;
+      stroke([[x,y],[x,y+20]],'#f3d6bfaa',3);
+     }
+    }
+    for(let n=0;n<130;n++){
+     ctx.fillStyle=rnd()>.5?'#ffbaa855':'#4b1f2b59';
+     ctx.fillRect(rnd()*128,rnd()*128,1+rnd()*3,1+rnd()*2);
+    }
+   } else if(id==='lava'){
+    ctx.fillStyle='#271521b2';ctx.fillRect(0,0,128,128);
+    for(let n=0;n<20;n++){
+     let x=rnd()*128,y=rnd()*128;
+     const steps=[[x,y]];
+     for(let j=0;j<5;j++){x+=rnd()*23-11;y+=rnd()*20-8;steps.push([x,y])}
+     stroke(steps,'#f65d2c80',7);stroke(steps,'#ffcf608c',2.4);
+    }
+    for(let n=0;n<90;n++){ctx.fillStyle='#a34431a3';ctx.fillRect(rnd()*128,rnd()*128,2+rnd()*6,2+rnd()*5)}
+   } else if(id==='ice'||id==='crystal'){
+    for(let n=0;n<55;n++){
+     const x=rnd()*128,y=rnd()*128,s=7+rnd()*26;
+     ctx.beginPath();ctx.moveTo(x,y-s);ctx.lineTo(x+s*.7,y+s*.3);ctx.lineTo(x-s*.5,y+s*.55);ctx.closePath();
+     ctx.fillStyle=id==='ice'?'#ecfbff27':'#f6c8ff31';ctx.fill();
+     ctx.strokeStyle=id==='ice'?'#d5f8ff8a':'#eed2ffa3';ctx.lineWidth=.6+rnd()*1.3;ctx.stroke();
+    }
+    for(let n=0;n<8;n++){
+     let x=rnd()*128,y=rnd()*128;
+     stroke([[x,y],[x+rnd()*40-20,y+rnd()*40-20],[x+rnd()*90-45,y+rnd()*90-45]],
+      id==='ice'?'#f2ffffa8':'#f7deffad',1.4);
     }
    }
+   // Micro relevo comum com baixa opacidade para manter a legibilidade na TV.
+   for(let n=0;n<160;n++){
+    ctx.fillStyle=rnd()>.5?'#ffffff15':'#07071822';
+    ctx.fillRect(rnd()*128,rnd()*128,1+rnd()*2,1+rnd()*2);
+   }
+   ctx.restore();
   });
   const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
-  // Atlas desenhado com origem no topo; UVs da malha já usam essa orientação.
   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);
