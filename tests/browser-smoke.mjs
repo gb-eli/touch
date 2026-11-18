@@ -100,6 +100,7 @@ try{
           const rect=document.querySelector(selector)?.getBoundingClientRect();
           return {top:rect?.top,bottom:rect?.bottom,viewport:innerHeight,
             docHeight:document.documentElement.scrollHeight,
+            tileRows:[...document.querySelectorAll('.studio-tiles > .studio-tile')].map(t=>Math.round(t.getBoundingClientRect().height)),
             tileCount:document.querySelectorAll('.studio-tiles > .studio-tile').length,
             calibrator:!!document.querySelector('.tile-calibration[data-go="diagnostico"]')};
         },pageName);
@@ -107,6 +108,8 @@ try{
           pageName+' painel deve caber verticalmente na tela do tablet: '+JSON.stringify(fit));
         if(pageName==='portal'){
           assert.equal(fit.tileCount,6,'início deve mostrar 6 blocos na tela');
+          assert.ok(fit.top<=Math.max(105,fit.viewport*.08),'a barra contextual não pode consumir o topo: '+JSON.stringify(fit));
+          assert.ok(Math.min(...fit.tileRows)>=65,'cartões devem ser realmente utilizáveis em paisagem: '+JSON.stringify(fit));
           assert.equal(fit.calibrator,true,'acesso ao diagnóstico do touch deve estar na tela inicial');
         }
         note(profile.name+' '+pageName+' app sem deslocamento do painel','pass',JSON.stringify(fit));
@@ -287,7 +290,7 @@ try{
         note(profile.name+' Construção: animação localizada','pass');
         note(profile.name+' Blocos toque e arraste','pass');
       }
-      if(profile.smokeOnly&&pageName==='oficina'){
+      if(profile.name==='tv-3840'&&pageName==='oficina'){
         assert.equal(await page.locator('#voxelCanvas').count(),1);
         await page.evaluate(()=>{
           document.querySelector('[data-voxel-cell="3,3"]')?.click();
@@ -304,7 +307,7 @@ try{
         assert.ok(rect.width>1200,'Cena 3D muito estreita para a TV 4K');
         note('tv-3840 WebGL voxel buffer','pass',JSON.stringify(buffer));
       }
-      if(profile.smokeOnly&&pageName==='arcade'){
+      if(profile.name==='tv-3840'&&pageName==='arcade'){
         const buffer=await page.locator('#arcadeCanvas').evaluate(c=>{
           const r=c.getBoundingClientRect();
           return {pixels:c.width*c.height,width:c.width,height:c.height,
