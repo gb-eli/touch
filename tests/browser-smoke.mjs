@@ -41,6 +41,7 @@ try{
     {name:'landscape-844',width:844,height:390,scale:1,smokeOnly:true},
     {name:'landscape-1024',width:1024,height:600,scale:1,smokeOnly:true},
     {name:'browser-1366',width:1366,height:630,scale:1,smokeOnly:true},
+    {name:'wa86f-css-1280',width:1280,height:720,scale:3,smokeOnly:true},
     {name:'desktop-1920',width:1920,height:1080,scale:1},
     {name:'tv-3840',width:3840,height:2160,scale:1,smokeOnly:true}
   ]){
@@ -355,6 +356,41 @@ try{
         });
         assert.ok(buffer.pixels<=3840*2160,'Canvas deve respeitar limite de 4K');
         note('tv-3840 Arcade canvas buffer','pass',JSON.stringify(buffer));
+      }
+      if(pageName==='portal'&&profile.name==='wa86f-css-1280'){
+        await page.evaluate(()=>window.TVTouchNavigation.go('diagnostico'));
+        await page.waitForTimeout(260);
+        const diagnostic=await page.evaluate(()=>{
+          const area=document.querySelector('main#conteudo');
+          const last=document.querySelector('#page-diagnostico > .notice:last-child');
+          const dock=document.querySelector('.sidebar');
+          area.scrollTop=area.scrollHeight;
+          return new Promise(resolve=>requestAnimationFrame(()=>{
+            resolve({
+              screen:[innerWidth,innerHeight],
+              ratio:devicePixelRatio,
+              overflowY:getComputedStyle(area).overflowY,
+              scrollTop:area.scrollTop,
+              scrollHeight:area.scrollHeight,
+              clientHeight:area.clientHeight,
+              lastBottom:last.getBoundingClientRect().bottom,
+              dockTop:dock.getBoundingClientRect().top,
+              visible:document.querySelector('#page-diagnostico').classList.contains('active'),
+              css:!![...document.styleSheets].find(s=>s.href?.includes('diagnostico-tv.css'))
+            });
+          }));
+        });
+        assert.deepEqual(diagnostic.screen,[1280,720],'configuracao CSS da TV observada');
+        assert.equal(diagnostic.ratio,3,'escala 3x identificada');
+        assert.equal(diagnostic.visible,true,'rota de diagnostico visivel');
+        assert.equal(diagnostic.css,true,'correcao da TV carregada');
+        assert.equal(diagnostic.overflowY,'auto','diagnostico deve rolar dentro do app');
+        assert.ok(diagnostic.scrollHeight>diagnostic.clientHeight+200,
+          'diagnostico longo deve continuar rolavel: '+JSON.stringify(diagnostic));
+        assert.ok(diagnostic.scrollTop>100,'rolagem interna deve chegar ao final: '+JSON.stringify(diagnostic));
+        assert.ok(diagnostic.lastBottom<=diagnostic.dockTop-9,
+          'ultimo aviso deve ficar acima do dock: '+JSON.stringify(diagnostic));
+        note('wa86f CSS 1280x720 DPR3: diagnostico ate o fim, sem sobreposicao','pass',JSON.stringify(diagnostic));
       }
       const large=profile.smokeOnly===true;
       await page.screenshot({path:path.join(out,profile.name+'-'+pageName+(large?'.jpg':'.png')),
