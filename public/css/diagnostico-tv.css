@@ -2,7 +2,20 @@
    A navegação inferior permanece visível, mas jamais esconde o último
    cartão; apenas a área de diagnóstico recebe rolagem vertical própria. */
 @media (orientation:landscape) and (min-width:760px){
+  /* .main-area é flex-column; sem min-height:0 os filhos alongam até o
+     conteúdo (2882px em 1280x720) e a rolagem interna nunca entra em ação. */
+  body.studio-ui.agv-landscape-app:has(#page-diagnostico.active) .main-area{
+    min-height:0;
+    height:var(--agv-live-vh,100dvh);
+    max-height:var(--agv-live-vh,100dvh);
+    overflow:hidden;
+  }
   body.studio-ui.agv-landscape-app:has(#page-diagnostico.active) main#conteudo{
+    box-sizing:border-box;
+    flex:1 1 auto;
+    min-height:0!important;
+    max-height:calc(var(--agv-live-vh,100dvh) - var(--agv-header-h,56px))!important;
+    height:calc(var(--agv-live-vh,100dvh) - var(--agv-header-h,56px))!important;
     overflow-x:hidden!important;
     overflow-y:auto!important;
     overscroll-behavior-y:contain;
