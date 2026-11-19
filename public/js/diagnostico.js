@@ -1,4 +1,4 @@
-/* TV TOUCH v1.1 — diagnóstico local e voluntário, sem telemetria/remessa de relatórios. */
+/* TV TOUCH v1.2 — diagnóstico local, toque medido > capacidade declarada pelo navegador. */
 (() => {
   'use strict';
   const el = id => document.getElementById(id);
@@ -57,7 +57,9 @@
     const values=[
       ['Sistema',b.os],['Navegador',b.browser],['Tela reportada',`${b.screenPixels} px`],
       ['Área útil do navegador',`${b.viewport} px`],['Escala de pixels',`${b.pixelRatio}×`],
-      ['Toques simultâneos (informados)',val(b.touchPoints)],['Processadores lógicos',val(b.cpuThreads)],
+      ['Toques simultâneos (informados)',val(b.touchPoints)],
+      ['Toques simultâneos (testados)',state.touchPeak===null?'Não testado':state.touchPeak],
+      ['Processadores lógicos',val(b.cpuThreads)],
       ['Memória aproximada',b.ramApproxGiB?`${b.ramApproxGiB} GiB`:'Não exposta pelo navegador'],
       ['Orientação',b.orientation],['Armazenamento usado (origem)',state.storage.used],
       ['Armazenamento disponível (estimativa)',state.storage.quota],
@@ -68,7 +70,7 @@
   function renderCapabilities() {
     const b=state.base;
     const entries=[
-      ['Toque e gestos',b.pointerEvents && b.touchPoints>0],['WebGL 3D',b.webgl],['WebGL 2',b.webgl2],
+      ['Toque e gestos',b.pointerEvents && (b.touchPoints>0 || state.touchPeak>0)],['WebGL 3D',b.webgl],['WebGL 2',b.webgl2],
       ['WebGPU',b.webgpu],['Tela cheia via página',b.fullscreen],['Cache offline (PWA)',b.installPwa],
       ['Acesso à posição com permissão',b.geolocationSupported && b.secureContext],
       ['Eventos de movimento',b.motionEventSupported && b.secureContext],['Impedir bloqueio da tela (Wake Lock)',b.wakeLock],
@@ -77,12 +79,25 @@
     const root=el('diagCapabilities');root.replaceChildren();
     entries.forEach(([name,ok])=>{const row=document.createElement('div');row.className='diag-capability';const label=document.createElement('span');label.textContent=name;const result=document.createElement('strong');result.className=ok?'diag-yes':'diag-no';result.textContent=supported(ok);row.append(label,result);root.appendChild(row);});
   }
+  // maxTouchPoints é apenas um valor relatado pelo navegador. A medição de
+  // PointerEvents durante o teste deve prevalecer, mas não comprova a
+  // funcionalidade específica de gestos como pinça em cada atividade.
+  function touchGuidance(reported,observed){
+    if(Number.isInteger(observed) && observed>=2){
+      const conflict=typeof reported==='number' && reported<observed;
+      return [`Teste prático: ${observed} contatos simultâneos observados nesta sessão.`+
+        (conflict?` O navegador informa ${reported}, mas esse número não representa o resultado do teste.`:'')+
+        ' O multitoque foi detectado; teste a pinça e a rotação dentro de cada atividade antes da aula.'];
+    }
+    if(observed===1)return ['Teste prático: foi observado apenas 1 contato simultâneo nesta tentativa. Repita com vários dedos antes de concluir que não há multitoque.'];
+    if(observed===0)return ['O teste não registrou contatos. Confira se a área destacada recebeu os toques e tente novamente.'];
+    if(reported===0)return ['O navegador não informa suporte ao toque. Faça o teste na própria TV para verificar a capacidade real.'];
+    if(reported===1)return ['O navegador declara 1 toque, mas isso pode subestimar a capacidade real. Execute o teste de vários dedos antes de decidir sobre a pinça.'];
+    if(typeof reported==='number' && reported>=2)return [`O navegador informa ${reported} toques, ainda não confirmados por teste prático. Realize a medição.`];
+    return ['Capacidade multitoque não informada. Execute o teste prático na tela interativa.'];
+  }
   function suggestions() {
-    const b=state.base, messages=[];
-    if(b.touchPoints === 0)messages.push('O navegador não informa suporte ao toque. Verifique se está aberto na própria TV, e não em um computador.');
-    else if(b.touchPoints === 1)messages.push('O navegador indica somente um toque: prefira ações de arrastar e tocar, sem pinça.');
-    else if(b.touchPoints >= 2)messages.push(`O navegador informa até ${b.touchPoints} toques. Faça o teste real de múltiplos dedos para confirmar.`);
-    if(state.touchPeak !== null)messages.push(`Teste real: ${state.touchPeak} toque(s) simultâneo(s) reconhecido(s) nesta sessão.`);
+    const b=state.base, messages=[...touchGuidance(b.touchPoints,state.touchPeak)];
     if(!b.webgl)messages.push('Sem WebGL detectado: priorize atividades Canvas 2D e simuladores simples.');
     if(b.webgl)messages.push('WebGL detectado: ferramentas de geometria e mapas 3D poderão ser testadas.');
     if((b.ramApproxGiB !== null && b.ramApproxGiB <= 2) || (b.cpuThreads!==null && b.cpuThreads<=2))messages.push('Capacidade reduzida informada: animações decorativas serão suavizadas e o portal deve priorizar atividades leves.');
@@ -120,7 +135,7 @@
     ['pointerup','pointercancel','pointerleave'].forEach(event=>zone.addEventListener(event,remove));
     start.addEventListener('click',()=>{
       if(timer)return;current.clear();peak=0;zone.hidden=false;start.disabled=true;result.textContent='Toque com vários dedos na área destacada.';
-      timer=setTimeout(()=>{timer=null;zone.hidden=true;start.disabled=false;state.touchPeak=peak;result.textContent=peak?`Máximo detectado: ${peak} toque(s) simultâneos.`:'Nenhum toque detectado; tente novamente na TV.';suggestions();window.dispatchEvent(new CustomEvent('tvt:measurement',{detail:{type:'touch_peak',value:peak,attempts:1,failures:0}}));},8000);
+      timer=setTimeout(()=>{timer=null;zone.hidden=true;start.disabled=false;state.touchPeak=peak;renderOverview();renderCapabilities();result.textContent=peak?`Máximo detectado: ${peak} toque(s) simultâneos.`:'Nenhum toque detectado; tente novamente na TV.';suggestions();window.dispatchEvent(new CustomEvent('tvt:measurement',{detail:{type:'touch_peak',value:peak,attempts:1,failures:0}}));},8000);
     });
   }
   function initFpsTest(){
@@ -179,7 +194,7 @@
   function safeReport(){
     const b=state.base;
     return {
-      application:'TV TOUCH • AGV',schema:1,version:'1.1.0',generatedAt:new Date().toISOString(),
+      application:'TV TOUCH • AGV',schema:1,version:'1.2.0',generatedAt:new Date().toISOString(),
       stationLabel:el('diagStation').value || null,
       device:{browser:b.browser,operatingSystem:b.os,language:b.language,timezone:b.timezone,
         screenPixels:b.screenPixels,viewportPixels:b.viewport,pixelRatio:b.pixelRatio,orientation:b.orientation,
