@@ -1,0 +1,106 @@
+/* TV TOUCH Studio 3.7.2 — diagnóstico utilizável em 1280×720 CSS px.
+   A navegação inferior permanece visível, mas jamais esconde o último
+   cartão; apenas a área de diagnóstico recebe rolagem vertical própria. */
+@media (orientation:landscape) and (min-width:760px){
+  /* .main-area é flex-column; sem min-height:0 os filhos alongam até o
+     conteúdo (2882px em 1280x720) e a rolagem interna nunca entra em ação. */
+  body.studio-ui.agv-landscape-app:has(#page-diagnostico.active) .main-area{
+    min-height:0;
+    height:var(--agv-live-vh,100dvh);
+    max-height:var(--agv-live-vh,100dvh);
+    overflow:hidden;
+  }
+  body.studio-ui.agv-landscape-app:has(#page-diagnostico.active) main#conteudo{
+    box-sizing:border-box;
+    flex:1 1 auto;
+    min-height:0!important;
+    max-height:calc(var(--agv-live-vh,100dvh) - var(--agv-header-h,56px))!important;
+    height:calc(var(--agv-live-vh,100dvh) - var(--agv-header-h,56px))!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    scroll-padding-bottom:clamp(110px,16dvh,178px);
+    padding-bottom:clamp(110px,16dvh,178px);
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico.active{
+    max-width:100%;
+    min-width:0;
+    padding-top:clamp(6px,1.2dvh,16px);
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-heading{
+    gap:12px;
+    margin:clamp(14px,2dvh,28px) 0 9px;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-panel{
+    min-width:0;
+    padding:clamp(13px,1.3vw,22px);
+    border:1px solid #426589;
+    border-radius:clamp(10px,1.1vw,17px);
+    background:linear-gradient(145deg,#14233a,#0b182a);
+    box-shadow:inset 0 1px 0 #ffffff19,0 6px 24px #0006;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-data{
+    min-width:0;
+    min-height:clamp(84px,12dvh,120px);
+    padding:clamp(10px,1vw,16px);
+    border:1px solid #426a98;
+    background:linear-gradient(150deg,#183550,#132036 80%);
+    color:#f9fcff;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-data strong{
+    font-size:clamp(15px,1.25vw,23px);
+    line-height:1.22;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-data span{
+    font-size:clamp(11px,.85vw,15px);
+    color:#c5e0f7;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-eyebrow{color:#18e8ff}
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-capability{
+    gap:8px;align-items:start;line-height:1.35
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-yes{color:#4bffc6}
+  body.studio-ui.agv-landscape-app #page-diagnostico :is(.diag-recommendations p,.diag-panel p){
+    color:#e2f0fc;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-data-grid{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:clamp(7px,.85vw,14px)
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-columns{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:clamp(8px,1vw,18px);margin:10px 0 16px;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-fps-bar>div{
+    background:linear-gradient(90deg,#05e4ff,#1979ff);
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-export-panel{
+    margin-top:12px;
+  }
+}
+@media (orientation:landscape) and (min-width:760px) and (max-height:780px){
+  body.studio-ui.agv-landscape-app #page-diagnostico .page-intro{
+    padding:9px 0 4px;
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .page-intro h1{
+    font-size:clamp(27px,2.5vw,42px);
+  }
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-identity{
+    margin:10px 0;
+  }
+}
+@media (orientation:landscape) and (min-width:760px) and (max-width:1000px){
+  body.studio-ui.agv-landscape-app #page-diagnostico .diag-data-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+@media (max-width:700px){
+  /* O diagnóstico vertical continua no fluxo padrão com rolagem de página. */
+  body.studio-ui #page-diagnostico .diag-data{min-width:0}
+}
+@media(prefers-reduced-motion:reduce){
+  body.studio-ui #page-diagnostico .diag-panel,
+  body.studio-ui #page-diagnostico .diag-data{transition:none!important}
+}
