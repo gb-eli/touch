@@ -537,6 +537,11 @@ body.agv-is-fullscreen .agv-fullscreen-toggle{border-color:#e2ff4d}
  body.studio-ui.agv-landscape-app >.agv-dev-credit{
   display:none!important;
  }
+ /* O rodapé editorial legado surgia por trás do dock no diagnóstico.
+    Seus roteiros continuam acessíveis pela seção Guia. */
+ body.studio-ui.agv-landscape-app .main-area >.footer{
+  display:none!important;
+ }
  body.studio-ui.agv-landscape-app .topbar{
   min-height:56px;
   height:clamp(56px,7.8dvh,74px);
