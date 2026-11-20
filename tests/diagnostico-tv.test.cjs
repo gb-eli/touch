@@ -11,6 +11,10 @@ const start=script.indexOf('  function touchGuidance(');
 const end=script.indexOf('\n  function suggestions()',start);
 assert.ok(start>=0&&end>start,'função de recomendação deve existir');
 const guidance=vm.runInNewContext(script.slice(start,end)+'\n touchGuidance;',Object.create(null));
+const pinchStart=script.indexOf('  function pinchDirection(');
+const pinchEnd=script.indexOf('\n  function initTouchTest()',pinchStart);
+assert.ok(pinchStart>0&&pinchEnd>pinchStart,'medição de pinça deve existir');
+const pinchDirection=vm.runInNewContext(script.slice(pinchStart,pinchEnd)+'\n pinchDirection;',Object.create(null));
 
 test('TV informa 1 toque, mas observa 16: diagnóstico prioriza medição real',()=>{
   const messages=guidance(1,16).join(' ');
@@ -35,9 +39,12 @@ test('Tentativa negativa, parcial e multitoque reportado geram avisos adequados'
 });
 
 test('Reprocessa o resumo e capacidades ao terminar o teste de 8 segundos',()=>{
-  assert.match(script,/state\.touchPeak=peak;renderOverview\(\);renderCapabilities\(\);/);
+  assert.match(script,/state\.touchPeak=peak;state\.pinchDirections=\[\.\.\.gestures\]\.sort\(\)/);
+  assert.match(script,/renderOverview\(\);renderCapabilities\(\)/);
   assert.match(script,/Toques simultâneos \(informados\)/);
   assert.match(script,/Toques simultâneos \(testados\)/);
+  assert.match(script,/Pinça \(teste prático\)/);
+  assert.match(script,/pinchDirections:state\.pinchDirections/);
   assert.match(script,/state\.touchPeak>0/);
   assert.match(script,/maxTouchPointsReported:b\.touchPoints/);
   assert.match(script,/multitouchPeak:state\.touchPeak/);
@@ -51,9 +58,30 @@ test('1280x720 horizontal possui rolagem interna e espaço para dock',()=>{
   assert.match(css,/grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
   assert.match(css,/prefers-reduced-motion:reduce/);
   const html=read('public/index.html');
-  assert.match(html,/css\/diagnostico-tv\.css\?v=3\.7\.2/);
-  assert.match(html,/js\/diagnostico\.js\?v=3\.7\.2/);
+  assert.match(html,/css\/diagnostico-tv\.css\?v=3\.8\.0/);
+  assert.match(html,/js\/diagnostico\.js\?v=3\.8\.0/);
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.7\.2-tv-diagnostics/);
+  assert.match(sw,/tvtouch-studio-v3\.8\.0-landscape-gesture-qa/);
   assert.ok(sw.includes('./css/diagnostico-tv.css'));
+});
+
+test('pinça: reconhece afastar e aproximar sem depender de maxTouchPoints',()=>{
+  assert.equal(pinchDirection(100,150),'afastar');
+  assert.equal(pinchDirection(100,65),'aproximar');
+  assert.equal(pinchDirection(100,113),null);
+  assert.equal(pinchDirection(100,84),null);
+  assert.equal(pinchDirection(0,55),null);
+  assert.equal(pinchDirection(Number.NaN,150),null);
+});
+
+test('captura local de gesto nao grava coordenadas nem altera permissoes',()=>{
+  assert.match(script,/zone\.addEventListener\('pointermove'/);
+  assert.match(script,/positions\.size!==2/);
+  assert.match(script,/e\.pointerType==='touch'/);
+  assert.match(script,/state\.pinchDirections=null/);
+  assert.match(script,/Pinça não observada nesta tentativa/);
+  assert.doesNotMatch(script,/localStorage\.setItem\(['"]pinch/i);
+  const css=read('public/css/diagnostico-tv.css');
+  assert.match(css,/\.diag-touch-zone:not\(\[hidden\]\)/);
+  assert.match(css,/touch-action:none/);
 });
