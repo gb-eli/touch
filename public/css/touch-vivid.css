@@ -580,6 +580,13 @@ body.agv-is-fullscreen .agv-fullscreen-toggle{border-color:#e2ff4d}
   min-width:44px;
   touch-action:manipulation;
  }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini>summary,
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid>summary{
+  box-sizing:border-box;
+  min-height:44px;
+  touch-action:manipulation;
+ }
+
  body.oficina-body.agv-landscape-app .voxel-toolbar :is(button,select):focus-visible,
  body.oficina-body.agv-landscape-app .voxel-materials button:focus-visible,
  body.oficina-body.agv-landscape-app .voxel-overlay button:focus-visible{
