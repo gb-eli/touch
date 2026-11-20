@@ -62,7 +62,7 @@ test('capas são ilustrações distintas, sem apresentar falsas miniaturas',()=>
   }
   assert.ok(app.includes('não é miniatura de um vídeo'));
   assert.ok(html.includes('não são vídeos 360° homologados'));
-  assert.match(sw,/tvtouch-studio-v3\.7\.2-tv-diagnostics/);
+  assert.match(sw,/tvtouch-studio-v3\.8\.0-landscape-gesture-qa/);
   assert.ok(sw.includes('immersive-scenes.svg'));
 });
 
