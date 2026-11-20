@@ -426,6 +426,7 @@ try{
               clientHeight:area.clientHeight,
               lastBottom:last.getBoundingClientRect().bottom,
               dockTop:dock.getBoundingClientRect().top,
+              legacyFooterDisplay:getComputedStyle(document.querySelector('.main-area > .footer')).display,
               visible:document.querySelector('#page-diagnostico').classList.contains('active'),
               css:!![...document.styleSheets].find(s=>s.href?.includes('diagnostico-tv.css'))
             });
@@ -436,6 +437,8 @@ try{
         assert.equal(diagnostic.visible,true,'rota de diagnostico visivel');
         assert.equal(diagnostic.css,true,'correcao da TV carregada');
         assert.equal(diagnostic.overflowY,'auto','diagnostico deve rolar dentro do app');
+        assert.equal(diagnostic.legacyFooterDisplay,'none',
+          'rodape antigo nao pode aparecer atras do dock durante diagnostico');
         assert.ok(diagnostic.scrollHeight>diagnostic.clientHeight+200,
           'diagnostico longo deve continuar rolavel: '+JSON.stringify(diagnostic));
         assert.ok(diagnostic.scrollTop>100,'rolagem interna deve chegar ao final: '+JSON.stringify(diagnostic));
