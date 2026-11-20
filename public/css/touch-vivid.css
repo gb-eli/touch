@@ -561,3 +561,58 @@ body.agv-is-fullscreen .agv-fullscreen-toggle{border-color:#e2ff4d}
   min-height:44px;
  }
 }
+
+/* Studio 3.8 — Oficina 3D: alvos reais de dedo, não apenas no launcher.
+   A cena preserva altura mínima; ferramentas rolam verticalmente dentro
+   da própria faixa e as gavetas ficam sobre o canvas quando fechadas. */
+@media (orientation:landscape) and (min-width:760px){
+ body.oficina-body.agv-landscape-app .oficina-header :is(.oficina-back,.oficina-sound),
+ body.oficina-body.agv-landscape-app .oficina-panel-actions button,
+ body.oficina-body.agv-landscape-app .voxel-toolbar button,
+ body.oficina-body.agv-landscape-app .voxel-toolbar select,
+ body.oficina-body.agv-landscape-app .voxel-project-details>summary,
+ body.oficina-body.agv-landscape-app .voxel-materials button{
+  min-height:44px;
+  touch-action:manipulation;
+ }
+ body.oficina-body.agv-landscape-app .voxel-overlay button{
+  min-height:44px;
+  min-width:44px;
+  touch-action:manipulation;
+ }
+ body.oficina-body.agv-landscape-app .voxel-toolbar :is(button,select):focus-visible,
+ body.oficina-body.agv-landscape-app .voxel-materials button:focus-visible,
+ body.oficina-body.agv-landscape-app .voxel-overlay button:focus-visible{
+  outline:3px solid #fff35a;
+  outline-offset:1px;
+ }
+}
+@media (orientation:landscape) and (min-width:760px) and (max-height:620px){
+ body.oficina-body.agv-landscape-app .oficina-tools.voxel-active{
+  max-height:clamp(91px,24dvh,112px);
+  overflow-y:auto;
+  scrollbar-width:thin;
+ }
+ body.oficina-body.agv-landscape-app .voxel-toolbar button,
+ body.oficina-body.agv-landscape-app .voxel-toolbar select,
+ body.oficina-body.agv-landscape-app .voxel-materials button{
+  min-height:44px;
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-mini:not([open])>summary,
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid:not([open])>summary{
+  min-height:44px;
+  max-height:none;
+  padding:3px 6px;
+  touch-action:manipulation;
+ }
+ body.oficina-body.agv-landscape-app .oficina-board.voxel-active>.voxel-access-grid:not([open]){
+  top:56px;
+ }
+ /* Evita colisão entre gavetas no canto superior direito e câmera no rodapé. */
+ body.oficina-body.agv-landscape-app .voxel-overlay{
+  left:6px;
+  right:auto;
+  bottom:6px;
+  gap:3px;
+ }
+}
