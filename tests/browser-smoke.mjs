@@ -133,6 +133,29 @@ try{
         }
         note(profile.name+' '+pageName+' visual viewport real','pass',JSON.stringify(landscape));
       }
+      if(pageName==='portal'&&profile.width>=760&&profile.height<=720){
+        const targets=await page.evaluate(()=>{
+          const list=selector=>[...document.querySelectorAll(selector)]
+            .map(el=>Math.round(el.getBoundingClientRect().height));
+          return {
+            shortcuts:list('.home-shortcuts > button, .home-shortcuts > a'),
+            navbar:list('.sidebar .nav-item'),
+            fullscreen:list('#fullscreenButton'),
+            theme:list('.theme-switch button'),
+            header:list('.topbar'),
+            authorCreditDisplay:getComputedStyle(document.querySelector('body > .agv-dev-credit')).display
+          };
+        });
+        for(const key of ['shortcuts','navbar','fullscreen','theme']){
+          assert.ok(targets[key].length>0,'missing touch controls '+key);
+          assert.ok(Math.min(...targets[key])>=44,
+            'touch targets >=44 CSS px '+key+': '+JSON.stringify(targets));
+        }
+        assert.ok(targets.header[0]>=56,'topbar accommodates targets: '+JSON.stringify(targets));
+        assert.equal(targets.authorCreditDisplay,'none',
+          'author credit must not cover bottom dock in landscape: '+JSON.stringify(targets));
+        note(profile.name+' landscape >=44px hit targets and dock clearance','pass',JSON.stringify(targets));
+      }
       if(pageName==='portal'&&profile.width>=760&&profile.height<=650){
         const shortcuts=await page.evaluate(()=>{
           const root=document.querySelector('.home-shortcuts');
@@ -360,6 +383,33 @@ try{
       if(pageName==='portal'&&profile.name==='wa86f-css-1280'){
         await page.evaluate(()=>window.TVTouchNavigation.go('diagnostico'));
         await page.waitForTimeout(260);
+        // Interações simuladas validam o código. Não equivalem ao toque físico na WA86F.
+        await page.evaluate(()=>{
+          const zone=document.querySelector('#diagTouchZone');
+          document.querySelector('#diagStartTouch').click();
+          const send=(name,id,x)=>zone.dispatchEvent(new PointerEvent(name,{
+            bubbles:true,cancelable:true,pointerType:'touch',pointerId:id,
+            clientX:x,clientY:120
+          }));
+          send('pointerdown',11,100);
+          send('pointerdown',12,200);
+          send('pointermove',11,40);   // afastar
+          send('pointermove',11,130);  // aproximar
+          send('pointerup',11,130);
+          send('pointerup',12,200);
+        });
+        await page.waitForTimeout(8100);
+        const pinch=await page.evaluate(()=>({
+          result:document.querySelector('#diagTouchResult').textContent,
+          pinchCard:[...document.querySelectorAll('#diagOverview .diag-data')]
+            .find(card=>card.textContent.includes('Pinça (teste prático)'))?.textContent,
+          recommendation:document.querySelector('#diagRecommendations').textContent
+        }));
+        assert.match(pinch.result,/Máximo detectado: 2 toque/);
+        assert.match(pinch.result,/Pinça observada: afastar e aproximar/);
+        assert.match(pinch.pinchCard||'',/afastar e aproximar/);
+        assert.match(pinch.recommendation,/Movimentos de pinça observados/);
+        note('WA86F layout: pinça bidirecional simulada no Chrome, NÃO validada na TV','pass',JSON.stringify(pinch));
         const diagnostic=await page.evaluate(()=>{
           const area=document.querySelector('main#conteudo');
           const last=document.querySelector('#page-diagnostico > .notice:last-child');
