@@ -528,3 +528,31 @@ body.agv-is-fullscreen .agv-fullscreen-toggle{border-color:#e2ff4d}
   line-height:1.1;white-space:nowrap;text-overflow:ellipsis
  }
 }
+
+/* Studio 3.8 — auditoria em 844×390 e WA86F 1280×720.
+   Os controles essenciais de toque passam a ter >=44px de altura.
+   O crédito de autoria permanece no HTML e no modo vertical, mas não
+   deve ficar sobre os destinos do dock durante a aula horizontal. */
+@media (orientation:landscape) and (min-width:760px){
+ body.studio-ui.agv-landscape-app >.agv-dev-credit{
+  display:none!important;
+ }
+ body.studio-ui.agv-landscape-app .topbar{
+  min-height:56px;
+  height:clamp(56px,7.8dvh,74px);
+ }
+ body.studio-ui.agv-landscape-app .top-action,
+ body.studio-ui.agv-landscape-app .lesson-chip,
+ body.studio-ui.agv-landscape-app .theme-switch button{
+  min-height:44px;
+ }
+ body.studio-ui.agv-landscape-app .home-shortcuts :is(button,a){
+  min-height:44px;
+ }
+ body.studio-ui.agv-landscape-app .nav-item{
+  min-height:44px;
+ }
+ body.studio-ui.agv-landscape-app .home-lesson{
+  min-height:44px;
+ }
+}
