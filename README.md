@@ -35,11 +35,13 @@ No diagnóstico fotografado em uma Samsung WA86F, o navegador declarou **1280×7
 
 ## Matriz de QA e comandos
 
+O roteiro de aceite físico da nova revisão está em [docs/QA_STUDIO_3_8_WA86F.md](docs/QA_STUDIO_3_8_WA86F.md).
+
 A suíte Chrome usa `tests/browser-smoke.mjs` e produz capturas e `browser-artifacts/report.json`, incluindo **390×844, 844×390, 1024×600, 1280×720 com DPR 3, 1366×630, 1920×1080 e 3840×2160**. A simulação `PointerEvent` em Chrome verifica apenas o algoritmo, **não substitui toques reais na WA86F**.
 
 ```bash
 node --test tests/*.test.cjs
-find public/js -name '*.js' -type f -exec node --check {} \;
+find public/js -name '*.js' -type f -print0 | xargs -0 -n1 node --check
 node --check public/service-worker.js
 ```
 
