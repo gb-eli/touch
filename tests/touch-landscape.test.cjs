@@ -10,7 +10,7 @@ test('Studio 3.7: os tres ambientes carregam o mesmo controle de tela cheia',()=
     const html=read(page);
     assert.match(html,/touch-fullscreen\.js\?v=3\.7\.0/);
     assert.match(html,/touch-layout\.js\?v=3\.7\.0/);
-    assert.match(html,/touch-vivid\.css\?v=3\.7\.1/);
+    assert.match(html,/touch-vivid\.css\?v=3\.8\.0/);
     assert.match(html,/data-touch-fullscreen/);
   }
 });
@@ -48,7 +48,7 @@ test('Contraste da paleta e cache da interface permanecem locais',()=>{
     assert.ok(css.includes(color),color+' preserva acento vibrante');
   assert.doesNotMatch(css,/https?:\/\//);
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.7\.2-tv-diagnostics/);
+  assert.match(sw,/tvtouch-studio-v3\.8\.0-landscape-gesture-qa/);
   assert.ok(sw.includes('./css/touch-vivid.css'));
   assert.ok(sw.includes('./js/touch-fullscreen.js'));
 });
