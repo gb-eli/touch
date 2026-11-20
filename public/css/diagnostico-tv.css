@@ -104,3 +104,18 @@
   body.studio-ui #page-diagnostico .diag-panel,
   body.studio-ui #page-diagnostico .diag-data{transition:none!important}
 }
+
+/* Teste de gestos: área suficiente para afastar dois dedos em painel horizontal.
+   Apenas a zona do teste intercepta gestos, nunca o documento inteiro. */
+@media (orientation:landscape) and (min-width:760px){
+ body.studio-ui.agv-landscape-app #page-diagnostico .diag-touch-zone:not([hidden]){
+  display:grid;place-items:center;text-align:center;
+  min-height:clamp(220px,34dvh,330px);
+  padding:16px;
+  touch-action:none;user-select:none;-webkit-user-select:none;
+  border-color:#00e3f4;
+  color:#ecfdff;
+  font-size:clamp(16px,1.4vw,23px);
+  font-weight:700;
+ }
+}
