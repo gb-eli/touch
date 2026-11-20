@@ -136,6 +136,7 @@ try{
       if(pageName==='portal'&&profile.width>=760&&profile.height<=720){
         const targets=await page.evaluate(()=>{
           const list=selector=>[...document.querySelectorAll(selector)]
+            .filter(el=>el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden')
             .map(el=>Math.round(el.getBoundingClientRect().height));
           return {
             shortcuts:list('.home-shortcuts > button, .home-shortcuts > a'),
