@@ -196,6 +196,37 @@ try{
           'canvas 3D precisa estar dentro do painel: '+JSON.stringify(scene));
         assert.equal(scene.closed,2,'mapa e coordenadas ficam recolhidos por padrao');
         note(profile.name+' canvas 3D ocupa area util','pass',JSON.stringify(scene));
+        const voxelTargets=await page.evaluate(()=>{
+          const visible=selector=>[...document.querySelectorAll(selector)]
+            .filter(el=>el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden')
+            .map(el=>({w:Math.round(el.getBoundingClientRect().width),
+              h:Math.round(el.getBoundingClientRect().height)}));
+          const detail=el=>el?.getBoundingClientRect();
+          const touchScroll=document.querySelector('.oficina-tools.voxel-active');
+          const camera=detail(document.querySelector('.voxel-overlay'));
+          const drawers=[...document.querySelectorAll('.oficina-board.voxel-active >details:not([open])')]
+            .map(detail).filter(Boolean);
+          const intersect=(a,b)=>a&&b&&a.right>b.left&&a.left<b.right&&a.bottom>b.top&&a.top<b.bottom;
+          return {
+            toolbar:visible('.voxel-toolbar button, .voxel-toolbar select'),
+            materials:visible('.voxel-materials button'),
+            camera:visible('.voxel-overlay button'),
+            drawers:visible('.oficina-board.voxel-active > details:not([open]) > summary'),
+            headers:visible('.oficina-header .oficina-back, .oficina-header .oficina-sound'),
+            toolViewport:touchScroll?.clientHeight,
+            toolScrollable:touchScroll?.scrollHeight>touchScroll?.clientHeight,
+            cameraDrawerOverlap:drawers.some(r=>intersect(camera,r))
+          };
+        });
+        for(const name of ['toolbar','materials','camera','drawers','headers']){
+          assert.ok(voxelTargets[name].length,'missing 3D touch targets: '+name);
+          assert.ok(voxelTargets[name].every(({h})=>h>=44),
+            '3D '+name+' targets must reach 44px without shrinking canvas: '+JSON.stringify(voxelTargets));
+        }
+        assert.equal(voxelTargets.cameraDrawerOverlap,false,
+          'camera controls cannot overlap mission/coordinates: '+JSON.stringify(voxelTargets));
+        note(profile.name+' Oficina 3D targets >=44px and overlays apart','pass',JSON.stringify(voxelTargets));
+
       }
       if(['portal','oficina','arcade'].includes(pageName)&&profile.width>=760&&profile.height<=650){
         const toggleId=pageName==='portal'?'#fullscreenButton':pageName==='oficina'?'#oficinaFullscreen':'#arcadeFullscreen';
