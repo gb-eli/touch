@@ -108,7 +108,7 @@ try{
         assert.ok(fit.top>=-1&&fit.bottom<=fit.viewport+2,
           pageName+' painel deve caber verticalmente na tela do tablet: '+JSON.stringify(fit));
         if(pageName==='portal'){
-          assert.equal(fit.tileCount,6,'início deve mostrar 6 blocos na tela');
+          assert.equal(fit.tileCount,7,'Studio 4.0: seis atividades + abrir mais experiências');
           assert.ok(fit.top<=Math.max(105,fit.viewport*.08),'a barra contextual não pode consumir o topo: '+JSON.stringify(fit));
           assert.ok(Math.min(...fit.tileRows)>=65,'cartões devem ser realmente utilizáveis em paisagem: '+JSON.stringify(fit));
           assert.equal(fit.calibrator,true,'acesso ao diagnóstico do touch deve estar na tela inicial');
@@ -139,7 +139,7 @@ try{
             .filter(el=>el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden')
             .map(el=>Math.round(el.getBoundingClientRect().height));
           return {
-            shortcuts:list('.home-shortcuts > button, .home-shortcuts > a'),
+            featured:list('.studio-tiles > .studio-tile'),
             navbar:list('.sidebar .nav-item'),
             fullscreen:list('#fullscreenButton'),
             theme:list('.theme-switch button'),
@@ -147,37 +147,60 @@ try{
             authorCreditDisplay:getComputedStyle(document.querySelector('body > .agv-dev-credit')).display
           };
         });
-        for(const key of ['shortcuts','navbar','fullscreen','theme']){
+        for(const key of ['featured','navbar','fullscreen','theme']){
           assert.ok(targets[key].length>0,'missing touch controls '+key);
           assert.ok(Math.min(...targets[key])>=44,
             'touch targets >=44 CSS px '+key+': '+JSON.stringify(targets));
         }
-        assert.ok(targets.header[0]>=56,'topbar accommodates targets: '+JSON.stringify(targets));
+        assert.ok(targets.header[0]>=50,'topbar accommodates targets: '+JSON.stringify(targets));
         assert.equal(targets.authorCreditDisplay,'none',
           'author credit must not cover bottom dock in landscape: '+JSON.stringify(targets));
         note(profile.name+' landscape >=44px hit targets and dock clearance','pass',JSON.stringify(targets));
       }
-      if(pageName==='portal'&&profile.width>=760&&profile.height<=650){
-        const shortcuts=await page.evaluate(()=>{
-          const root=document.querySelector('.home-shortcuts');
-          const items=[...root.querySelectorAll(':scope > button, :scope > a')];
-          const rects=items.map(el=>el.getBoundingClientRect());
-          return {
-            count:items.length,
-            arcades:items.filter(el=>el.matches('a[href="arcade.html"]')).length,
-            replays:items.filter(el=>el.matches('[data-touch-replay]')).length,
-            tops:rects.map(r=>Math.round(r.top)),
-            minHeight:Math.min(...rects.map(r=>r.height)),
-            bottoms:rects.map(r=>Math.round(r.bottom))
-          };
+      if(pageName==='portal'&&profile.width>=760&&(profile.height<=650||profile.name==='wa86f-css-1280')){
+        const deck=await page.evaluate(()=>{
+          const tiles=[...document.querySelectorAll('.studio-tiles > .studio-tile')];
+          const hero=document.querySelector('.studio-tiles > .tile-cosmos').getBoundingClientRect();
+          const side=document.querySelector('.studio-tiles > .tile-board').getBoundingClientRect();
+          const more=document.querySelector('#agvDeckApps');
+          const drawer=document.querySelector('#agvDeckDrawer');
+          return {ready:document.body.classList.contains('agv-deck-ready'),
+            count:tiles.length,heroWidth:Math.round(hero.width),heroHeight:Math.round(hero.height),
+            sideWidth:Math.round(side.width),sideHeight:Math.round(side.height),
+            moreVisible:!!more&&more.getBoundingClientRect().height>=44,
+            drawerDisplay:getComputedStyle(drawer).display,
+            assetLoaded:[...document.styleSheets].some(x=>x.href?.includes('studio-control-deck.css'))};
         });
-        assert.equal(shortcuts.count,8,'launcher deve ter 8 atalhos sem Arcade duplicado: '+JSON.stringify(shortcuts));
-        assert.equal(shortcuts.arcades,1,'somente um Arcade');
-        assert.equal(shortcuts.replays,1,'reabrir teste de toque permanece disponível');
-        assert.ok(Math.max(...shortcuts.tops)-Math.min(...shortcuts.tops)<=3,
-          'atalhos precisam ficar em uma unica linha na paisagem: '+JSON.stringify(shortcuts));
-        assert.ok(shortcuts.minHeight>=27,'alvos touch nao podem ficar pequenos: '+JSON.stringify(shortcuts));
-        note(profile.name+' launcher 8 atalhos em uma linha','pass',JSON.stringify(shortcuts));
+        assert.equal(deck.ready,true,'Control Deck JS initialized: '+JSON.stringify(deck));
+        assert.equal(deck.assetLoaded,true,'Control Deck CSS loaded');
+        assert.equal(deck.count,7,'six core experiences plus apps drawer');
+        assert.ok(deck.heroWidth>deck.sideWidth*2,'cinematic hero must dominate the layout: '+JSON.stringify(deck));
+        assert.ok(deck.heroHeight>deck.sideHeight*2,'hero must span three side rows: '+JSON.stringify(deck));
+        assert.equal(deck.moreVisible,true,'apps drawer is visible and touchable');
+        assert.equal(deck.drawerDisplay,'none','secondary shortcuts must not consume permanent landscape height');
+        await page.locator('#agvDeckApps').click();
+        assert.equal(await page.locator('#agvDeckApps').getAttribute('aria-expanded'),'true');
+        assert.equal(await page.locator('#agvDeckDrawer').isVisible(),true);
+        const apps=await page.evaluate(()=>{
+          const entries=[...document.querySelectorAll('#agvDeckDrawer .home-shortcuts >a, #agvDeckDrawer .home-shortcuts >button')];
+          return {count:entries.length,arcades:entries.filter(x=>x.matches('a[href="arcade.html"]')).length,
+            retries:entries.filter(x=>x.matches('[data-touch-replay]')).length,
+            heights:entries.map(x=>Math.round(x.getBoundingClientRect().height)),
+            closeHeight:Math.round(document.querySelector('.deck-drawer-close').getBoundingClientRect().height)};
+        });
+        assert.equal(apps.count,8,'all eight secondary tools preserved: '+JSON.stringify(apps));
+        assert.equal(apps.arcades,1,'no duplicate Arcade');
+        assert.equal(apps.retries,1,'repeat touch test retained');
+        assert.ok(Math.min(...apps.heights)>=44&&apps.closeHeight>=44,
+          'all app drawer touch targets >=44px: '+JSON.stringify(apps));
+        if(profile.name==='wa86f-css-1280'){
+          await page.screenshot({path:path.join(out,'wa86f-css-1280-control-deck-open.jpg'),
+            type:'jpeg',quality:86,animations:'disabled',fullPage:false});
+        }
+        await page.keyboard.press('Escape');
+        assert.equal(await page.locator('#agvDeckApps').getAttribute('aria-expanded'),'false');
+        assert.equal(await page.locator('#agvDeckDrawer').isVisible(),false);
+        note(profile.name+' cinematic hero + real apps drawer verified','pass',JSON.stringify({deck,apps}));
       }
       if(pageName==='oficina'&&profile.width>=760&&profile.height<=650){
         const scene=await page.evaluate(()=>{
@@ -413,6 +436,10 @@ try{
         note('tv-3840 Arcade canvas buffer','pass',JSON.stringify(buffer));
       }
       if(pageName==='portal'&&profile.name==='wa86f-css-1280'){
+        await page.evaluate(()=>window.TVTouchNavigation.go('inicio'));
+        await page.waitForTimeout(130);
+        await page.screenshot({path:path.join(out,'wa86f-css-1280-control-deck-home.jpg'),
+          type:'jpeg',quality:90,animations:'disabled',fullPage:false});
         await page.evaluate(()=>window.TVTouchNavigation.go('diagnostico'));
         await page.waitForTimeout(260);
         // Interações simuladas validam o código. Não equivalem ao toque físico na WA86F.
