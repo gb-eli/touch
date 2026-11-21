@@ -133,6 +133,30 @@ try{
         }
         note(profile.name+' '+pageName+' visual viewport real','pass',JSON.stringify(landscape));
       }
+      if(pageName==='portal'&&profile.width>=760&&profile.height<=720){
+        const targets=await page.evaluate(()=>{
+          const list=selector=>[...document.querySelectorAll(selector)]
+            .filter(el=>el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden')
+            .map(el=>Math.round(el.getBoundingClientRect().height));
+          return {
+            shortcuts:list('.home-shortcuts > button, .home-shortcuts > a'),
+            navbar:list('.sidebar .nav-item'),
+            fullscreen:list('#fullscreenButton'),
+            theme:list('.theme-switch button'),
+            header:list('.topbar'),
+            authorCreditDisplay:getComputedStyle(document.querySelector('body > .agv-dev-credit')).display
+          };
+        });
+        for(const key of ['shortcuts','navbar','fullscreen','theme']){
+          assert.ok(targets[key].length>0,'missing touch controls '+key);
+          assert.ok(Math.min(...targets[key])>=44,
+            'touch targets >=44 CSS px '+key+': '+JSON.stringify(targets));
+        }
+        assert.ok(targets.header[0]>=56,'topbar accommodates targets: '+JSON.stringify(targets));
+        assert.equal(targets.authorCreditDisplay,'none',
+          'author credit must not cover bottom dock in landscape: '+JSON.stringify(targets));
+        note(profile.name+' landscape >=44px hit targets and dock clearance','pass',JSON.stringify(targets));
+      }
       if(pageName==='portal'&&profile.width>=760&&profile.height<=650){
         const shortcuts=await page.evaluate(()=>{
           const root=document.querySelector('.home-shortcuts');
@@ -172,6 +196,37 @@ try{
           'canvas 3D precisa estar dentro do painel: '+JSON.stringify(scene));
         assert.equal(scene.closed,2,'mapa e coordenadas ficam recolhidos por padrao');
         note(profile.name+' canvas 3D ocupa area util','pass',JSON.stringify(scene));
+        const voxelTargets=await page.evaluate(()=>{
+          const visible=selector=>[...document.querySelectorAll(selector)]
+            .filter(el=>el.getClientRects().length>0&&getComputedStyle(el).visibility!=='hidden')
+            .map(el=>({w:Math.round(el.getBoundingClientRect().width),
+              h:Math.round(el.getBoundingClientRect().height)}));
+          const detail=el=>el?.getBoundingClientRect();
+          const touchScroll=document.querySelector('.oficina-tools.voxel-active');
+          const camera=detail(document.querySelector('.voxel-overlay'));
+          const drawers=[...document.querySelectorAll('.oficina-board.voxel-active >details:not([open])')]
+            .map(detail).filter(Boolean);
+          const intersect=(a,b)=>a&&b&&a.right>b.left&&a.left<b.right&&a.bottom>b.top&&a.top<b.bottom;
+          return {
+            toolbar:visible('.voxel-toolbar button, .voxel-toolbar select'),
+            materials:visible('.voxel-materials button'),
+            camera:visible('.voxel-overlay button'),
+            drawers:visible('.oficina-board.voxel-active > details:not([open]) > summary'),
+            headers:visible('.oficina-header .oficina-back, .oficina-header .oficina-sound'),
+            toolViewport:touchScroll?.clientHeight,
+            toolScrollable:touchScroll?.scrollHeight>touchScroll?.clientHeight,
+            cameraDrawerOverlap:drawers.some(r=>intersect(camera,r))
+          };
+        });
+        for(const name of ['toolbar','materials','camera','drawers','headers']){
+          assert.ok(voxelTargets[name].length,'missing 3D touch targets: '+name);
+          assert.ok(voxelTargets[name].every(({h})=>h>=44),
+            '3D '+name+' targets must reach 44px without shrinking canvas: '+JSON.stringify(voxelTargets));
+        }
+        assert.equal(voxelTargets.cameraDrawerOverlap,false,
+          'camera controls cannot overlap mission/coordinates: '+JSON.stringify(voxelTargets));
+        note(profile.name+' Oficina 3D targets >=44px and overlays apart','pass',JSON.stringify(voxelTargets));
+
       }
       if(['portal','oficina','arcade'].includes(pageName)&&profile.width>=760&&profile.height<=650){
         const toggleId=pageName==='portal'?'#fullscreenButton':pageName==='oficina'?'#oficinaFullscreen':'#arcadeFullscreen';
@@ -360,6 +415,33 @@ try{
       if(pageName==='portal'&&profile.name==='wa86f-css-1280'){
         await page.evaluate(()=>window.TVTouchNavigation.go('diagnostico'));
         await page.waitForTimeout(260);
+        // Interações simuladas validam o código. Não equivalem ao toque físico na WA86F.
+        await page.evaluate(()=>{
+          const zone=document.querySelector('#diagTouchZone');
+          document.querySelector('#diagStartTouch').click();
+          const send=(name,id,x)=>zone.dispatchEvent(new PointerEvent(name,{
+            bubbles:true,cancelable:true,pointerType:'touch',pointerId:id,
+            clientX:x,clientY:120
+          }));
+          send('pointerdown',11,100);
+          send('pointerdown',12,200);
+          send('pointermove',11,40);   // afastar
+          send('pointermove',11,130);  // aproximar
+          send('pointerup',11,130);
+          send('pointerup',12,200);
+        });
+        await page.waitForTimeout(8100);
+        const pinch=await page.evaluate(()=>({
+          result:document.querySelector('#diagTouchResult').textContent,
+          pinchCard:[...document.querySelectorAll('#diagOverview .diag-data')]
+            .find(card=>card.textContent.includes('Pinça (teste prático)'))?.textContent,
+          recommendation:document.querySelector('#diagRecommendations').textContent
+        }));
+        assert.match(pinch.result,/Máximo detectado: 2 toque/);
+        assert.match(pinch.result,/Pinça observada: afastar e aproximar/);
+        assert.match(pinch.pinchCard||'',/afastar e aproximar/);
+        assert.match(pinch.recommendation,/Movimentos de pinça observados/);
+        note('WA86F layout: pinça bidirecional simulada no Chrome, NÃO validada na TV','pass',JSON.stringify(pinch));
         const diagnostic=await page.evaluate(()=>{
           const area=document.querySelector('main#conteudo');
           const last=document.querySelector('#page-diagnostico > .notice:last-child');
@@ -375,6 +457,7 @@ try{
               clientHeight:area.clientHeight,
               lastBottom:last.getBoundingClientRect().bottom,
               dockTop:dock.getBoundingClientRect().top,
+              legacyFooterDisplay:getComputedStyle(document.querySelector('.main-area > .footer')).display,
               visible:document.querySelector('#page-diagnostico').classList.contains('active'),
               css:!![...document.styleSheets].find(s=>s.href?.includes('diagnostico-tv.css'))
             });
@@ -385,6 +468,8 @@ try{
         assert.equal(diagnostic.visible,true,'rota de diagnostico visivel');
         assert.equal(diagnostic.css,true,'correcao da TV carregada');
         assert.equal(diagnostic.overflowY,'auto','diagnostico deve rolar dentro do app');
+        assert.equal(diagnostic.legacyFooterDisplay,'none',
+          'rodape antigo nao pode aparecer atras do dock durante diagnostico');
         assert.ok(diagnostic.scrollHeight>diagnostic.clientHeight+200,
           'diagnostico longo deve continuar rolavel: '+JSON.stringify(diagnostic));
         assert.ok(diagnostic.scrollTop>100,'rolagem interna deve chegar ao final: '+JSON.stringify(diagnostic));

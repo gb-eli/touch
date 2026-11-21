@@ -1,9 +1,9 @@
-/* TV TOUCH v1.2 — diagnóstico local, toque medido > capacidade declarada pelo navegador. */
+/* TV TOUCH v1.3 — diagnóstico local de contato e pinça por PointerEvents. */
 (() => {
   'use strict';
   const el = id => document.getElementById(id);
   const STATION_KEY = 'tvtouch:station-label:v1';
-  const state = { base: {}, storage: {}, touchPeak: null, fps: null, motion: null };
+  const state = { base: {}, storage: {}, touchPeak: null, pinchDirections: null, fps: null, motion: null };
   const val = (value, fallback='Não informado pelo navegador') => value === null || value === undefined || value === '' ? fallback : String(value);
   const supported = truth => truth ? 'Disponível' : 'Não detectado';
   const tile = (heading, value, note='') => {
@@ -59,6 +59,7 @@
       ['Área útil do navegador',`${b.viewport} px`],['Escala de pixels',`${b.pixelRatio}×`],
       ['Toques simultâneos (informados)',val(b.touchPoints)],
       ['Toques simultâneos (testados)',state.touchPeak===null?'Não testado':state.touchPeak],
+      ['Pinça (teste prático)',state.pinchDirections===null?'Não testado':state.pinchDirections.length?state.pinchDirections.join(' e '):'Não observada'],
       ['Processadores lógicos',val(b.cpuThreads)],
       ['Memória aproximada',b.ramApproxGiB?`${b.ramApproxGiB} GiB`:'Não exposta pelo navegador'],
       ['Orientação',b.orientation],['Armazenamento usado (origem)',state.storage.used],
@@ -98,6 +99,11 @@
   }
   function suggestions() {
     const b=state.base, messages=[...touchGuidance(b.touchPoints,state.touchPeak)];
+    if(state.touchPeak>=2&&state.pinchDirections!==null){
+      const actions=state.pinchDirections;
+      messages.push(actions.length?`Movimentos de pinça observados no diagnóstico: ${actions.join(' e ')}. Verifique se funcionam também nos jogos e no 3D.`:
+        'Pinça não observada nesta tentativa. Repita o teste aproximando e afastando dois dedos; isso não prova ausência do gesto.');
+    }
     if(!b.webgl)messages.push('Sem WebGL detectado: priorize atividades Canvas 2D e simuladores simples.');
     if(b.webgl)messages.push('WebGL detectado: ferramentas de geometria e mapas 3D poderão ser testadas.');
     if((b.ramApproxGiB !== null && b.ramApproxGiB <= 2) || (b.cpuThreads!==null && b.cpuThreads<=2))messages.push('Capacidade reduzida informada: animações decorativas serão suavizadas e o portal deve priorizar atividades leves.');
@@ -127,15 +133,65 @@
       state.storage={used:fmt(v.usage),quota:fmt(v.quota)};renderOverview();
     }).catch(()=>{});} else {state.storage={used:'Não informado',quota:'Não informado'};}
   }
+  // Compara dois pontos de toque sem depender de navigator.maxTouchPoints,
+  // que pode informar 1 mesmo quando a tela entrega PointerEvents múltiplos.
+  function pinchDirection(initial,current){
+    if(!Number.isFinite(initial)||!Number.isFinite(current)||initial<20)return null;
+    if(Math.abs(current-initial)<Math.max(22,initial*.18))return null;
+    return current>initial?'afastar':'aproximar';
+  }
   function initTouchTest(){
     const start=el('diagStartTouch'),zone=el('diagTouchZone'),result=el('diagTouchResult');
-    let current=new Set(),peak=0, timer=null;
-    const remove=e=>{current.delete(e.pointerId);};
-    zone.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch'&&e.pointerType!=='pen')return;e.preventDefault();current.add(e.pointerId);peak=Math.max(peak,current.size);result.textContent=`${current.size} toque(s) agora • máximo ${peak}`;});
-    ['pointerup','pointercancel','pointerleave'].forEach(event=>zone.addEventListener(event,remove));
+    let current=new Set(),positions=new Map(),peak=0,timer=null,reference=null,gestures=new Set();
+    const track=()=>{
+      if(positions.size!==2){reference=null;return;}
+      const [a,b]=[...positions.values()];
+      const distance=Math.hypot(a.x-b.x,a.y-b.y);
+      if(reference===null){reference=distance;return;}
+      const gesture=pinchDirection(reference,distance);
+      if(gesture)gestures.add(gesture);
+    };
+    const remove=e=>{
+      current.delete(e.pointerId);positions.delete(e.pointerId);
+      if(positions.size!==2)reference=null;
+    };
+    zone.addEventListener('pointerdown',e=>{
+      if(e.pointerType!=='touch'&&e.pointerType!=='pen')return;
+      e.preventDefault();
+      current.add(e.pointerId);
+      if(e.pointerType==='touch')positions.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      try{zone.setPointerCapture(e.pointerId)}catch{}
+      track();
+      peak=Math.max(peak,current.size);
+      result.textContent=`${current.size} toque(s) agora • máximo ${peak}`;
+    });
+    zone.addEventListener('pointermove',e=>{
+      if(!positions.has(e.pointerId))return;
+      e.preventDefault();
+      positions.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      track();
+      if(gestures.size)result.textContent=`${current.size} toque(s) agora • máximo ${peak} • pinça detectada`;
+    });
+    ['pointerup','pointercancel','pointerleave','lostpointercapture'].forEach(event=>
+      zone.addEventListener(event,remove));
     start.addEventListener('click',()=>{
-      if(timer)return;current.clear();peak=0;zone.hidden=false;start.disabled=true;result.textContent='Toque com vários dedos na área destacada.';
-      timer=setTimeout(()=>{timer=null;zone.hidden=true;start.disabled=false;state.touchPeak=peak;renderOverview();renderCapabilities();result.textContent=peak?`Máximo detectado: ${peak} toque(s) simultâneos.`:'Nenhum toque detectado; tente novamente na TV.';suggestions();window.dispatchEvent(new CustomEvent('tvt:measurement',{detail:{type:'touch_peak',value:peak,attempts:1,failures:0}}));},8000);
+      if(timer)return;
+      current.clear();positions.clear();gestures.clear();peak=0;reference=null;
+      state.pinchDirections=null;zone.hidden=false;start.disabled=true;
+      result.textContent='Toque com vários dedos. Aproxime e afaste dois dedos para testar a pinça.';
+      timer=setTimeout(()=>{
+        timer=null;zone.hidden=true;start.disabled=false;
+        state.touchPeak=peak;state.pinchDirections=[...gestures].sort();
+        renderOverview();renderCapabilities();
+        const pinch=gestures.size?` Pinça observada: ${state.pinchDirections.join(' e ')}.`:
+          peak>=2?' Pinça não observada nesta tentativa.':'';
+        result.textContent=peak?`Máximo detectado: ${peak} toque(s) simultâneos.${pinch}`:
+          'Nenhum toque detectado; tente novamente na TV.';
+        suggestions();
+        window.dispatchEvent(new CustomEvent('tvt:measurement',{
+          detail:{type:'touch_peak',value:peak,attempts:1,failures:0}
+        }));
+      },8000);
     });
   }
   function initFpsTest(){
@@ -194,7 +250,7 @@
   function safeReport(){
     const b=state.base;
     return {
-      application:'TV TOUCH • AGV',schema:1,version:'1.2.0',generatedAt:new Date().toISOString(),
+      application:'TV TOUCH • AGV',schema:1,version:'1.3.0',generatedAt:new Date().toISOString(),
       stationLabel:el('diagStation').value || null,
       device:{browser:b.browser,operatingSystem:b.os,language:b.language,timezone:b.timezone,
         screenPixels:b.screenPixels,viewportPixels:b.viewport,pixelRatio:b.pixelRatio,orientation:b.orientation,
@@ -205,7 +261,7 @@
       connectivityEstimates:{onlineHint:b.onlineHint,networkType:b.networkType,effectiveType:b.effectiveType,
         rttApproxMs:b.rttApproxMs,downlinkApproxMbps:b.downlinkApproxMbps,saveData:b.saveData},
       preferences:{reducedMotion:b.reducedMotion,highContrast:b.highContrast,darkMode:b.darkMode},
-      tests:{multitouchPeak:state.touchPeak,fpsApprox:state.fps,motionSupport:state.motion},
+      tests:{multitouchPeak:state.touchPeak,pinchDirections:state.pinchDirections,fpsApprox:state.fps,motionSupport:state.motion},
       privacy:{collectedStudentData:false,transmittedAutomatically:false,includesPublicIP:false,
         includesPrivateIP:false,includesMAC:false,includesCoordinates:false,includesSensorReadings:false}
     };
@@ -219,7 +275,7 @@
     });
     el('diagCopy').addEventListener('click',async()=>{
       const b=state.base;
-      const text=`TV TOUCH • AGV — ${el('diagStation').value||'Painel não identificado'}\nSistema: ${b.os}\nNavegador: ${b.browser}\nTela: ${b.screenPixels}\nÁrea útil: ${b.viewport}\nToques informados: ${val(b.touchPoints)}\nToques testados: ${val(state.touchPeak,'Não testado')}\nWebGL: ${supported(b.webgl)}\nMemória aproximada: ${val(b.ramApproxGiB)} GiB\nFPS: ${val(state.fps,'Não testado')}\nDados de rede identificáveis e localização: omitidos.`;
+      const text=`TV TOUCH • AGV — ${el('diagStation').value||'Painel não identificado'}\nSistema: ${b.os}\nNavegador: ${b.browser}\nTela: ${b.screenPixels}\nÁrea útil: ${b.viewport}\nToques informados: ${val(b.touchPoints)}\nToques testados: ${val(state.touchPeak,'Não testado')}\nPinça testada: ${state.pinchDirections===null?'Não testado':state.pinchDirections.length?state.pinchDirections.join(' e '):'Não observada'}\nWebGL: ${supported(b.webgl)}\nMemória aproximada: ${val(b.ramApproxGiB)} GiB\nFPS: ${val(state.fps,'Não testado')}\nDados de rede identificáveis e localização: omitidos.`;
       try {if(!navigator.clipboard?.writeText)throw Error();await navigator.clipboard.writeText(text);el('diagSaveStatus').textContent='Resumo copiado para a área de transferência.';}
       catch{el('diagSaveStatus').textContent='Cópia indisponível neste navegador. Exporte o JSON.';}
     });

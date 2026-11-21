@@ -1,78 +1,68 @@
-# TV TOUCH / Studio 2.6 — AGV
+# TV TOUCH · AGV
 
-Portal educacional para os painéis interativos Samsung WA86F de 86 polegadas, Android 14, uso horizontal. O código estático funciona no GitHub Pages sem framework ou workflow personalizado.
+Portal educacional interativo para **painéis Samsung WA86F de 86″**, desenvolvido em HTML, CSS e JavaScript estáticos, para uso com toque, mouse e teclado em orientação horizontal.
 
-## Studio 2.6 — versão integrada para publicação
+- **Produção verificada em 20/11/2026:** Studio **3.7.2**, em https://gb-eli.github.io/touch/.
+- **Versão em homologação nesta branch:** Studio **3.8.0** (alvos touch, crédito fora do dock e diagnóstico prático da pinça).
+- **Fonte canônica:** `main` (aplicação + testes + documentação); publicação: `gh-pages` com **somente `public/`** na raiz.
+- **Produção confirmada antes desta revisão:** `main` em `f7c0c498b557317df5855fe8dbb4738e53630412` e `gh-pages` em `6b48514ba3bad001b89d010d161e9bbea24e8f95`. Não presumir que merge em `main` implica deploy no Pages.
+- **Estado da 3.8.0:** implementação isolada; exige revisão da PR, CI e aprovação específica para publicar.
 
-A revisão consolidada inclui as três melhorias anteriores:
+## Experiência e navegação
 
-- **Piano multitoque:** 24 notas, três timbres sintetizados, acordes e desafios, com áudio interrompido ao sair.
-- **Sólidos e encaixe:** cinco formas, quatro materiais ilustrativos, três qualidades gráficas e três níveis de encaixe (4, 6, 8 peças).
-- **Interface 360 e mobile:** capas SVG próprias por assunto, filtros funcionais, layout de uma coluna no celular, menu de cinco destinos + Mais, tipografia e contraste revisados.
-- **Preservados:** home, biblioteca de ferramentas, desenho, memória, simulador de física, universo, atividades portuárias, tutoriais, diagnóstico, modo Black/Claro/Vivo e acesso administrativo existente.
-- As opções de 360 graus continuam **pesquisas orientadas no YouTube**; vídeo individual só será anunciado como verificado após curadoria real.
-- O material de aparência cerâmica/aço/madeira/pedra usa Canvas2D ilustrativo e não fotogrametria/PBR.
-- Sem CDN extra, credenciais no frontend, alterações no Supabase ou workflow personalizado.
-- Atualização de cache: `tvtouch-studio-v2.6.0-unified`, todos os recursos públicos novos pré-armazenados.
-- QA da integração: 14/14 testes automatizados de lógica aprovados; testes de hardware físico ainda não realizados.
+| Rota | Função |
+| --- | --- |
+| `/` | Launcher de **seis experiências** (Universo 3D, Quadro livre, Formas 3D, Memória, Vídeos 360°, Teste de toque), atalhos, navegação e ferramentas adicionais |
+| `/oficina.html` | Oficina interativa, incluindo construtor WebGL 3D com materiais, objetivos, controles de câmera e alternativa 2D |
+| `/arcade.html` | Snake, Pong, Basquete e Sinuca; comportamentos de jogo verificados em navegador |
+| `/#diagnostico` | Inventário de capacidades informadas, teste prático de múltiplos contatos, teste indicativo de FPS e relatório local |
+| `/admin.html` | Interface administrativa existente, com operações reais condicionadas à integração e às permissões configuradas |
 
-## Revisão visual Studio 2.2
+O aplicativo oferece **entrar/sair de tela cheia por gesto do usuário** (Fullscreen API), mantém saída visível e calcula a interface com base na área útil do navegador, não apenas na resolução física. Não calibra o controlador de toque infravermelho da TV. O manifesto PWA usa `display: standalone`; instalar o site e entrar em fullscreen são funcionalidades diferentes.
 
-- **Portal:** paleta funcional em superfícies sólidas, contraste forte e instruções diretas, reduzindo brilhos, efeito de vidro e gradientes decorativos.
-- **Atividades:** cores próprias por tipo (astronomia, quadro, geometria, memória e imersão); ícones de navegação em SVG.
-- **Admin:** acesso sem cenografia fictícia; gráfico de áreas convertido em barras quantitativas com percentuais; demonstração permanece explicitamente identificada como dados fictícios.
-- **Acessibilidade:** foco visível, alternativas touch/teclado existentes preservadas, animação dispensável sob preferência de movimento reduzido.
-- **Segurança:** nenhuma alteração de banco de dados, políticas, chaves ou permissões; Supabase segue opcional e não configurado.
-- **Homologação:** exigir teste visual/touch e FPS físico na Samsung WA86F antes de encerrar o aceite de hardware.
+A orientação visual é de **aplicativo horizontal**: superfícies de alto contraste, temas próprios, matriz de atividades, alvos amplos, feedback de toque e movimento reduzido quando solicitado. O relatório técnico pode rolar internamente sem ficar por baixo do dock. Recursos offline são versionados pelo Service Worker; nunca armazenar dados de alunos ou segredos no cache.
 
-## Atualização Studio 2.1
+## Evidências físicas e limitações de aceitação
 
-- Tutorial de primeiro acesso em quatro etapas, com opções **Ver tutorial** e **Ir para ferramentas**; pode ser reaberto na barra superior.
-- Refinamento dos estados de toque, foco visível e contraste dos cartões.
-- Escolha de disciplina preservada no topo; opção de telemetria continua voluntária.
-- Arquivos do tutorial disponíveis no cache do PWA.
+No diagnóstico fotografado em uma Samsung WA86F, o navegador declarou **1280×720 pixels CSS**, escala **3×**, Linux ARM, Chrome 157, aproximadamente 8 GiB de memória e oito processadores lógicos. Estas são informações **reportadas pelo navegador**, não inventário de hardware certificado.
 
-## Interface
+- `navigator.maxTouchPoints` informou **1**; o teste de eventos de ponteiro observou **16 contatos simultâneos** durante a medição. O resultado prático tem prioridade, mas não prova o funcionamento de cada gesto em todas as atividades.
+- O teste simples de `requestAnimationFrame` indicou **44 FPS** naquela sessão. Isso **não equivale** a uma medição de FPS do construtor WebGL, nem autoriza afirmar que a TV sustenta ou não 60 FPS no jogo.
+- A Studio 3.8.0 acrescenta detecção de **aproximar/afastar dois dedos** na área de diagnóstico, mas a comprovação física da pinça e da rotação no construtor continua **PENDENTE**.
+- WebGL, WebGL 2, WebGPU e Fullscreen API foram relatados como disponíveis; desempenho e estabilidade reais precisam de testes com a TV.
 
-- Launcher de 5 experiências em mosaico, com alvos grandes e barra de navegação inferior, projetado para 16:9.
-- Temas Black, Claro e Vivo, com variação de fundo moderada, opção Pausar e preferência salva no navegador.
-- Ícones SVG próprios; imagens de marca em SVG/PNG locais.
-- Estrutura responsiva para 1366×768, 1920×1080 e 3840×2160, com opção de navegação em telas menores.
-- Transições com `prefers-reduced-motion` e animações pausadas quando a aba não está visível.
+**Critério de aceite em sala:** usar a TV real em paisagem, com e sem navegador em tela cheia, confirmar leitura e interação na interface, ausência de conteúdo sob o dock, desenho, rotação, pinça, construção 3D e fluidez durante cinco minutos de uso real. Registrar versão, navegador e ações observadas, sem imagens de alunos.
 
-## Experiências
+## Matriz de QA e comandos
 
-- **Universo 3D**: renderizador WebGL sem dependência de rede; fallback Canvas 2D; seleção de planetas, arraste para girar, pinça para zoom.
-- **Quadro livre**: desenho touch com cores, desfazer, salvar PNG (módulo anterior preservado).
-- **Formas 3D**: geometria manipulável por toque (módulo anterior preservado).
-- **Memória**: jogo de 6 pares com flip 3D, contagem de jogadas e reinício.
-- **Física 2D**: lançamento de esferas, gravidade ajustável, colisões simplificadas.
-- **Encaixe e quiz portuário**: preservados no laboratório.
-- **Biblioteca e vídeos**: acesso a recursos externos com aviso de necessidade de conexão e verificação pedagógica.
+O roteiro de aceite físico da nova revisão está em [docs/QA_STUDIO_3_8_WA86F.md](docs/QA_STUDIO_3_8_WA86F.md).
 
-## Arquitetura e segurança
+A suíte Chrome usa `tests/browser-smoke.mjs` e produz capturas e `browser-artifacts/report.json`, incluindo **390×844, 844×390, 1024×600, 1280×720 com DPR 3, 1366×630, 1920×1080 e 3840×2160**. A simulação `PointerEvent` em Chrome verifica apenas o algoritmo, **não substitui toques reais na WA86F**.
 
-- `public/` = site estático (HTML/CSS/JS/SVG/PNG), sem segredos.
-- `supabase/` = backend opcional. Não publicar scripts SQL, Edge Function ou chaves secretas no GitHub Pages.
-- `docs/` = projeto, evolução e procedimentos.
-- `public/admin.html` = administração existente; operações reais dependem de Supabase Auth e políticas RLS.
-- Perfil e parâmetros de gesto por TV dependem do backend. Web apps não recalibram o controlador infravermelho físico.
-- Sem professor/aluno obrigatório, sem envio de notas, desenhos ou dados pessoais. Telemetria permanece opcional.
+```bash
+node --test tests/*.test.cjs
+find public/js -name '*.js' -type f -print0 | xargs -0 -n1 node --check
+node --check public/service-worker.js
+```
 
-## Implantação com GitHub Pages
+O projeto não depende de `package.json` para executar os testes Node; a suíte de navegador usa Playwright e Chrome disponíveis no CI. Consulte `.github/workflows/quality.yml` para a instalação exata e a captura de evidências. Evitar CI repetitivo por alteração pequena: consolidar testes e código antes de abrir a PR.
 
-`main`: código-fonte completo. `gh-pages`: **apenas conteúdo de** `public/` na raiz. Settings → Pages → Deploy from a branch → `gh-pages` → `/(root)`. Não usar workflow próprio.
+## Publicação segura e reversão
 
-A publicação por branch ainda pode criar uma execução gerenciada do Pages, eventualmente contabilizada no plano privado. Confira o consumo em Billing. Para zero GitHub Actions, utilize hospedagem externa.
+1. Preparar alterações numa branch isolada e revisar o diff; não alterar dados, Auth, RLS, Supabase, credenciais ou permissões por uma mudança visual.
+2. Verificar testes Node, sintaxe JS, navegador e screenshots no mesmo perfil de viewport; declarar limitações físicas.
+3. Solicitar **autorização de produção** específica depois de aprovado o conjunto.
+4. Integrar a PR à `main`; publicar a árvore de `main/public/` como raiz de `gh-pages`, com `.nojekyll`, nunca a raiz de `main`.
+5. Conferir CI da `main`, deploy gerenciado do Pages, versões de assets/cache e as três rotas públicas. O commit `6b48514ba3bad001b89d010d161e9bbea24e8f95` é o último ponto de publicação **verificado antes da revisão 3.8**; registrar outro backup a cada publicação.
 
-## Homologação
+Leia [`docs/DEPLOY.md`](docs/DEPLOY.md) para procedimentos de GitHub Pages e backend opcional. Recursos externos (como vídeos) dependem das políticas e disponibilidade de seus fornecedores; não anunciar conteúdo individual como curado sem conferência.
 
-`node --check public/js/*.js`, inspeção de referências e testes de navegador em resoluções horizontais. As interações WebGL/IR multitouch devem ser verificadas na Samsung WA86F real antes de homologação final.
+## Governança de trabalho antigo
 
-As experiências astronômicas e físicas são modelos didáticos ilustrativos, não simuladores científicos em escala.
+Em 20/11/2026, as PRs **#8, #14, #15 e #16** estavam abertas em *draft* e suas branches haviam divergido aproximadamente **119 commits atrás da `main`**. As melhorias em piano, geometria e curadoria **não devem ser integradas diretamente** dessas branches antigas: comparar conteúdos e aproveitar somente o que ainda estiver ausente, mediante mudanças novas e testes. Nenhuma dessas PRs deve ser encerrada ou apagada automaticamente.
 
-## Piloto Studio 2.7 — Abertura interativa e Arcade (PR isolada)
+O conteúdo anterior deste README, que descrevia a versão Studio 2.6, foi preservado em [`docs/HISTORICO_README_STUDIO_2_6.md`](docs/HISTORICO_README_STUDIO_2_6.md). O histórico Git também mantém todas as versões.
 
-Entrada de primeira visita por sessão com player oficial e visível do trailer Dolby Atmos: Unfold; desafio rápido de toque com categorias aleatórias (frutas, esportes, formas) e quatro minijogos (Snake, Pong, Basquete, Sinuca). Alternância entre 2D e 3D visual; mecânicas continuam bidimensionais. Áudio não foi extraído do YouTube, pode exigir um segundo toque e necessita internet.
+## Privacidade e arquitetura
 
-Nenhuma mudança em notas, dados pessoais, autenticação, Supabase ou administração. **Não publicar sem teste na Samsung WA86F.** Ver docs/QA_ARCADE_EXPERIENCIA_2_7.md.
+`public/` contém apenas recursos estáticos públicos, sem segredos. `supabase/` mantém o backend opcional separado; eventuais credenciais privadas ficam exclusivamente no servidor e permissões precisam ser conferidas antes de ativação. O diagnóstico não coleta automaticamente IP público nem coordenadas, e seu relatório exportado omite esses identificadores. Não confundir indicação de disponibilidade de uma API com permissão concedida ou capacidade física testada.
