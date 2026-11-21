@@ -8,6 +8,20 @@ Portal educacional interativo para **painéis Samsung WA86F de 86″**, desenvol
 - **Histórico da 3.7.2:** `main` em `f7c0c498b557317df5855fe8dbb4738e53630412` e `gh-pages` em `6b48514ba3bad001b89d010d161e9bbea24e8f95`. **Primeira publicação da 3.8.0:** merge `df9d9ecc88ab11709fdca1695c41bda1caa89ab8`, Pages `0884ba69a562b2f6af457a5e05a74d6be8496943`. Verificar sempre o SHA atual antes de publicar.
 - **Estado da 3.8.0:** integrada à `main` e publicada, com CI da PR aprovado. O aceite físico de pinça, rotação e desempenho permanece independente.
 
+## Studio 4.0 — reconstrução visual em avaliação (NÃO publicada)
+
+Após críticas fundamentadas nas fotos da Samsung WA86F e nos screenshots Chrome da Studio 3.8, a experiência de paisagem foi **redesenhada, não apenas recolorida**:
+
+- A grade antiga de seis cartões iguais dá lugar a um **palco orbital cinematográfico principal**, com cinco experiências laterais e um acesso de ferramentas, formando grade assimétrica de sete alvos touch.
+- A segunda linha fixa de oito atalhos sai da tela principal e passa a um **painel de experiências acessível** (abre com toque, fecha via botão, fundo ou Esc, com ciclo de foco por Tab), preservando seus links e ferramentas.
+- Ilustração orbital original em SVG local; alto contraste com fundo carvão, laranja vivo, ciano elétrico e verde-lima. Sem fontes, fotos ou dependências externas.
+- Estilos globais da Oficina e Arcade reforçados, sem reescrever motores dos jogos, movimento 3D, banco de dados ou permissões.
+- O modo vertical mantém o layout existente como alternativa. Cabeçalho, tela cheia, acesso ao diagnóstico e navegação inferior continuam disponíveis.
+
+**Aceite exigido:** screenshots do novo launcher em 844×390, 1280×720 DPR3, 1920×1080 e 3840×2160; comparação direta com a baseline 3.8; abertura/fechamento do painel; rota de todos os seis módulos; canvas 3D; controle de foco e movimento reduzido. Testes de navegador não substituem homologação da TV real.
+
+**Produção preservada:** Studio 3.8.0. Não publicar esta revisão até o resultado visual superar claramente o anterior e ser aprovada.
+
 ## Experiência e navegação
 
 | Rota | Função |
