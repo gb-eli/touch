@@ -2,11 +2,11 @@
 
 Portal educacional interativo para **painéis Samsung WA86F de 86″**, desenvolvido em HTML, CSS e JavaScript estáticos, para uso com toque, mouse e teclado em orientação horizontal.
 
-- **Produção verificada em 20/11/2026:** Studio **3.7.2**, em https://gb-eli.github.io/touch/.
-- **Versão em homologação nesta branch:** Studio **3.8.0** (alvos touch, crédito fora do dock e diagnóstico prático da pinça).
+- **Produção publicada em 20/11/2026:** Studio **3.8.0**, em https://gb-eli.github.io/touch/. O primeiro deploy foi confirmado pelo GitHub Pages após a [PR #36](https://github.com/gb-eli/touch/pull/36).
+- **Melhorias da 3.8.0:** alvos touch de 44 px, crédito e rodapé fora do dock horizontal e teste prático de pinça com resultado local. Validação automatizada aprovada; os gestos físicos e a fluidez do construtor na WA86F continuam pendentes de aceite.
 - **Fonte canônica:** `main` (aplicação + testes + documentação); publicação: `gh-pages` com **somente `public/`** na raiz.
-- **Produção confirmada antes desta revisão:** `main` em `f7c0c498b557317df5855fe8dbb4738e53630412` e `gh-pages` em `6b48514ba3bad001b89d010d161e9bbea24e8f95`. Não presumir que merge em `main` implica deploy no Pages.
-- **Estado da 3.8.0:** implementação isolada; exige revisão da PR, CI e aprovação específica para publicar.
+- **Histórico da 3.7.2:** `main` em `f7c0c498b557317df5855fe8dbb4738e53630412` e `gh-pages` em `6b48514ba3bad001b89d010d161e9bbea24e8f95`. **Primeira publicação da 3.8.0:** merge `df9d9ecc88ab11709fdca1695c41bda1caa89ab8`, Pages `0884ba69a562b2f6af457a5e05a74d6be8496943`. Verificar sempre o SHA atual antes de publicar.
+- **Estado da 3.8.0:** integrada à `main` e publicada, com CI da PR aprovado. O aceite físico de pinça, rotação e desempenho permanece independente.
 
 ## Experiência e navegação
 
@@ -28,10 +28,10 @@ No diagnóstico fotografado em uma Samsung WA86F, o navegador declarou **1280×7
 
 - `navigator.maxTouchPoints` informou **1**; o teste de eventos de ponteiro observou **16 contatos simultâneos** durante a medição. O resultado prático tem prioridade, mas não prova o funcionamento de cada gesto em todas as atividades.
 - O teste simples de `requestAnimationFrame` indicou **44 FPS** naquela sessão. Isso **não equivale** a uma medição de FPS do construtor WebGL, nem autoriza afirmar que a TV sustenta ou não 60 FPS no jogo.
-- A Studio 3.8.0 acrescenta detecção de **aproximar/afastar dois dedos** na área de diagnóstico, mas a comprovação física da pinça e da rotação no construtor continua **PENDENTE**.
+- A Studio 3.8.0 acrescentou detecção de **aproximar/afastar dois dedos** na área de diagnóstico, mas a comprovação física da pinça e da rotação no construtor continua **PENDENTE**.
 - WebGL, WebGL 2, WebGPU e Fullscreen API foram relatados como disponíveis; desempenho e estabilidade reais precisam de testes com a TV.
 
-**Critério de aceite em sala:** usar a TV real em paisagem, com e sem navegador em tela cheia, confirmar leitura e interação na interface, ausência de conteúdo sob o dock, desenho, rotação, pinça, construção 3D e fluidez durante cinco minutos de uso real. Registrar versão, navegador e ações observadas, sem imagens de alunos.
+**Critério de aceite em sala (ainda pendente na Samsung):** usar a TV real em paisagem, com e sem navegador em tela cheia, confirmar leitura e interação na interface, ausência de conteúdo sob o dock, desenho, rotação, pinça, construção 3D e fluidez durante cinco minutos de uso real. Registrar versão, navegador e ações observadas, sem imagens de alunos.
 
 ## Matriz de QA e comandos
 
@@ -51,9 +51,9 @@ O projeto não depende de `package.json` para executar os testes Node; a suíte 
 
 1. Preparar alterações numa branch isolada e revisar o diff; não alterar dados, Auth, RLS, Supabase, credenciais ou permissões por uma mudança visual.
 2. Verificar testes Node, sintaxe JS, navegador e screenshots no mesmo perfil de viewport; declarar limitações físicas.
-3. Solicitar **autorização de produção** específica depois de aprovado o conjunto.
+3. Solicitar **autorização de produção** específica depois de aprovado o conjunto (concedida para a Studio 3.8 em 20/11/2026).
 4. Integrar a PR à `main`; publicar a árvore de `main/public/` como raiz de `gh-pages`, com `.nojekyll`, nunca a raiz de `main`.
-5. Conferir CI da `main`, deploy gerenciado do Pages, versões de assets/cache e as três rotas públicas. O commit `6b48514ba3bad001b89d010d161e9bbea24e8f95` é o último ponto de publicação **verificado antes da revisão 3.8**; registrar outro backup a cada publicação.
+5. Conferir CI da `main`, deploy gerenciado do Pages, versões de assets/cache e as três rotas públicas. Para referência, a última publicação da Studio 3.7.2 foi `6b48514ba3bad001b89d010d161e9bbea24e8f95`; a primeira publicação da Studio 3.8 foi `0884ba69a562b2f6af457a5e05a74d6be8496943`.
 
 Leia [`docs/DEPLOY.md`](docs/DEPLOY.md) para procedimentos de GitHub Pages e backend opcional. Recursos externos (como vídeos) dependem das políticas e disponibilidade de seus fornecedores; não anunciar conteúdo individual como curado sem conferência.
 
