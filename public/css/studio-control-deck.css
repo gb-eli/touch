@@ -1,0 +1,407 @@
+/* TV TOUCH Studio 4.0 — CONTROL DECK
+   One deliberately composed interface; not another 3×2 website card grid.
+   Scoped to landscapes, 1280×720 CSS pixels / DPR 3 first.
+   All existing actions and routes remain in the DOM and functional. */
+:root{
+ --signal-bg:#03070c;--signal-panel:#09141e;--signal-ink:#f7fbff;
+ --signal-orange:#ff571b;--signal-cyan:#04e4f5;--signal-lime:#c9ff25;
+ --signal-border:#274455;--signal-muted:#b9cedc
+}
+body.studio-ui.agv-deck-ready,body.oficina-body,body:has(.arcade-shell){
+ background:#03070c;color:#f7fbff
+}
+body.studio-ui.agv-deck-ready .topbar{
+ border-bottom:1px solid #2c4657!important;background:#03070cf5!important;
+ box-shadow:0 10px 22px #0009!important;color:#f7fbff!important
+}
+body.studio-ui.agv-deck-ready .top-current{
+ color:#f2f8fa;font-weight:850;letter-spacing:-.025em
+}
+body.studio-ui.agv-deck-ready .top-current .crumb-divider{color:#ff6725}
+body.studio-ui.agv-deck-ready .top-action,
+body.studio-ui.agv-deck-ready .lesson-chip,
+body.studio-ui.agv-deck-ready .theme-switch{
+ border-color:#385568!important;background:#0a1721!important;color:#fff!important;
+ box-shadow:none!important
+}
+body.studio-ui.agv-deck-ready .theme-switch .theme-button{color:#e8f0f7!important}
+body.studio-ui.agv-deck-ready .theme-switch .theme-button.active{
+ background:var(--signal-orange)!important;color:#0a0b0d!important;
+ box-shadow:none!important;font-weight:900
+}
+body.studio-ui.agv-deck-ready :is(.top-action,.lesson-chip,.theme-button):focus-visible,
+body.studio-ui.agv-deck-ready .studio-tile:focus-visible{
+ outline:3px solid #c9ff25!important;outline-offset:3px
+}
+body.studio-ui.agv-deck-ready .sidebar{
+ background:#03080fed!important;border-color:#315066!important;
+ box-shadow:0 5px 28px #000c,0 0 0 1px #000!important;backdrop-filter:blur(10px)
+}
+body.studio-ui.agv-deck-ready .sidebar .nav-item{color:#d5e2eb!important;background:transparent!important}
+body.studio-ui.agv-deck-ready .sidebar .nav-item.active{
+ background:var(--signal-lime)!important;color:#07100b!important;
+ border-color:#dcff8b!important;box-shadow:inset 0 2px 0 #fff8!important
+}
+body.studio-ui.agv-deck-ready .sidebar .nav-item.active .nav-caption{color:#07100b!important}
+body.studio-ui.agv-deck-ready .sidebar .nav-item:not(.active):focus-visible{
+ outline:3px solid var(--signal-orange);outline-offset:-2px
+}
+.deck-app-tile{display:none}
+.deck-backdrop[hidden],.deck-drawer-close[hidden]{display:none!important}
+@media (orientation:landscape) and (min-width:760px){
+ body.studio-ui.agv-deck-ready.agv-landscape-app.studio-home-active .studio-home{
+  position:relative;isolation:isolate;overflow:hidden!important;max-height:none;
+  display:flex!important;flex-direction:column;justify-content:space-between;
+  padding:clamp(5px,.8dvh,12px) 0 clamp(4px,.6dvh,10px)!important;
+  gap:clamp(6px,.95dvh,14px)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lead{
+  display:flex;flex:0 0 auto;align-items:center;
+  justify-content:space-between;min-height:clamp(38px,6dvh,65px);margin:0;
+  padding:0 2px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-overline{
+  color:#95aec2!important;font-weight:900;font-size:clamp(9px,.76vw,12px)!important;
+  letter-spacing:.115em
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lead h1{
+  color:#f6fcff!important;font:900 clamp(26px,3vw,55px)/.95
+  Impact,'Arial Narrow',system-ui,sans-serif!important;
+  letter-spacing:.005em;margin:2px 0!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lead h1 span{
+  color:var(--signal-lime)!important;text-shadow:none!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lead-right{gap:10px}
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-context-note{
+  color:#b7ccd9!important;font-size:clamp(10px,.78vw,15px)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lesson{
+  min-height:44px;border:1px solid #e36031!important;
+  background:var(--signal-orange)!important;color:#0c0b0b!important;
+  font-weight:900;border-radius:9px;box-shadow:none!important;
+  padding:8px 14px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lesson b{color:#10100d}
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles{
+  display:grid!important;
+  flex:1 1 auto!important;min-height:0!important;height:auto!important;
+  max-height:none!important;
+  grid-template-columns:minmax(0,1.34fr) repeat(2,minmax(0,.50fr))!important;
+  grid-template-rows:repeat(3,minmax(0,1fr))!important;
+  gap:clamp(6px,.75vw,14px)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.studio-tile{
+  position:relative;display:block!important;min-width:0!important;min-height:0!important;
+  max-height:none!important;height:auto!important;overflow:hidden!important;
+  padding:clamp(9px,.9vw,18px)!important;
+  border-radius:clamp(10px,1vw,18px)!important;
+  border:1px solid #496174!important;
+  text-align:left;color:#fff!important;touch-action:manipulation;
+  box-shadow:inset 0 1px 0 #ffffff38,0 9px 20px #0009!important;
+  transition:transform .18s cubic-bezier(.19,1,.22,1),border-color .16s,filter .16s!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.studio-tile:hover,
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.studio-tile:focus-visible{
+  border-color:#f2faff!important;filter:brightness(1.16);
+  transform:translateY(-2px) scale(1.004)
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.studio-tile:active{
+  transform:scale(.984);filter:brightness(1.26)
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.studio-tile::before{
+  content:'';position:absolute;z-index:1;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(150deg,#fff0 0 20px,#ffffff12 21px,#fff0 22px 46px);
+  opacity:.16
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.studio-tile::after{
+  content:'';position:absolute;z-index:2;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,#0000 4%,#0001 37%,#03070ddf 98%)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.tile-cosmos{
+  grid-column:1!important;grid-row:1/4!important;border-color:#F37A32!important;
+  padding:clamp(14px,1.35vw,27px)!important;
+  background:linear-gradient(180deg,#0000 0%,#03080e88 63%,#020406ed 100%),
+   url('../assets/orbit-showcase.svg') center 43%/cover no-repeat,#050c13!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .orbit-art{display:none!important}
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos::before{
+  opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 69px,#86b3bf24 70px,transparent 71px 140px);
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos::after{
+  background:linear-gradient(180deg,#02060922 0%,#03060900 25%,#03070b18 48%,#03070bed 100%)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-top{
+  top:clamp(14px,1.3vw,28px);left:clamp(14px,1.3vw,28px);right:clamp(14px,1.3vw,28px)
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-index{
+  color:#ffb983!important;font-size:clamp(11px,.85vw,17px)!important;
+  letter-spacing:.15em
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-content{
+  z-index:4;bottom:clamp(18px,2vw,46px);left:clamp(15px,1.7vw,38px);right:20px;
+  gap:clamp(6px,.5vw,12px)
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-content strong{
+  font:950 clamp(34px,4.35vw,84px)/.93
+  Impact,'Arial Narrow',system-ui,sans-serif!important;letter-spacing:-.015em;
+  color:#fff!important;text-transform:uppercase;text-shadow:0 4px 18px #000d
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-content strong em{
+  color:var(--signal-lime)!important;font-style:normal
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-content small{
+  color:#e8f8ff!important;font-size:clamp(13px,1.1vw,21px)!important;font-weight:650
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-cta{
+  display:inline-flex!important;align-items:center;gap:15px;
+  min-height:clamp(40px,4.3vw,60px);width:max-content;max-width:100%;
+  margin-top:clamp(4px,.7vw,12px);padding:8px clamp(13px,1.2vw,22px);
+  color:#081009;background:var(--signal-lime);border-radius:9px;
+  font-size:clamp(12px,1vw,19px);font-weight:950;text-shadow:none;
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.tile-board{
+  grid-column:2!important;grid-row:1!important;
+  background:linear-gradient(125deg,#002f37,#024558 64%,#001e34)!important;
+  border-color:#00dce6!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.tile-solids{
+  grid-column:3!important;grid-row:1!important;
+  background:linear-gradient(135deg,#1e123f,#501885 65%,#170d38)!important;
+  border-color:#a752ff!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.tile-memory{
+  grid-column:2!important;grid-row:2!important;
+  background:linear-gradient(135deg,#3a1507,#98340b 65%,#270a06)!important;
+  border-color:#ff6b2a!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.tile-video{
+  grid-column:3!important;grid-row:2!important;
+  background:linear-gradient(135deg,#082450,#134bb8 60%,#05162f)!important;
+  border-color:#388dff!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.tile-calibration{
+  grid-column:2!important;grid-row:3!important;
+  background:linear-gradient(135deg,#063328,#07664b 70%,#041e1d)!important;
+  border-color:#0ef0a6!important;color:#fff!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.deck-app-tile{
+  grid-column:3!important;grid-row:3!important;display:block!important;
+  background:linear-gradient(135deg,#13231a,#253d17 62%,#061408)!important;
+  border-color:#b5fc36!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-top{
+  z-index:3;left:clamp(9px,.75vw,17px);right:clamp(8px,.8vw,18px);
+  top:clamp(9px,.75vw,17px)
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-index{
+  color:#d6eafa!important;font-size:clamp(8px,.73vw,12px)!important;
+  letter-spacing:.115em!important;font-weight:900
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-content{
+  bottom:clamp(8px,.85vw,19px);left:clamp(10px,.85vw,18px);
+  right:6px;z-index:4;gap:3px;overflow:visible
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-content strong{
+  color:#fff!important;font:900 clamp(14px,1.55vw,29px)/1.05
+  Impact,'Arial Narrow',system-ui,sans-serif!important;
+  letter-spacing:.012em;text-shadow:0 2px 13px #000f
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-content small{
+  color:#e7f4ff!important;font-size:clamp(10px,.82vw,16px)!important;
+  line-height:1.1;max-width:92%;font-weight:680
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-corner{
+  width:clamp(25px,2.4vw,42px);height:clamp(25px,2.4vw,42px);
+  background:#02080dcc!important;border:1px solid #ffffff98!important;
+  color:#fff!important;border-radius:9px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos)
+ :is(.board-art,.solid-art,.memory-art,.video-art,.tile-calibration-art){
+  opacity:.66;pointer-events:none;transform-origin:center;filter:saturate(1.38) contrast(1.22)
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>.tile-calibration .calibration-target{
+  border-color:#dcffe7;box-shadow:0 0 0 11px #28ffa82e,0 0 0 24px #38ffa827
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .deck-app-icon{
+  position:absolute;top:26%;left:50%;transform:translate(-50%,-5%);
+  display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
+  width:76px;height:76px;max-width:45%;max-height:47%;
+  pointer-events:none;opacity:.95
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .deck-app-icon i{
+  display:block;border-radius:5px;border:2px solid #dfff94;
+  background:#b8ff25;box-shadow:inset 0 2px 0 #ffffff70
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .deck-app-tile .tile-content strong{
+  color:#d7ff3f!important
+ }
+ /* Eight secondary apps are retained, but live in one focused overlay.
+    The old permanent second navigation bar is gone. */
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom:not(.deck-open){
+  display:none!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom.deck-open{
+  position:absolute;z-index:81;display:flex!important;flex-direction:column;
+  top:50%;right:clamp(8px,1vw,22px);transform:translateY(-50%);
+  width:min(680px,94%);max-height:calc(100% - 24px);margin:0!important;
+  padding:clamp(13px,1.3vw,25px);overflow-y:auto;
+  border:2px solid var(--signal-lime);border-radius:18px;
+  background:#07131af7;box-shadow:0 30px 70px #000f,0 0 0 1px #c7ff2433
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom .home-bottom-title{
+  display:flex!important;align-items:center;justify-content:space-between;
+  margin:0 0 12px;padding:0 0 8px;border-bottom:1px solid #526b59;
+  font-size:clamp(16px,1.4vw,23px);color:#f3fff0;font-weight:900
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom .home-shortcuts{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-rows:minmax(48px,1fr);gap:clamp(6px,.7vw,12px);
+  width:100%;min-width:0;min-height:0
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom .home-shortcuts :is(button,a){
+  min-height:48px!important;text-align:left!important;
+  justify-content:flex-start!important;padding:12px!important;
+  border:1px solid #416676!important;border-radius:11px!important;
+  background:#102535!important;color:#fff!important;
+  font-size:clamp(13px,1.1vw,19px)!important;
+  box-shadow:none!important;white-space:normal
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom .home-shortcuts :is(button,a):focus-visible{
+  outline:3px solid var(--signal-lime);outline-offset:1px
+ }
+ .deck-drawer-close{
+  width:44px;min-width:44px;height:44px;padding:0;border-radius:9px;
+  border:1px solid #a9fb6a;background:#c9ff25;color:#06110a;
+  font-size:24px;font-weight:900;cursor:pointer;touch-action:manipulation
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .deck-backdrop:not([hidden]){
+  display:block;position:absolute;inset:0;z-index:80;background:#02060abc;
+  backdrop-filter:blur(3px);border-radius:13px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .sidebar{
+  width:min(1050px,calc(100vw - 24px));bottom:calc(6px + env(safe-area-inset-bottom,0px));
+  border:1px solid #344753!important;border-radius:16px!important;
+  padding:5px!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .nav-item{
+  min-height:48px!important;height:clamp(48px,7.5dvh,84px)!important;
+  border-radius:11px!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .nav-item .nav-caption{
+  font-size:clamp(10px,.8vw,15px)!important;font-weight:760
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .topbar{
+  min-height:50px!important;height:clamp(50px,7dvh,75px)!important;
+  padding:0 clamp(10px,1.4vw,30px)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app main#conteudo{
+  padding:0 clamp(10px,1.35vw,34px)!important
+ }
+}
+@media (orientation:landscape) and (min-width:760px) and (max-height:550px){
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lead{
+  min-height:35px;gap:6px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lead h1{
+  font-size:clamp(23px,3dvh,34px)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-lesson{min-height:40px;padding:4px 10px}
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles{
+  gap:5px!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-content strong{
+  font-size:clamp(29px,5.6dvh,50px)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .tile-cosmos .tile-cta{
+  min-height:35px;padding:4px 10px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-content strong{
+  font-size:clamp(12px,1.65vw,19px)!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-content small{
+  display:none!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-index{
+  font-size:9px!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles>:not(.tile-cosmos) .tile-top{
+  top:6px;left:8px;right:8px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom.deck-open{
+  width:min(620px,96%);padding:9px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom .home-shortcuts{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom .home-shortcuts :is(button,a){
+  min-height:44px!important;padding:6px 9px!important;font-size:12px!important
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom .home-bottom-title{
+  margin-bottom:6px;padding-bottom:5px;font-size:15px
+ }
+}
+/* Oficina & Arcade: one coherent dark high-contrast system rather than pastel
+   cards layered across successive releases; interactive canvas wins attention. */
+@media (orientation:landscape) and (min-width:760px){
+ body.oficina-body.agv-landscape-app,body.agv-landscape-app:has(.arcade-shell){
+  background:#02070c!important
+ }
+ body.oficina-body.agv-landscape-app :is(.oficina-header,.oficina-panel),
+ body.agv-landscape-app .arcade-shell :is(.arcade-panel,.arcade-header){
+  background:#06111b!important;border:1px solid #254759!important;
+  box-shadow:inset 0 1px 0 #ffffff12,0 10px 27px #0009!important
+ }
+ body.oficina-body.agv-landscape-app .oficina-shell,
+ body.agv-landscape-app .arcade-shell{background:#03080d!important}
+ body.oficina-body.agv-landscape-app .oficina-choices button,
+ body.agv-landscape-app .arcade-shell .arcade-game{
+  background:#0a1923!important;border:1px solid #355568!important;
+  color:#f8fbff!important;box-shadow:none!important
+ }
+ body.oficina-body.agv-landscape-app .oficina-choices button[aria-pressed=true],
+ body.agv-landscape-app .arcade-shell .arcade-game.active{
+  background:#103943!important;border:2px solid var(--signal-cyan)!important;
+  box-shadow:inset 4px 0 0 var(--signal-cyan)!important
+ }
+ body.oficina-body.agv-landscape-app .oficina-choices :is(strong,small),
+ body.agv-landscape-app .arcade-shell .arcade-game :is(strong,small){color:#e9f3fa!important}
+ body.oficina-body.agv-landscape-app .oficina-panel-head h2,
+ body.agv-landscape-app .arcade-panel-top h2{color:#f5fbff!important}
+ body.oficina-body.agv-landscape-app .oficina-tools.voxel-active{background:transparent!important}
+ body.oficina-body.agv-landscape-app .voxel-toolbar :is(button,select),
+ body.oficina-body.agv-landscape-app .voxel-materials button,
+ body.oficina-body.agv-landscape-app .voxel-overlay button,
+ body.agv-landscape-app .arcade-actions button,
+ body.agv-landscape-app .arcade-keypad button{
+  background:#11232e!important;color:#f3fbff!important;
+  border:1px solid #4b6979!important;box-shadow:none!important;
+  border-radius:9px!important
+ }
+ body.oficina-body.agv-landscape-app .voxel-toolbar button[aria-pressed=true],
+ body.oficina-body.agv-landscape-app .voxel-materials button[aria-pressed=true],
+ body.agv-landscape-app .arcade-actions button.arcade-primary{
+  background:var(--signal-orange)!important;color:#0d0b0a!important;
+  border-color:#ffc69e!important;font-weight:900
+ }
+ body.oficina-body.agv-landscape-app .voxel-scene{
+  background:radial-gradient(ellipse at 48% 60%,#0d3446 0%,#05121f 45%,#02070d 100%)!important;
+  border:1px solid #0eb7d6!important;
+  box-shadow:inset 0 0 45px #000d,0 4px 18px #000c!important
+ }
+ body.agv-landscape-app .arcade-shell .arcade-scene{
+  background:#041923!important;border:1px solid #0fd5e9!important;
+  box-shadow:0 4px 20px #000b!important
+ }
+ body.oficina-body.agv-landscape-app .oficina-status{
+  background:#0a1e2b!important;color:#dbf3ff!important;
+  border-left:4px solid var(--signal-orange)!important
+ }
+ body.oficina-body.agv-landscape-app .oficina-eyebrow,
+ body.agv-landscape-app .arcade-eyebrow{color:var(--signal-lime)!important}
+}
+@media (prefers-reduced-motion: reduce){
+ body.studio-ui.agv-deck-ready .studio-tile,
+ body.studio-ui.agv-deck-ready .deck-app-tile{transition:none!important}
+ body.studio-ui.agv-deck-ready .deck-backdrop{backdrop-filter:none!important}
+}
