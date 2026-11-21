@@ -61,7 +61,7 @@ test('1280x720 horizontal possui rolagem interna e espaço para dock',()=>{
   assert.match(html,/css\/diagnostico-tv\.css\?v=3\.8\.0/);
   assert.match(html,/js\/diagnostico\.js\?v=3\.8\.0/);
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.8\.0-landscape-gesture-qa/);
+  assert.match(sw,/tvtouch-studio-v4\.0\.0-control-deck/);
   assert.ok(sw.includes('./css/diagnostico-tv.css'));
 });
 
