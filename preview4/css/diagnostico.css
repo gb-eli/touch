@@ -1,0 +1,24 @@
+/* Complemento TV TOUCH v1.1 — diagnóstico responsivo e operável por toque. */
+.diag-home-banner{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:30px 0 4px;padding:22px 26px;background:linear-gradient(105deg,#163149,#16213b);border:1px solid #315274;border-radius:18px}
+.diag-home-banner strong{display:block;font-size:1.23rem}.diag-home-banner p{margin:7px 0 0;color:#bccee0}
+.diag-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;margin:32px 0 15px}.diag-heading h2{margin:0;font-size:1.55rem}.diag-heading p{margin:0;color:#a9bad0}
+.diag-panel{border:1px solid #30425c;background:#111c30;border-radius:20px;padding:26px;min-width:0}
+.diag-panel h2{margin:5px 0 12px;font-size:1.3rem}.diag-panel p{line-height:1.65;color:#aec1d4}
+.diag-eyebrow{letter-spacing:.12em;font-size:.76rem;font-weight:800;color:#83dce7}
+.diag-identity{display:flex;justify-content:space-between;align-items:center;gap:28px;margin:25px 0}.diag-identity>div:first-child{max-width:680px}
+.diag-identity-actions{display:flex;flex-direction:column;align-items:stretch;gap:10px;min-width:270px}.diag-identity-actions label{font-size:.9rem;color:#bfcede}
+.diag-identity-actions select{height:54px;background:#202f49;color:#fff;border:1px solid #50607a;border-radius:12px;padding:0 12px;font:inherit}
+.diag-data-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.diag-data{border:1px solid #2f4665;background:#131e32;border-radius:15px;padding:17px;min-height:104px;display:flex;flex-direction:column;gap:8px;overflow-wrap:anywhere}
+.diag-data span{font-size:.83rem;color:#a7bcce}.diag-data strong{font-size:1.1rem;line-height:1.3}.diag-data small{color:#9bb0c6}
+.diag-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:16px 0 27px}
+.diag-list{display:flex;flex-direction:column;gap:0}.diag-capability{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #293c54}.diag-capability span{color:#cbd8e6}.diag-capability strong{font-size:.85rem;text-align:right;white-space:nowrap}
+.diag-yes{color:#96eed0}.diag-no{color:#e8b3a6}.diag-recommendations p{padding:6px 0;margin:0;color:#c4d5e5}
+.diag-touch-zone{touch-action:none;user-select:none;-webkit-user-select:none;min-height:180px;margin-top:16px;border:3px dashed #62d6ee;border-radius:16px;background:repeating-linear-gradient(135deg,#203c52,#203c52 18px,#19334a 18px,#19334a 36px);display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;font-size:1.18rem;font-weight:800;color:#e8fcff}
+.diag-status{min-height:28px;font-size:.95rem;color:#c5d5e8!important;overflow-wrap:anywhere}.diag-fps-bar{height:12px;border-radius:99px;background:#233651;overflow:hidden}.diag-fps-bar div{height:100%;width:0;background:#64dbe8;transition:width .15s}
+.diag-separator{border-bottom:1px solid #33465c;margin:17px 0}.diag-export-panel{display:flex;align-items:center;justify-content:space-between;gap:26px;margin:26px 0}.diag-export-panel>div:first-child{max-width:850px}.diag-export-actions{display:flex;flex-direction:column;align-items:stretch;gap:12px;min-width:250px}
+.diag-panel button{min-height:48px}.diag-identity select:focus-visible{outline:3px solid #65d8e9;outline-offset:3px}
+.diag-economy .hero-cube,.diag-economy .orbit,.diag-economy .float-mark{animation:none!important}
+@media(max-width:1180px){.diag-data-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:850px){.diag-columns{grid-template-columns:1fr}.diag-data-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.diag-identity,.diag-export-panel{flex-direction:column;align-items:stretch}.diag-identity-actions,.diag-export-actions{min-width:0}.diag-home-banner{flex-wrap:wrap}}
+@media(max-width:480px){.diag-data-grid{grid-template-columns:1fr}.diag-panel{padding:18px}.diag-heading{flex-wrap:wrap}.diag-capability{flex-wrap:wrap}}

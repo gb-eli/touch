@@ -1,0 +1,25 @@
+/* AGV TOUCH 3.4 — microinterações localizadas; sem filtros em tela inteira. */
+.oficina-cube{animation:none}
+.oficina-cube.landed{
+  animation:agv34-block-land .36s cubic-bezier(.16,.84,.21,1) both;
+}
+.oficina-column.available{
+  border-color:#9beaff;
+  background:linear-gradient(180deg,#263b4a66,#321a4466);
+  box-shadow:inset 0 0 14px #72dffe18;
+}
+.oficina-column.at-limit{border-color:#ff7d737c}
+.oficina-column:focus-visible{
+  outline:4px solid #ffe68a;
+  outline-offset:3px;
+}
+.oficina-column.available:hover{box-shadow:inset 0 0 14px #80eaff44,0 0 18px #91e4ff33}
+@keyframes agv34-block-land{
+  0%{opacity:.55;transform:translateY(-30%) scale(1.06)}
+  67%{opacity:1;transform:translateY(4%) scale(.98)}
+  100%{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .oficina-cube.landed{animation:none!important}
+}
+.agv-quiet-mode .oficina-cube.landed{animation:none!important}

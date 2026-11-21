@@ -1,0 +1,76 @@
+/* Studio 3.3 — efeitos locais comuns, com fallback de movimento reduzido */
+.agv33-effect-root{
+  position:relative;
+  isolation:isolate;
+}
+.agv33-effect{
+  position:absolute;
+  pointer-events:none;
+  z-index:8;
+  left:var(--agv33-x,50%);
+  top:var(--agv33-y,50%);
+  width:9px;
+  height:9px;
+  border-radius:3px;
+  background:var(--agv33-effect-color,#77e9ff);
+  box-shadow:0 0 14px var(--agv33-effect-color,#77e9ff),0 0 4px #fff;
+  transform:translate(-50%,-50%);
+  animation:agv33-particle .54s cubic-bezier(.14,.68,.2,1) forwards;
+  will-change:transform,opacity;
+}
+.agv33-effect-correct,.agv33-effect-score,.agv33-effect-win{
+  --agv33-effect-color:#ff9862;
+}
+.agv33-effect-wrong,.agv33-effect-lose{
+  --agv33-effect-color:#ff586c;
+}
+.agv33-effect-select,.agv33-effect-move{
+  --agv33-effect-color:#7ee8ff;
+}
+.agv33-effect-win{width:12px;height:12px;clip-path:polygon(50% 0,63% 38%,100% 50%,63% 62%,50% 100%,37% 62%,0 50%,37% 38%)}
+@keyframes agv33-particle{
+  0%{opacity:.88;transform:translate(-50%,-50%) scale(.55)}
+  70%{opacity:.95}
+  100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--agv33-angle,0deg)) translateY(calc(-1 * var(--agv33-distance,38px))) scale(.35)}
+}
+.agv33-game-status{
+  transition:border-color .2s ease,background .2s ease;
+}
+.agv33-game-status[data-feedback="correct"],
+.agv33-game-status[data-feedback="score"],
+.agv33-game-status[data-feedback="win"]{
+  border-color:#69ffd0!important;
+}
+.agv33-game-status[data-feedback="wrong"],
+.agv33-game-status[data-feedback="lose"]{
+  border-color:#ff7a7c!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .agv33-effect{display:none!important;animation:none!important}
+  .agv33-game-status{transition:none}
+}
+.agv-quiet-mode .agv33-effect{display:none!important}
+
+.agv33-sound-toggle{
+  min-height:48px;
+  padding:10px 15px;
+  border:1px solid #b46bdb;
+  border-radius:10px;
+  background:linear-gradient(135deg,#2e1b42,#18102c);
+  color:#fff8ff;
+  font:800 clamp(12px,.9vw,16px)/1.25 system-ui,sans-serif;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+.agv33-sound-toggle[aria-pressed="true"]{
+  background:linear-gradient(130deg,#ffad79,#ff714b);
+  border-color:#ffc7a8;
+  color:#27101b;
+}
+.agv33-sound-toggle:focus-visible{
+  outline:3px solid #ffe184;outline-offset:3px;
+}
+@media(max-width:680px){
+  .agv33-sound-toggle{min-height:46px;padding:8px 12px}
+  .activity-bar .agv33-sound-toggle{order:3;flex-basis:100%}
+}
