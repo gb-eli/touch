@@ -17,7 +17,7 @@
     button.setAttribute('aria-expanded','false');
     button.setAttribute('aria-label','Abrir mais experiências e ferramentas');
     button.innerHTML='<span class="tile-top"><span class="tile-index">ACESSO RÁPIDO</span>'+
-      '<span class="tile-corner" aria-hidden="true">↗</span></span>'+
+      '<span class="tile-corner" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></span>'+
       '<span class="deck-app-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>'+
       '<span class="tile-content"><strong>Mais experiências</strong><small>Oficina, Arcade e ferramentas</small></span>';
     grid.appendChild(button);
