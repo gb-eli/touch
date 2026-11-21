@@ -405,3 +405,21 @@ body.studio-ui.agv-deck-ready .sidebar .nav-item:not(.active):focus-visible{
  body.studio-ui.agv-deck-ready .deck-app-tile{transition:none!important}
  body.studio-ui.agv-deck-ready .deck-backdrop{backdrop-filter:none!important}
 }
+
+/* QA refinements from first real Chrome capture:
+   - Never show the seventh app-drawer tile in portrait fallback.
+   - Make the drawer title/close action span its full width.
+   - Give the diagnostic report enough scroll runway above the fixed dock.
+     1280×720 DPR3 found the old last notice 46px behind the dock. */
+body.studio-ui.agv-deck-ready:not(.agv-landscape-app) .deck-app-tile{display:none!important}
+@media (orientation:landscape) and (min-width:760px){
+ body.studio-ui.agv-deck-ready.agv-landscape-app .home-bottom.deck-open>.home-bottom-title{
+  box-sizing:border-box;width:100%!important;max-width:none!important;
+  min-width:0;flex:0 0 auto;justify-content:space-between!important;
+  text-align:left!important;white-space:normal;gap:12px
+ }
+ body.studio-ui.agv-deck-ready.agv-landscape-app:has(#page-diagnostico.active) main#conteudo{
+  padding-bottom:clamp(188px,28dvh,260px)!important;
+  scroll-padding-bottom:clamp(188px,28dvh,260px)!important
+ }
+}
