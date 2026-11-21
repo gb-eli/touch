@@ -426,7 +426,7 @@ body.studio-ui.agv-deck-ready:not(.agv-landscape-app) .deck-app-tile{display:non
 
 /* Deliberate micro-transitions: only opacity/transform, no perpetual animation. */
 @keyframes agvDeckReveal{from{opacity:.6;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-@keyframes agvDrawerReveal{from{opacity:.4;transform:translateY(-48%) scale(.98)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@keyframes agvDrawerReveal{from{opacity:.4;transform:translateY(-48%)}to{opacity:1;transform:translateY(-50%)}}
 @keyframes agvBackdropReveal{from{opacity:0}to{opacity:1}}
 @media(orientation:landscape) and (min-width:760px) and (prefers-reduced-motion:no-preference){
  body.studio-ui.agv-deck-ready.agv-landscape-app .studio-tiles{animation:agvDeckReveal .26s ease-out both}
