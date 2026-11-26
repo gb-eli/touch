@@ -77,8 +77,8 @@ else (function platformUI(E){
   const inputs=()=>Object.fromEntries(["left","right","up","down","jump","run"].map(k=>[k,keys.has(k)||[...touch.values()].includes(k)]));
   function resize(){const r=canvas.getBoundingClientRect();if(!r.width||!r.height)return;const scale=Math.min(devicePixelRatio||1,1.6,Math.sqrt(1450000/(r.width*r.height)));canvas.width=Math.round(r.width*scale);canvas.height=Math.round(r.height*scale);W=canvas.width;H=canvas.height;}
   new ResizeObserver(resize).observe(canvas);resize();
-  function reset(m=mode,n=stage){mode=m;stage=n;s=E.create(mode,stage);paused=false;keys.clear();touch.clear();document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===mode)));$("gameTitle").textContent=mode==="2d"?"Salto Solar":"Ilhas do Horizonte";$("hint").textContent=mode==="2d"?"Corra, pule e recolha cristais.":"Explore as três dimensões. Use ↑ ↓ para mudar de faixa.";document.body.classList.toggle("mode3",mode==="3d");update();}
-  function play(){if(s.status==="won"){reset(mode,(stage+1)%2);s.status="playing"}else if(s.status==="lost"){reset();s.status="playing"}else{s.status="playing";paused=false}update();}
+  function reset(m=mode,n=stage){mode=m;stage=n;s=E.create(mode,stage);paused=false;clear();document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===mode)));$("gameTitle").textContent=mode==="2d"?"Salto Solar":"Ilhas do Horizonte";$("hint").textContent=mode==="2d"?"Corra, pule e recolha cristais.":"Explore as três dimensões. Use ↑ ↓ para mudar de faixa.";document.body.classList.toggle("mode3",mode==="3d");update();}
+  function play(){if(s.status==="won"){reset(mode,(stage+1)%2);s.status="playing"}else if(s.status==="lost"){reset();s.status="playing"}else{s.status="playing";paused=false}update();canvas.focus({preventScroll:true});}
   function update(){
     $("score").textContent=String(s.score).padStart(3,"0");$("life").textContent="♥ ".repeat(Math.max(0,s.lives)).trim()||"—";$("stage").textContent=`FASE ${stage+1}/2`;
     const active=s.status==="playing"&&!paused; $("overlay").hidden=active;
@@ -146,6 +146,6 @@ else (function platformUI(E){
   }
   function frame(now){const dt=last?Math.min(.08,(now-last)/1000):0;last=now;if(s.status==="playing"&&!paused){acc+=dt;while(acc>=1/60){E.step(s,inputs(),1/60);acc-=1/60;}if(s.status!=="playing"){clear();update()}}else acc=0;
     if(mode==="3d")draw3();else draw2();
-    $("score").textContent=String(s.score).padStart(3,"0");$("life").textContent="♥ ".repeat(Math.max(0,s.lives)).trim()||"—";requestAnimationFrame(frame)}
+    const score=String(s.score).padStart(3,"0"),life="♥ ".repeat(Math.max(0,s.lives)).trim()||"—";if($("score").textContent!==score)$("score").textContent=score;if($("life").textContent!==life)$("life").textContent=life;requestAnimationFrame(frame)}
   reset();requestAnimationFrame(frame);
 })(engine);
