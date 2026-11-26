@@ -1,0 +1,436 @@
+{
+  "schema": 1,
+  "base": "f096e2e98aed86a10c45f0c417d7b87745b12567",
+  "method": "Static source scan; preserves HTML reference order per resource type. Not a complete runtime dependency graph.",
+  "pages": [
+    {
+      "path": "public/index.html",
+      "css": [
+        "css/styles.css",
+        "css/diagnostico.css",
+        "css/telemetria.css",
+        "css/governance.css",
+        "css/studio.css?v=2.0.2",
+        "css/tutorial.css?v=2.1.0",
+        "css/identity.css?v=2.2.0",
+        "css/product-interface.css?v=2.5.0",
+        "css/geometry-activities.css?v=3.1.0",
+        "experiences/piano/style.css?v=2.6.0",
+        "css/experience-intro.css?v=2.9.0",
+        "css/agv-identity.css?v=2.9.0",
+        "css/agv-ux.css?v=3.1.0",
+        "css/agv-design-system.css?v=3.2.0",
+        "css/game-experience.css?v=3.3.0",
+        "css/touch-app-shell.css?v=3.6.0",
+        "css/touch-vivid.css?v=3.8.0",
+        "css/diagnostico-tv.css?v=3.8.0"
+      ],
+      "js": [
+        {
+          "src": "js/touch-layout.js?v=3.7.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/touch-fullscreen.js?v=3.7.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/agv-touch-feedback.js?v=3.2.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/telemetria-config.js",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/governance.js",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/geometry-lab.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/game-experience.js?v=3.3.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/app.js?v=3.3.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/studio.js?v=2.0.2",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/planetarium.js?v=2.0.2",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/learning-games.js?v=3.3.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/diagnostico.js?v=3.8.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/telemetria.js",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/tutorial.js?v=2.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/experience-host.js?v=2.6.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/site-synapses.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/platform-ux.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/experience-intro.js?v=3.7.1",
+          "defer": true,
+          "async": false,
+          "module": false
+        }
+      ],
+      "inlineScripts": 0,
+      "inlineStyles": 0
+    },
+    {
+      "path": "public/oficina.html",
+      "css": [
+        "css/agv-identity.css?v=2.9.0",
+        "css/agv-ux.css?v=3.1.0",
+        "css/oficina.css?v=3.1.1",
+        "css/agv-design-system.css?v=3.2.0",
+        "css/game-experience.css?v=3.3.0",
+        "css/agv34-interactions.css?v=3.4.0",
+        "css/voxel-builder.css?v=3.5.0",
+        "css/touch-app-shell.css?v=3.6.0",
+        "css/touch-vivid.css?v=3.8.0"
+      ],
+      "js": [
+        {
+          "src": "js/site-synapses.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/platform-ux.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/game-experience.js?v=3.3.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/voxel-world.js?v=3.5.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/voxel-renderer.js?v=3.5.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/voxel-builder-ui.js?v=3.5.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/oficina.js?v=3.5.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/touch-layout.js?v=3.7.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/touch-fullscreen.js?v=3.7.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/agv-touch-feedback.js?v=3.2.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        }
+      ],
+      "inlineScripts": 0,
+      "inlineStyles": 0
+    },
+    {
+      "path": "public/arcade.html",
+      "css": [
+        "css/arcade.css?v=2.7.1",
+        "css/agv-identity.css?v=2.9.0",
+        "css/agv-ux.css?v=3.1.0",
+        "css/agv-design-system.css?v=3.2.0",
+        "css/game-experience.css?v=3.3.0",
+        "css/agv34-interactions.css?v=3.4.0",
+        "css/touch-app-shell.css?v=3.6.0",
+        "css/touch-vivid.css?v=3.8.0"
+      ],
+      "js": [
+        {
+          "src": "js/game-experience.js?v=3.3.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/arcade-physics.js?v=3.4.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/arcade.js?v=3.4.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/site-synapses.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/platform-ux.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/touch-layout.js?v=3.7.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/touch-fullscreen.js?v=3.7.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/agv-touch-feedback.js?v=3.2.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        }
+      ],
+      "inlineScripts": 0,
+      "inlineStyles": 0
+    },
+    {
+      "path": "public/aventuras.html",
+      "css": [
+        "css/platform-adventures.css?v=2"
+      ],
+      "js": [
+        {
+          "src": "js/platform-adventures.js?v=2",
+          "defer": true,
+          "async": false,
+          "module": false
+        }
+      ],
+      "inlineScripts": 0,
+      "inlineStyles": 0
+    },
+    {
+      "path": "public/admin.html",
+      "css": [
+        "css/admin.css",
+        "css/admin-controls.css",
+        "css/ux-shell.css?v=1.7.1",
+        "css/admin-clarity.css?v=2.2.0",
+        "css/agv-identity.css?v=2.9.0",
+        "css/agv-ux.css?v=3.1.0",
+        "css/agv-design-system.css?v=3.2.0"
+      ],
+      "js": [
+        {
+          "src": "js/agv-touch-feedback.js?v=3.2.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/telemetria-config.js",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/admin.js",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/admin-controls.js",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/ux.js?v=1.7.1",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/site-synapses.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        },
+        {
+          "src": "js/platform-ux.js?v=3.1.0",
+          "defer": true,
+          "async": false,
+          "module": false
+        }
+      ],
+      "inlineScripts": 0,
+      "inlineStyles": 0
+    },
+    {
+      "path": "public/experiences/tech-news/index.html",
+      "css": [],
+      "js": [],
+      "inlineScripts": 1,
+      "inlineStyles": 1
+    }
+  ],
+  "serviceWorker": {
+    "cache": "tvtouch-studio-v3.8.0-tech-news-v2",
+    "assets": [
+      "./",
+      "./index.html",
+      "./experiences/tech-news/index.html",
+      "./css/styles.css",
+      "./css/diagnostico.css",
+      "./css/diagnostico-tv.css",
+      "./css/telemetria.css",
+      "./css/governance.css",
+      "./css/studio.css",
+      "./css/identity.css",
+      "./css/tutorial.css",
+      "./css/ux-shell.css",
+      "./js/app.js",
+      "./js/diagnostico.js",
+      "./js/telemetria.js",
+      "./js/telemetria-config.js",
+      "./js/governance.js",
+      "./js/ux.js",
+      "./js/studio.js",
+      "./js/tutorial.js",
+      "./js/planetarium.js",
+      "./js/learning-games.js",
+      "./manifest.webmanifest",
+      "./assets/favicon.svg",
+      "./assets/icon-192.png",
+      "./assets/icon-512.png",
+      "./css/product-interface.css",
+      "./css/geometry-activities.css",
+      "./experiences/piano/style.css",
+      "./js/geometry-lab.js",
+      "./js/experience-host.js",
+      "./experiences/piano/index.js",
+      "./assets/immersive-scenes.svg",
+      "./arcade.html",
+      "./css/arcade.css",
+      "./css/experience-intro.css",
+      "./js/arcade-physics.js",
+      "./js/arcade.js",
+      "./js/experience-intro.js",
+      "./css/agv-identity.css",
+      "./js/site-synapses.js",
+      "./assets/agv-synapse-crystal.svg",
+      "./css/agv-ux.css",
+      "./js/platform-ux.js",
+      "./oficina.html",
+      "./css/oficina.css",
+      "./css/voxel-builder.css",
+      "./css/touch-app-shell.css",
+      "./css/touch-vivid.css",
+      "./js/touch-layout.js",
+      "./js/touch-fullscreen.js",
+      "./css/agv34-interactions.css",
+      "./js/voxel-world.js",
+      "./js/voxel-renderer.js",
+      "./js/voxel-builder-ui.js",
+      "./js/oficina.js",
+      "./css/agv-design-system.css",
+      "./js/agv-touch-feedback.js",
+      "./js/game-experience.js",
+      "./css/game-experience.css"
+    ],
+    "localPageReferencesAbsentFromPrecache": [
+      "public/aventuras.html",
+      "public/css/platform-adventures.css",
+      "public/js/platform-adventures.js"
+    ]
+  }
+}
