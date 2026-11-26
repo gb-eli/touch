@@ -486,6 +486,44 @@ try{
       await page.close();
       console.log('SMOKE COMPLETE',profile.name,pageName);
     }
+    if(['wa86f-css-1280','landscape-844'].includes(profile.name)){
+      const page=await ctx.newPage();
+      const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+      const response=await page.goto(origin+'/aventuras.html');
+      assert.equal(response.status(),200);
+      await page.waitForTimeout(220);
+      const layout=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,
+        height:document.querySelector('#game').getBoundingClientRect().height,
+        controls:[...document.querySelectorAll('[data-control]')].filter(x=>x.getClientRects().length).map(x=>x.getBoundingClientRect().height)}));
+      assert.equal(layout.width,layout.scroll);
+      assert.ok(layout.height>200);
+      assert.ok(layout.controls.every(h=>h>=44));
+      await page.locator('#play').click();
+      assert.equal(await page.locator('#overlay').isVisible(),false);
+      await page.keyboard.down('ArrowRight');
+      await page.keyboard.down(' ');
+      await page.waitForTimeout(400);
+      await page.keyboard.up(' ');
+      await page.keyboard.up('ArrowRight');
+      await page.screenshot({path:path.join(out,profile.name+'-adventure-2d.jpg'),type:'jpeg',quality:85});
+      await page.locator('[data-mode="3d"]').click();
+      assert.equal(await page.locator('#gameTitle').textContent(),'Ilhas do Horizonte');
+      assert.ok(await page.locator('[data-control="up"]').isVisible());
+      await page.locator('#play').click();
+      await page.evaluate(()=>{
+        const controls=[['right',41],['up',42],['jump',43]];
+        controls.forEach(([k,id])=>document.querySelector('[data-control="'+k+'"]').dispatchEvent(new PointerEvent('pointerdown',{pointerId:id,pointerType:'touch',bubbles:true,cancelable:true})));
+      });
+      await page.waitForTimeout(400);
+      await page.evaluate(()=>[['right',41],['up',42],['jump',43]].forEach(([k,id])=>document.querySelector('[data-control="'+k+'"]').dispatchEvent(new PointerEvent('pointerup',{pointerId:id,pointerType:'touch',bubbles:true}))));
+      assert.equal(await page.locator('.held').count(),0);
+      await page.screenshot({path:path.join(out,profile.name+'-adventure-3d.jpg'),type:'jpeg',quality:85});
+      await page.locator('#pause').click();
+      assert.equal(await page.locator('#message').textContent(),'Pausa');
+      assert.deepEqual(errors,[]);
+      note(profile.name+' platform adventures 2D/3D controls and layout','pass',JSON.stringify(layout));
+      await page.close();
+    }
     await ctx.close();
   }
   assert.deepEqual(report.issues.filter(x=>x.type==='runtime-errors'),[],
