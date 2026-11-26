@@ -23,3 +23,5 @@ Divergências de auditoria: PDF p.37 indica 21/26 CSS com reduced-motion; overfl
 
 ## Próximos passos
 Integrar Oficina em shell sem sacrificar palco; refatorar ciclo de vida de módulos e controles; renderer WebGL compatível com hardware; novos labs disciplinares. Teste físico antes de release. Não abrir PR até reunir primeira entrega funcional e validar em navegador.
+
+Revisão Alpha 1: o comprimento do fio acompanha o valor físico proporcionalmente, arco e referência acompanham a amplitude, medições estáticas não são reescritas a cada quadro, link de salto não muda a rota. No modo apresentação o palco ocupa o espaço de conteúdo e os parâmetros ficam ocultos. Medição real de bounding boxes e revisão de sobreposição ainda pendentes.
