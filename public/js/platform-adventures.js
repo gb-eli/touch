@@ -52,7 +52,7 @@ const engine=(function platformEngine(){
       if(overlap(p,b)&&p.vy<=0&&prevY>=top-.06&&p.y<=top){
         p.y=top;p.vy=0;p.ground=true;
         if(b.y===-1&&p.x>b.x+1.1&&p.x<b.x+b.w-1&&p.x>s.checkpoint.x+8)
-          s.checkpoint={x:b.x+b.w/2,z:b.z+b.d/2};
+          s.checkpoint={x:b.x+.85,z:b.z+b.d/2};
         break;
       }
     }
@@ -87,11 +87,11 @@ else (function platformUI(E){
     $("pause").textContent=paused?"Continuar":"Pausar";
   }
   document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>reset(b.dataset.mode,0)));
-  $("play").onclick=play;$("reset").onclick=()=>reset();$("pause").onclick=()=>{if(s.status!=="playing")return;paused=!paused;keys.clear();touch.clear();update()};
+  $("play").onclick=play;$("reset").onclick=()=>reset();$("pause").onclick=()=>{if(s.status!=="playing")return;paused=!paused;clear();update()};
   $("full").onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{$("hint").textContent="Tela cheia indisponível neste navegador."}};
   document.addEventListener("fullscreenchange",()=>{$("full").textContent=document.fullscreenElement?"Sair da tela cheia":"Tela cheia";resize()});
   const keyMap={ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right",ArrowUp:"up",w:"up",ArrowDown:"down",s:"down"," ":"jump",Shift:"run"};
-  document.addEventListener("keydown",e=>{if(e.target.matches("button,a")&&(e.key===" "||e.key==="Enter"))return;let k=keyMap[e.key];if(k){e.preventDefault();keys.add(k)}if(e.key==="Escape"&&s.status==="playing"&&!document.fullscreenElement){paused=true;keys.clear();touch.clear();update()}});
+  document.addEventListener("keydown",e=>{if(e.target.matches("button,a")&&(e.key===" "||e.key==="Enter"))return;let k=keyMap[e.key];if(k){e.preventDefault();keys.add(k)}if(e.key==="Escape"&&s.status==="playing"&&!document.fullscreenElement){paused=true;clear();update()}});
   document.addEventListener("keyup",e=>{if(keyMap[e.key])keys.delete(keyMap[e.key])});
   document.querySelectorAll("[data-control]").forEach(b=>{
     b.addEventListener("pointerdown",e=>{if(s.status!=="playing"||paused)return;e.preventDefault();touch.set(e.pointerId,b.dataset.control);try{b.setPointerCapture(e.pointerId)}catch{}b.classList.add("held")});
@@ -128,13 +128,14 @@ else (function platformUI(E){
     const p=s.p,camera={x:p.x-6.8,y:6.5,z:p.z+8.7};
     const norm=v=>{const l=Math.hypot(...v);return v.map(x=>x/l)};
     const f=norm([7,-5.1,-8.7]),right=norm([-f[2],0,f[0]]);
-    const up=[right[1]*f[2]-right[2]*f[1],right[2]*f[0]-right[0]*f[2],right[0]*f[1]-right[1]*f[0]].map(x=>-x);
+    const up=[right[1]*f[2]-right[2]*f[1],right[2]*f[0]-right[0]*f[2],right[0]*f[1]-right[1]*f[0]];
     const dot=(a,b)=>a.reduce((n,v,i)=>n+v*b[i],0),focal=Math.min(W,H)*1.05;
     function project(v){const d=[v[0]-camera.x,v[1]-camera.y,v[2]-camera.z],z=dot(d,f);if(z<=.7)return null;return [W*.48+dot(d,right)*focal/z,H*.5-dot(d,up)*focal/z,z]}
     const faces=[];
     function box(x,y,z,w,h,d,colors){const v=[[x,y,z],[x+w,y,z],[x+w,y+h,z],[x,y+h,z],[x,y,z+d],[x+w,y,z+d],[x+w,y+h,z+d],[x,y+h,z+d]];
       const indices=[[0,1,2,3],[4,5,6,7],[0,4,7,3],[1,5,6,2],[3,2,6,7],[0,1,5,4]];
-      indices.forEach((ids,i)=>{const q=ids.map(k=>project(v[k]));if(q.some(t=>!t))return;faces.push({points:q,depth:q.reduce((n,t)=>n+t[2],0)/4,color:colors[i%colors.length]})});
+      const normals=[[0,0,-1],[0,0,1],[-1,0,0],[1,0,0],[0,1,0],[0,-1,0]];
+      indices.forEach((ids,i)=>{const center=ids.reduce((a,k)=>a.map((n,j)=>n+v[k][j]/4),[0,0,0]);if(dot(normals[i],[camera.x-center[0],camera.y-center[1],camera.z-center[2]])<=0)return;const q=ids.map(k=>project(v[k]));if(q.some(t=>!t))return;faces.push({points:q,depth:q.reduce((n,t)=>n+t[2],0)/4,color:colors[i%colors.length]})});
     }
     for(const b of s.platforms){if(b.x+b.w<p.x-10||b.x>p.x+33)continue;box(b.x,b.y,b.z,b.w,b.h,b.d,b.y<0?["#9b4726","#b65d2b","#783b29","#d17b35","#63cf3a","#633325"]:["#c77520","#ed9b27","#9a4c20","#e7ad45","#ffdd63","#a45f22"])}
     for(const g of s.gems)if(!g.taken&&Math.abs(g.x-p.x)<24){const y=g.y+.09*Math.sin(s.time*3+g.x);box(g.x-.17,y-.17,g.z-.17,.34,.34,.34,["#ffac12","#ffd345","#c58100","#ffef70","#fff9a4"])}
