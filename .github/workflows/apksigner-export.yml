@@ -1,0 +1,27 @@
+name: Temporary APK signature verifier
+on:
+  push:
+    branches:
+      - app/android-mvp
+    paths:
+      - .github/workflows/apksigner-export.yml
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Locate Android verifier
+        id: locate
+        run: |
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          test -f "$SDK/build-tools/35.0.1/lib/apksigner.jar"
+          cp "$SDK/build-tools/35.0.1/lib/apksigner.jar" "$RUNNER_TEMP/apksigner.jar"
+          echo "jar=$RUNNER_TEMP/apksigner.jar" >> "$GITHUB_OUTPUT"
+      - name: Transfer verifier for independent validation
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: apksigner-verifier-temporary
+          path: ${{ steps.locate.outputs.jar }}
+          retention-days: 1
