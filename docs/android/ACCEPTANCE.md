@@ -7,7 +7,7 @@ Este documento define os ensaios do aplicativo `br.com.agv.touch.dev`. As caixas
 | Ambiente | Estado deste registro |
 | --- | --- |
 | Contrato do domínio e filesystem do host | Executado: 36 cenários, 239 operações comparadas ao JS legado, testes adicionais de JSON/persistência/concorrência e picking. Detalhes em [DOMAIN_CONTRACT.md](DOMAIN_CONTRACT.md). |
-| APK em Android/emulador | Sem resultado de execução registrado neste checklist. Preencher após o ensaio. |
+| APK em Android/emulador | Execução nativa registrada em emulador AOSP API 28/x86 com SwiftShader. Consultar [native-qa.json](evidence/native-qa.json) para o estado atualizado, a versão testada e as evidências de cada ensaio; esse registro não substitui o aceite físico. |
 | Galaxy S25 Ultra físico, em casa | **Pendente.** |
 | Samsung WA86F física, na escola | **Pendente.** |
 | Câmera, RA, reconhecimento corporal/mãos e VR | Não implementados no MVP; fora do aceite funcional desta versão. |

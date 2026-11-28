@@ -11,7 +11,7 @@ O aplicativo inicial não depende de um site ou WebView para renderizar as ativi
 - Namespace: `br.com.agv.touch`.
 - Aplicativo de desenvolvimento: `br.com.agv.touch.dev`.
 - Nome no launcher da variante de desenvolvimento: `AGV Touch · Teste`.
-- Versão inicial: `0.1.0-dev`, código `2` (segunda candidata de teste).
+- Versão inicial: `0.1.0-dev`, código `3` (candidata com contraste dos diálogos corrigido).
 - Android mínimo: API 26. Compilação e alvo: API 35.
 - Gráficos: OpenGL ES 2.0 obrigatório; toque e RA não filtram a instalação.
 - Fontes Java compatíveis com Java 8; compilação com JDK 17 ou superior.
@@ -52,6 +52,8 @@ O workflow `.github/workflows/android.yml` executa o contrato entre o modelo Jav
 Os testes JVM usam `org.json:json:20240303` somente como dependência de teste. O aplicativo usa `org.json` do Android; o JAR de testes não é empacotado no APK. O download do CI é conferido contra o SHA-256 `3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed`.
 
 Na primeira execução da PR, o runner tinha os pacotes Android necessários, mas `sdkmanager` não estava no `PATH`. O workflow agora resolve e exporta a raiz do SDK, verifica a plataforma 35 e as ferramentas 35.0.1 e só procura o instalador pelo caminho absoluto se algum pacote estiver ausente. As oito expectativas antigas de cache nos testes web também foram alinhadas a `tvtouch-studio-v3.8.0-tech-news-v2`, valor já presente na `main`; o service worker de produção e as demais asserções foram preservados.
+
+O smoke de navegador também esperava oito atalhos, embora o link TECH NEWS já existisse no commit base `9fda57c` e elevasse o total a nove com o replay de toque. A contagem esperada foi atualizada para nove; as verificações de Arcade único, replay, tamanho dos alvos e alinhamento em uma linha foram mantidas. As duas regras de grade do launcher web legado foram ajustadas para acomodar os nove atalhos na mesma linha, corrigindo a quebra já existente sem alterar o conteúdo.
 
 ## Assinatura e distribuição
 

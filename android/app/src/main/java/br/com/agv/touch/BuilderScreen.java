@@ -101,7 +101,7 @@ final class BuilderScreen extends LinearLayout {
     private void chooseCoordinates(){
         LinearLayout row=ui.row();row.setPadding(ui.dp(20),ui.dp(12),ui.dp(20),ui.dp(12));
         final NumberPicker[] pickers=new NumberPicker[3];String[] names={"X · coluna","Y · altura","Z · linha"};int[] max={7,5,7};
-        for(int i=0;i<3;i++){LinearLayout col=ui.vertical();TextView label=ui.text(names[i],12,UiKit.TEXT,true);label.setGravity(Gravity.CENTER);col.addView(label);NumberPicker n=new NumberPicker(getContext());n.setMinValue(0);n.setMaxValue(max[i]);n.setWrapSelectorWheel(false);n.setContentDescription(names[i]);col.addView(n);pickers[i]=n;row.addView(col,new LayoutParams(0,-2,1));}
+        for(int i=0;i<3;i++){LinearLayout col=ui.vertical();TextView label=ui.text(names[i],12,UiKit.PAPER,true);label.setGravity(Gravity.CENTER);col.addView(label);NumberPicker n=new NumberPicker(getContext());n.setMinValue(0);n.setMaxValue(max[i]);n.setWrapSelectorWheel(false);n.setContentDescription(names[i]);col.addView(n);pickers[i]=n;row.addView(col,new LayoutParams(0,-2,1));}
         new AlertDialog.Builder(getContext()).setTitle("Escolher posição na grade").setView(row).setPositiveButton("Selecionar",(d,w)->{for(NumberPicker picker:pickers)picker.clearFocus();if("orbit".equals(tool))setTool("add");scene.selectCell(pickers[0].getValue(),pickers[1].getValue(),pickers[2].getValue());}).setNegativeButton("Cancelar",null).show();
     }
     private void confirm(){

@@ -189,7 +189,7 @@ public final class MainActivity extends Activity {
     private void missionResult(){
         VoxelWorld.Progress progress=world.progress(mission);if(!progress.complete)return;
         LinearLayout panel=ui.vertical();panel.setPadding(ui.dp(22),0,ui.dp(22),ui.dp(12));panel.addView(new UiKit.BlockArt(this,world.blocks(),false),new LinearLayout.LayoutParams(-1,ui.dp(170)));
-        panel.addView(ui.text("Você completou as "+progress.total+" posições de "+missionTitle(mission)+". Sua construção continua disponível para explorar.",16,UiKit.TEXT,false));
+        panel.addView(ui.text("Você completou as "+progress.total+" posições de "+missionTitle(mission)+". Sua construção continua disponível para explorar.",16,UiKit.PAPER,false));
         new AlertDialog.Builder(this).setTitle("Objetivo concluído!").setView(panel).setPositiveButton("Salvar projeto",(d,w)->saveDialog(null)).setNegativeButton("Continuar criando",null).setNeutralButton("Ver outras missões",(d,w)->navigate("explore")).show();
     }
 

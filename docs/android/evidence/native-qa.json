@@ -1,0 +1,253 @@
+{
+  "status": "completed",
+  "environment": {
+    "api": 28,
+    "architecture": "x86",
+    "system": "AOSP emulator",
+    "rendering": "SwiftShader software",
+    "portraitPixels": "720x1600",
+    "physicalDevice": false,
+    "displayConfigurations": [
+      {
+        "pixels": "720x1600",
+        "densityDpi": 280,
+        "orientation": "portrait"
+      },
+      {
+        "pixels": "1600x720",
+        "densityDpi": 280,
+        "orientation": "landscape"
+      },
+      {
+        "pixels": "1600x720",
+        "densityDpi": 160,
+        "orientation": "landscape",
+        "purpose": "Capturas finais da interface larga"
+      }
+    ],
+    "temporarySizeOverride": "Um override lógico 1280x720 foi exercitado e restaurado; as capturas finais usam a resolução física 1600x720, sem letterbox."
+  },
+  "package": "br.com.agv.touch.dev",
+  "checks": [
+    {
+      "id": "launch",
+      "status": "pass",
+      "versionCode": 1,
+      "observed": "Início abriu; construtor exibiu grade vazia e controles.",
+      "evidence": [
+        "native-home-portrait.png",
+        "native-builder-empty-portrait.png"
+      ]
+    },
+    {
+      "id": "selection_confirmation",
+      "status": "pass",
+      "versionCode": 1,
+      "observed": "Coordenadas 0,0,0 mostraram prévia com contador 0. Confirmar criou 1 bloco.",
+      "evidence": [
+        "native-coordinate-confirm-state.png",
+        "native-one-block-portrait.png"
+      ]
+    },
+    {
+      "id": "undo_redo",
+      "status": "pass",
+      "versionCode": 1,
+      "observed": "Desfazer removeu a peça (0); Refazer restaurou (1).",
+      "evidence": [
+        "native-undo-zero.png",
+        "native-redo-one.png",
+        "native-redo-one.xml"
+      ]
+    },
+    {
+      "id": "save",
+      "status": "pass",
+      "versionCode": 1,
+      "observed": "Nome QA_Nativo_01 aceito; interface informou Projeto salvo neste aparelho e 1/256.",
+      "evidence": [
+        "native-saved-project.png",
+        "native-saved-project.xml"
+      ]
+    },
+    {
+      "id": "restart_saved",
+      "status": "pass",
+      "versionCode": 1,
+      "observed": "Após am force-stop e am start, Início ofereceu QA_Nativo_01 com 1 bloco; reabrir mostrou 1/256 e estado salvo.",
+      "evidence": [
+        "native-home-restart.xml",
+        "native-reopened-project.png",
+        "native-reopened-project-ready.xml"
+      ]
+    },
+    {
+      "id": "upgrade_preservation",
+      "status": "pass",
+      "setup": "Projeto QA_Nativo_01 salvo com 1 bloco; rascunho com 2 blocos, segundo em 1,0,0, ainda não salvo.",
+      "evidence": [
+        "native-code2-recovery-offer.png",
+        "native-code2-draft-recovered.png",
+        "native-code2-draft-recovered.xml"
+      ],
+      "fromVersionCode": 1,
+      "toVersionCode": 2,
+      "observed": "install -r concluiu com Success. Projeto salvo e recovery permaneceram idênticos; UI ofereceu recuperar o rascunho e reabriu com 2 blocos."
+    },
+    {
+      "id": "rotation_history",
+      "status": "pass",
+      "versionCode": 3,
+      "observed": "Após instalar code3, uma quarta peça foi adicionada em paisagem. Ao girar para retrato, permaneceram 4 blocos e Desfazer habilitado. Desfazer levou a 3; Refazer restaurou 4.",
+      "evidence": [
+        "native-code3-four-before-rotation.xml",
+        "native-code3-four-after-rotation.xml",
+        "native-code3-undo-after-rotation.xml",
+        "native-code3-undo-after-rotation.png",
+        "native-code3-redo-after-rotation.xml",
+        "native-code3-builder-portrait.png"
+      ]
+    },
+    {
+      "id": "briefing_preserves_mission",
+      "status": "not_run",
+      "reason": "Não executado neste ensaio; priorizados migração, recuperação, contraste e rotação conforme escopo final."
+    },
+    {
+      "id": "draft_after_process_death",
+      "status": "pass",
+      "versionCode": 2,
+      "mechanism": "Processo substituído por install -r; um force-stop separado com rascunho não foi executado.",
+      "observed": "Rascunho de 2 blocos recuperado pela ação RECUPERAR após atualização.",
+      "evidence": [
+        "native-code2-recovery-offer.xml",
+        "native-code2-draft-recovered.xml"
+      ]
+    },
+    {
+      "id": "saf_import_export",
+      "status": "not_run",
+      "reason": "Não executado pelo seletor Android SAF; não é contado como aprovado."
+    },
+    {
+      "id": "wide_layout",
+      "status": "pass",
+      "versionCode": 3,
+      "observed": "Layout largo com palco, nove materiais e controles inferiores visíveis. Home apresentou navegação lateral e projeto com 4 blocos. Capturas finais em 1600x720 pixels, density160; perfil automático.",
+      "evidence": [
+        "native-code3-builder-wide-final.png",
+        "native-code3-saved-wide.xml",
+        "native-code3-home-wide-final.png",
+        "native-code3-home-wide-final.xml"
+      ]
+    },
+    {
+      "id": "coordinate_dialog_contrast",
+      "status": "pass",
+      "versionCode": 3,
+      "observed": "Rótulos X/Y/Z agora brancos e legíveis sobre o diálogo cinza; confirmado por captura da interface real. A falha anterior em code2 foi corrigida.",
+      "evidence": [
+        "native-code2-coordinate-contrast.png",
+        "native-code3-coordinate-contrast-fixed.png"
+      ]
+    },
+    {
+      "id": "code3_install_recovery",
+      "status": "pass",
+      "versionCode": 3,
+      "observed": "SHA-256 conferido; install -r concluiu Success. Ao abrir, foi oferecido e recuperado o rascunho de 3 blocos de code2.",
+      "evidence": [
+        "native-code3-recovery-offer.xml",
+        "native-code3-recovered-ready.xml",
+        "native-package-code3.txt"
+      ]
+    },
+    {
+      "id": "bottom_save_back",
+      "status": "pass",
+      "versionCode": 3,
+      "observed": "Salvar projeto no dock inferior abriu o diálogo; confirmar exibiu Projeto salvo neste aparelho e 4/256. Voltar inferior levou à Home, com QA_Nativo_01 e 4 blocos.",
+      "evidence": [
+        "native-code3-save-bottom-dialog.xml",
+        "native-code3-saved-wide.xml",
+        "native-code3-home-wide-final.xml"
+      ]
+    },
+    {
+      "id": "mission_result_dialog_contrast",
+      "status": "not_run",
+      "versionCode": 3,
+      "reason": "A cor do texto também foi corrigida no código pelo implementador; o diálogo de resultado não foi exercitado nesta sessão."
+    },
+    {
+      "id": "android_runtime_error_log",
+      "status": "pass",
+      "versionCode": 3,
+      "observed": "Log filtrado AndroidRuntime:E sem entradas de erro, apenas cabeçalhos; nenhuma falha de encerramento do app observada nas jornadas executadas.",
+      "evidence": [
+        "native-runtime-log-code3.txt"
+      ],
+      "scope": "Não representa auditoria de todos os tags do logcat ou teste de estresse."
+    }
+  ],
+  "limitations": [
+    "Emulador de software não certifica Galaxy S25 Ultra ou Samsung WA86F.",
+    "Nenhum resultado de câmera, RA, sensores, multitoque físico, caneta ou desempenho térmico.",
+    "Algumas leituras uiautomator falharam durante transições; houve nova captura/leitura, sem contar erro de automação como falha do app."
+  ],
+  "updatedAt": "2026-11-28T05:36:01.846727+00:00",
+  "storageAudit": {
+    "method": "Leitura de arquivos do APK debug via run-as; dados sintéticos de QA.",
+    "savedIdenticalAcrossUpgrade": true,
+    "recoveryIdenticalAcrossUpgrade": true,
+    "savedBlocksBeforeAndAfter": 1,
+    "recoveryBlocksBeforeAndAfter": 2,
+    "savedSha256": "387bd4c83b05c2a6238f7e1296c5243e8bdea2c5acafca21d082a9f3aa11ddad",
+    "recoverySha256": "f365bf31a80ff71e5f87ee3c2ae5cc8d51bb8cb8868c7c089aa3971efd8c5b8d"
+  },
+  "artifacts": [
+    {
+      "versionCode": 1,
+      "versionName": "0.1.0-dev",
+      "role": "Instalação inicial testada"
+    },
+    {
+      "versionCode": 2,
+      "versionName": "0.1.0-dev",
+      "sha256": "fffb04f5342e6e50537f02d6e4537cab877df4f10550e29bffa5427aad29cd4b",
+      "bytes": 118765,
+      "role": "Atualização com dados preservados; contraste customizado requer correção."
+    },
+    {
+      "versionCode": 3,
+      "versionName": "0.1.0-dev",
+      "sha256": "e4de26fd1c7a06feced4a4cae7a40bb4d4bac58e26453c9d1bd32ab66d67d28d",
+      "bytes": 79100,
+      "role": "Candidata final instalada, contraste retestado, edição e rotação executadas."
+    }
+  ],
+  "findings": [
+    {
+      "id": "coordinate_labels_contrast",
+      "foundInVersionCode": 2,
+      "status": "resolved",
+      "fixedInVersionCode": 3,
+      "before": "native-code2-coordinate-contrast.png",
+      "after": "native-code3-coordinate-contrast-fixed.png"
+    }
+  ],
+  "outcome": "executed_checks_passed_with_not_run_items",
+  "summary": {
+    "pass": 13,
+    "not_run": 3,
+    "fail": 0
+  },
+  "finalState": {
+    "screen": "home",
+    "projectName": "QA_Nativo_01",
+    "savedBlocks": 4,
+    "pendingChanges": false,
+    "controller": "stopped",
+    "controllerStatusObserved": true
+  }
+}
