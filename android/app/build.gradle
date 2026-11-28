@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'br.com.agv.touch'
+    compileSdk 35
+    buildToolsVersion '35.0.1'
+
+    defaultConfig {
+        applicationId 'br.com.agv.touch'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0'
+    }
+
+    signingConfigs {
+        debug {
+            // This optional path is local or supplied by CI, never committed.
+            def privateKeyPath = providers.environmentVariable('AGV_DEBUG_KEYSTORE').orNull
+            if (privateKeyPath) {
+                storeFile file(privateKeyPath)
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+        }
+        release {
+            minifyEnabled false
+            // Production signing is intentionally supplied outside this repository.
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}

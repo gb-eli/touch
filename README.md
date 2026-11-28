@@ -1,5 +1,19 @@
 # TV TOUCH · AGV
 
+## Aplicativo Android · MVP 0.1
+
+O repositório agora inclui a primeira implementação Android nativa para testar no **Galaxy S25 Ultra** e, separadamente, na **Samsung WA86F de 86″**. O MVP reúne construtor 3D por toque, nove materiais, quatro missões, projetos locais, recuperação de rascunhos, importação/exportação JSON e diagnóstico. A câmera, a realidade aumentada e o reconhecimento corporal têm etapas próprias de desenvolvimento e não são simulados pelo APK inicial.
+
+- [Aplicativo: funcionalidades e instruções](android/README.md).
+- [Mapa de telas, baixa e alta fidelidade navegáveis](docs/app-design/README.md).
+- [Arquitetura Android e compilação](docs/android/BUILD.md).
+- [Contrato de compatibilidade com os projetos do site](docs/android/DOMAIN_CONTRACT.md).
+- [Roteiro de aceite no celular e na escola](docs/android/ACCEPTANCE.md).
+
+A implementação usa Java, Views Android e OpenGL ES; a decisão que atualiza a proposta inicial de Unity está documentada no guia de arquitetura. A validação de código, protótipos e APK é distinta do aceite físico de cada aparelho. A página pública poderá assumir o papel de divulgação e download depois dessa validação e da migração dos projetos existentes.
+
+## Portal web existente
+
 Portal educacional interativo para **painéis Samsung WA86F de 86″**, desenvolvido em HTML, CSS e JavaScript estáticos, para uso com toque, mouse e teclado em orientação horizontal.
 
 - **Produção publicada em 20/11/2026:** Studio **3.8.0**, em https://gb-eli.github.io/touch/. O primeiro deploy foi confirmado pelo GitHub Pages após a [PR #36](https://github.com/gb-eli/touch/pull/36).

@@ -1,0 +1,20 @@
+flowchart TD
+    A["Abrir TV Touch"] --> H["Início"]
+    H --> E["Explorar atividades"]
+    H --> P["Meus projetos"]
+    H --> S["Ajustes e diagnóstico"]
+    H --> B["Construtor livre"]
+    E --> B
+    E --> M["Ponte, torre, escada ou simetria"]
+    E --> C["Câmera e RA: disponibilidade"]
+    C --> E
+    M --> BM["Construtor com objetivo"]
+    BM --> Q{"Objetivo completo?"}
+    Q -- "Ainda falta" --> BM
+    Q -- "Sim" --> R["Resultado da missão"]
+    R --> V["Salvar projeto"]
+    R --> M
+    B --> V
+    V --> P
+    P -- "Abrir" --> B
+    S --> H
