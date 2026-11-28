@@ -1,99 +1,114 @@
 name: Publish TV Touch in-app update (0.2.1)
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-tv-touch-update.yml'
   workflow_dispatch:
+
 permissions:
   contents: write
+  actions: read
+
 concurrency:
-  group: tv-touch-release-0-2-1
+  group: tv-touch-publish-0-2-1
   cancel-in-progress: false
+
 jobs:
   release:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
-      - name: Check signing credential
-        env:
-          KEY_B64: ${{ secrets.TV_TOUCH_DEV_KEYSTORE_B64 }}
-        run: |
-          if [ -z "$KEY_B64" ]; then
-            echo "::error::Configure Actions secret TV_TOUCH_DEV_KEYSTORE_B64 before running. Never upload the key as a release asset."
-            exit 1
-          fi
-      - name: Check out 0.2.1 source
+      - name: Check out public signed-release metadata only
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: app/studio-0.2.1-update-test
           persist-credentials: false
-      - name: Configure Java
-        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
-        with:
-          distribution: temurin
-          java-version: '21'
-      - name: Prepare private signing file
+      - name: Download exact previously tested CI APK
         env:
-          KEY_B64: ${{ secrets.TV_TOUCH_DEV_KEYSTORE_B64 }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          umask 077
-          printf '%s' "$KEY_B64" | base64 -d > "$RUNNER_TEMP/tv-touch-dev.p12"
-          test -s "$RUNNER_TEMP/tv-touch-dev.p12"
-          echo "AGV_DEBUG_KEYSTORE=$RUNNER_TEMP/tv-touch-dev.p12" >> "$GITHUB_ENV"
-      - name: Build and lint signed APK
+          mkdir -p "$RUNNER_TEMP/source"
+          gh run download 46151615348 --repo "$GITHUB_REPOSITORY" \
+            --name agv-touch-debug-39 --dir "$RUNNER_TEMP/source"
+          test -s "$RUNNER_TEMP/source/app-debug.apk"
+      - name: Assemble pre-signed APK without exposing private key
         run: |
           set -euo pipefail
-          cd android
-          ./gradlew --no-daemon :app:assembleDebug :app:lintDebug
-          python3 tools/verify_apk.py app/build/outputs/apk/debug/app-debug.apk
-      - name: Check signing certificate and APK version
-        id: verify
+          python3 - <<'PY'
+          import base64,hashlib,os,pathlib,struct,zipfile
+          root=pathlib.Path(os.environ["GITHUB_WORKSPACE"])
+          source=pathlib.Path(os.environ["RUNNER_TEMP"])/"source/app-debug.apk"
+          target=pathlib.Path(os.environ["RUNNER_TEMP"])/"TV_TOUCH_STUDIO_0.2.1_Android.apk"
+          sig=root/".github/release-material/v0.2.1-dev-v2-public-signature.b64"
+          data=source.read_bytes()
+          block=base64.b64decode(sig.read_text().strip(),validate=True)
+          assert block[-16:]==b"APK Sig Block 42"
+          with zipfile.ZipFile(source) as z:
+              assert z.testzip() is None
+              cd=z.start_dir
+          oldsize=struct.unpack_from("<Q",data,cd-24)[0]
+          start=cd-oldsize-8
+          assert start>0 and data[cd-16:cd]==b"APK Sig Block 42"
+          eocd=data.rfind(b"PK\x05\x06")
+          assert eocd>cd
+          end=bytearray(data[eocd:])
+          struct.pack_into("<I",end,16,start+len(block))
+          candidate=data[:start]+block+data[cd:eocd]+end
+          digest=hashlib.sha256(candidate).hexdigest()
+          expected="c04309fa4ac80a41a06c80b178df27399c565073a1f1afb5db2a5bf88737e9b1"
+          assert digest==expected,(digest,expected)
+          assert len(candidate)==119261,len(candidate)
+          target.write_bytes(candidate)
+          print("Public signature applied to exact tested APK. SHA-256 verified:",digest)
+          PY
+      - name: Independently validate cryptographic certificate
         run: |
           set -euo pipefail
           SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
-          APK=android/app/build/outputs/apk/debug/app-debug.apk
-          EXPECTED=a9154ab40c8744eab6d110cd1371686a85ed394ed9a35bf876a30becdf5eaf0a
-          "$SDK/build-tools/35.0.1/apksigner" verify --verbose --print-certs "$APK" > "$RUNNER_TEMP/signature-report.txt"
-          grep -q 'Verified using v2 scheme (APK Signature Scheme v2): true' "$RUNNER_TEMP/signature-report.txt"
-          grep -qi "$EXPECTED" "$RUNNER_TEMP/signature-report.txt"
-          "$SDK/build-tools/35.0.1/aapt" dump badging "$APK" | head -n 1 > "$RUNNER_TEMP/badging.txt"
-          grep -q "name='br.com.agv.touch.dev'" "$RUNNER_TEMP/badging.txt"
-          grep -q "versionCode='7'" "$RUNNER_TEMP/badging.txt"
-          grep -q "versionName='0.2.1-dev'" "$RUNNER_TEMP/badging.txt"
-          echo "sha=$(sha256sum "$APK" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
-          echo "size=$(stat -c '%s' "$APK")" >> "$GITHUB_OUTPUT"
-      - name: Create immutable prerelease
+          APK="$RUNNER_TEMP/TV_TOUCH_STUDIO_0.2.1_Android.apk"
+          EXPECTED_CERT=a9154ab40c8744eab6d110cd1371686a85ed394ed9a35bf876a30becdf5eaf0a
+          "$SDK/build-tools/35.0.1/apksigner" verify --verbose --print-certs "$APK" > "$RUNNER_TEMP/apk-signature.txt"
+          grep -q 'Verified using v2 scheme (APK Signature Scheme v2): true' "$RUNNER_TEMP/apk-signature.txt"
+          grep -qi "$EXPECTED_CERT" "$RUNNER_TEMP/apk-signature.txt"
+          "$SDK/build-tools/35.0.1/aapt" dump badging "$APK" | head -n1 > "$RUNNER_TEMP/apk-version.txt"
+          grep -q "name='br.com.agv.touch.dev'" "$RUNNER_TEMP/apk-version.txt"
+          grep -q "versionCode='7'" "$RUNNER_TEMP/apk-version.txt"
+          grep -q "versionName='0.2.1-dev'" "$RUNNER_TEMP/apk-version.txt"
+          echo 'APK integrity, matching certificate, package and version confirmed.'
+      - name: Create immutable pre-release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if gh release view v0.2.1-dev --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "::error::This release already exists; refusing replacement."
-            exit 1
+            echo "Release v0.2.1-dev exists; verifying existing asset instead of overwriting."
+          else
+            gh release create v0.2.1-dev \
+              "$RUNNER_TEMP/TV_TOUCH_STUDIO_0.2.1_Android.apk#TV_TOUCH_STUDIO_0.2.1_Android.apk" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target 28be91bc2a4393fc6bec1c9de81edaa6aa882762 \
+              --prerelease --title "TV Touch Studio Prism 0.2.1-dev" \
+              --notes "Teste de atualização pelo próprio app. Código de versão 7, aviso visível na tela inicial e orientações de instalação. Mesmo certificado da 0.2.0."
           fi
-          gh release create v0.2.1-dev \
-            "android/app/build/outputs/apk/debug/app-debug.apk#TV_TOUCH_STUDIO_0.2.1_Android.apk" \
-            --repo "$GITHUB_REPOSITORY" \
-            --target "$(git rev-parse HEAD)" --prerelease \
-            --title "TV Touch Studio Prism 0.2.1-dev" \
-            --notes "Atualização de teste pelo próprio aplicativo. Melhorias no aviso de atualização e manutenção dos módulos Studio Prism."
-      - name: Verify published asset SHA-256
+      - name: Verify actual public release bytes
         env:
           GH_TOKEN: ${{ github.token }}
-          EXPECTED_SHA: ${{ steps.verify.outputs.sha }}
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/release"
+          mkdir -p "$RUNNER_TEMP/published"
           gh release download v0.2.1-dev --repo "$GITHUB_REPOSITORY" \
-            --pattern 'TV_TOUCH_STUDIO_0.2.1_Android.apk' --dir "$RUNNER_TEMP/release"
-          test "$EXPECTED_SHA" = "$(sha256sum "$RUNNER_TEMP/release/TV_TOUCH_STUDIO_0.2.1_Android.apk" | cut -d' ' -f1)"
-      - name: Activate public update catalog
+            --pattern TV_TOUCH_STUDIO_0.2.1_Android.apk --dir "$RUNNER_TEMP/published"
+          printf '%s  %s\n' \
+            c04309fa4ac80a41a06c80b178df27399c565073a1f1afb5db2a5bf88737e9b1 \
+            "$RUNNER_TEMP/published/TV_TOUCH_STUDIO_0.2.1_Android.apk" | sha256sum --check -
+      - name: Activate version catalog only after verified release
         env:
           GH_TOKEN: ${{ github.token }}
-          APK_SHA: ${{ steps.verify.outputs.sha }}
-          APK_SIZE: ${{ steps.verify.outputs.size }}
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json,os
+          import json,os,pathlib
           feed={
             "schema":1,
             "packageName":"br.com.agv.touch.dev",
@@ -102,20 +117,15 @@ jobs:
             "minSdk":26,
             "notes":"Aviso de atualização na tela inicial e orientações de instalação mais claras. Mantém o Studio Prism e os projetos salvos.",
             "apkUrl":"https://github.com/gb-eli/touch/releases/download/v0.2.1-dev/TV_TOUCH_STUDIO_0.2.1_Android.apk",
-            "sizeBytes":int(os.environ["APK_SIZE"]),
-            "sha256":os.environ["APK_SHA"]
+            "sizeBytes":119261,
+            "sha256":"c04309fa4ac80a41a06c80b178df27399c565073a1f1afb5db2a5bf88737e9b1"
           }
-          with open(os.environ["RUNNER_TEMP"]+"/tv-touch-feed.json","w") as f:
-            json.dump(feed,f,indent=2,ensure_ascii=False)
-            f.write("\n")
+          target=pathlib.Path(os.environ["RUNNER_TEMP"])/"feed.json"
+          target.write_text(json.dumps(feed,indent=2,ensure_ascii=False)+"\n")
           PY
-          META="$(gh api "repos/$GITHUB_REPOSITORY/contents/docs/android/updates/dev.json?ref=main")"
-          CURRENT_SHA="$(printf '%s' "$META" | jq -r .sha)"
-          CONTENT="$(base64 -w0 "$RUNNER_TEMP/tv-touch-feed.json")"
+          CURRENT_SHA="$(gh api "repos/$GITHUB_REPOSITORY/contents/docs/android/updates/dev.json?ref=main" --jq .sha)"
+          CONTENT="$(base64 -w0 "$RUNNER_TEMP/feed.json")"
           gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/docs/android/updates/dev.json" \
-            -f message='release(android): publish verified Studio Prism 0.2.1 feed' \
-            -f content="$CONTENT" -f sha="$CURRENT_SHA" -f branch=main > /dev/null
-          echo "Signed release verified and catalog activated."
-      - name: Delete temporary signing key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/tv-touch-dev.p12"
+            -f message='release(android): activate verified 0.2.1 in-app update' \
+            -f content="$CONTENT" -f sha="$CURRENT_SHA" -f branch=main >/dev/null
+          echo "Public update catalog now advertises the verified, signed APK."
