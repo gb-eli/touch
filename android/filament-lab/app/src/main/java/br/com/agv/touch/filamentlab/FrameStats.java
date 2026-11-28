@@ -15,5 +15,6 @@ public final class FrameStats {
     public int accepted(){return accepted;}
     public int skipped(){return skipped;}
     public double fps(){return accepted>1&&last>first?(accepted-1)*1e9/(last-first):0;}
+    public double fpsForDuration(double seconds){if(!Double.isFinite(seconds)||seconds<=0)throw new IllegalArgumentException("duration");return accepted/seconds;}
     public double p95ms(){if(size==0)return 0;long[] copy=Arrays.copyOf(intervals,size);Arrays.sort(copy);return copy[(int)Math.ceil(size*.95)-1]/1e6;}
 }

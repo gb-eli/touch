@@ -19,7 +19,7 @@ public final class LauncherActivity extends Activity {
         int gl=am.getDeviceConfigurationInfo().reqGlEsVersion;
         boolean vulkan=getPackageManager().hasSystemFeature(PackageManager.FEATURE_VULKAN_HARDWARE_LEVEL);
         TextView info=new TextView(this);info.setTextColor(0xffc4cfdf);info.setTextSize(16);
-        info.setText("Prova de conceito 2.0-alpha.1\nOpenGL ES informado: "+(gl>>16)+"."+(gl&0xffff)+"\nVulkan informado: "+(vulkan?"sim":"não")+"\nA disponibilidade informada não garante funcionamento. O app de construção e seus projetos não são alterados.");
+        info.setText("Prova de conceito 2.0-alpha.2\nOpenGL ES informado: "+(gl>>16)+"."+(gl&0xffff)+"\nVulkan informado: "+(vulkan?"sim":"não")+"\nA disponibilidade informada não garante funcionamento. O app de construção e seus projetos não são alterados.");
         panel.addView(info);
         add(panel,"Testar OpenGL", "opengl",gl>=0x00030000);
         add(panel,"Testar Vulkan (experimental)", "vulkan",vulkan);
