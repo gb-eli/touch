@@ -136,6 +136,10 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
         else {shell.addView(content,new LinearLayout.LayoutParams(-1,0,1));if(!activity)shell.addView(navigation(false),new LinearLayout.LayoutParams(-1,ui.dp(82)));}
         setContentView(outer);outer.requestApplyInsets();
         switch(screen){case"builder":showBuilder();break;case"explore":showExplore();break;case"library":showLibrary();break;case"projects":showProjects();break;case"settings":showSettings();break;case"mission":showMission();break;default:screen="home";showHome();}
+        if(!activity&&!prefs.getBoolean("reduce_motion",false)){
+            content.setAlpha(0.88f);
+            content.animate().alpha(1f).setDuration(190).start();
+        }
     }
 
     private LinearLayout navigation(boolean rail) {
@@ -439,6 +443,12 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
 
     private void showSettings(){
         LinearLayout p=page("DO SEU JEITO","Ajustes","Adapte a interface e confira as informações deste aparelho.");
+        LinearLayout tutorial=ui.featureCard(UiKit.LAVENDER,0xffe3f5fb);
+        tutorial.addView(ui.overline("APRENDA A CRIAR",UiKit.VIOLET));
+        ui.addFull(tutorial,ui.text("Uma visita guiada ao Studio.",21,UiKit.TEXT,true),9);
+        ui.addFull(tutorial,ui.text("Revise as ferramentas, a Biblioteca e o salvamento dos seus projetos.",15,UiKit.MUTED,false),7);
+        ui.addFull(tutorial,ui.button("Rever primeiros passos",false,this::showOnboarding),14);
+        ui.addFull(p,tutorial,0);
         LinearLayout controls=ui.card();controls.addView(ui.text("Experiência",22,UiKit.TEXT,true));
         String profile=prefs.getString("profile","auto");String profileLabel="tv".equals(profile)?"TV":"phone".equals(profile)?"Celular":"Automático";
         ui.addFull(controls,ui.button("Perfil de interface: "+profileLabel,false,this::chooseProfile),18);
