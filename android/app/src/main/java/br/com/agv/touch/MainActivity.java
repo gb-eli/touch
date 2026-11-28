@@ -331,32 +331,98 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
         new AlertDialog.Builder(this).setTitle("Objetivo concluído!").setView(panel).setPositiveButton("Salvar projeto",(d,w)->saveDialog(null)).setNegativeButton("Continuar criando",null).setNeutralButton("Ver outras missões",(d,w)->navigate("explore")).show();
     }
 
+    private Set<String> favorites(){
+        return new HashSet<>(prefs.getStringSet("favorite_projects",Collections.emptySet()));
+    }
+    private void toggleFavorite(String id){
+        Set<String> next=favorites();
+        if(!next.add(id))next.remove(id);
+        prefs.edit().putStringSet("favorite_projects",next).apply();
+        render();
+    }
+    private void duplicateProject(ProjectStore.ProjectSummary item){
+        if(store==null||blockForTransfer())return;
+        try{
+            ProjectCodec.Project source=store.load(item.projectId).project;
+            ProjectCodec.Project duplicate=ProjectCodec.create(source.name+" - cópia",source.mission,source.blocks);
+            store.save(duplicate);render();toast("Uma cópia independente foi criada.");
+        }catch(IOException e){error("Não foi possível duplicar",e.getMessage());}
+    }
     private void showProjects(){
-        LinearLayout p=page("SUAS CRIAÇÕES","Meus projetos","Abra, organize e leve suas construções para outro aparelho.");
-        LinearLayout actions=ui.row();actions.addView(ui.button("Novo projeto",true,()->newProject("free")),new LinearLayout.LayoutParams(0,-2,1));LinearLayout.LayoutParams ap=new LinearLayout.LayoutParams(0,-2,1);ap.leftMargin=ui.dp(10);actions.addView(ui.button("Importar JSON",false,this::pickImport),ap);p.addView(actions);
-        List<ProjectStore.ProjectSummary> projects;
+        LinearLayout p=page("ATELIÊ PESSOAL","Suas criações.","Salve, organize e retome seu mundo de ideias.");
+        LinearLayout actions=ui.row();
+        actions.addView(ui.button("Novo projeto",true,()->newProject("free")),new LinearLayout.LayoutParams(0,-2,1));
+        LinearLayout.LayoutParams ap=new LinearLayout.LayoutParams(0,-2,1);ap.leftMargin=ui.dp(9);
+        actions.addView(ui.button("Importar JSON",false,this::pickImport),ap);
+        p.addView(actions);
         if(store==null){showStorageError();return;}
-        try{projects=store.list();}catch(IOException e){ui.addFull(p,ui.text("Não foi possível ler os projetos. "+e.getMessage(),16,UiKit.DANGER,false),24);return;}
-        if(projects.isEmpty()){LinearLayout empty=ui.card();empty.addView(new UiKit.BlockArt(this,Collections.emptyList(),false),new LinearLayout.LayoutParams(-1,ui.dp(160)));empty.addView(ui.text("Sua primeira ideia começa aqui.",24,UiKit.TEXT,true));ui.addFull(empty,ui.text("Quando você salvar uma construção, ela aparecerá nesta área.",16,UiKit.MUTED,false),12);ui.addFull(empty,ui.button("Criar meu primeiro projeto",true,()->newProject("free")),22);ui.addFull(p,empty,24);return;}
+        List<ProjectStore.ProjectSummary> projects;
+        try{projects=new ArrayList<>(store.list());}
+        catch(IOException e){ui.addFull(p,ui.text("Não foi possível ler os projetos. "+e.getMessage(),16,UiKit.DANGER,false),24);return;}
+        Set<String> favorites=favorites();
+        LinearLayout summary=ui.featureCard(UiKit.LAVENDER,0xffe7f7fb);
+        summary.addView(ui.overline("SEU ACERVO",UiKit.VIOLET));
+        ui.addFull(summary,ui.text(projects.size()+" projeto"+(projects.size()==1?"":"s")+"  ·  "+favorites.size()+" favorito"+(favorites.size()==1?"":"s"),20,UiKit.TEXT,true),10);
+        ui.addFull(p,summary,18);
+        LinearLayout filters=ui.row();
+        Button all=ui.button("Todos",false,()->{projectFilter="all";render();});
+        Button starred=ui.button("★ Favoritos",false,()->{projectFilter="favorites";render();});
+        ui.styleButton(all,"all".equals(projectFilter)?UiKit.VIOLET:UiKit.PAPER,"all".equals(projectFilter)?UiKit.PAPER:UiKit.TEXT,"all".equals(projectFilter));
+        ui.styleButton(starred,"favorites".equals(projectFilter)?UiKit.VIOLET:UiKit.PAPER,"favorites".equals(projectFilter)?UiKit.PAPER:UiKit.TEXT,"favorites".equals(projectFilter));
+        filters.addView(all,new LinearLayout.LayoutParams(0,-2,1));
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(0,-2,1);lp.leftMargin=ui.dp(8);filters.addView(starred,lp);
+        ui.addFull(p,filters,16);
+        if("favorites".equals(projectFilter))projects.removeIf(item->!favorites.contains(item.projectId));
+        projects.sort((a,b)->{
+            boolean af=favorites.contains(a.projectId),bf=favorites.contains(b.projectId);
+            if(af!=bf)return af?-1:1;
+            return Long.compare(b.updatedAt,a.updatedAt);
+        });
+        if(projects.isEmpty()){
+            LinearLayout empty=ui.card();
+            empty.addView(new UiKit.BlockArt(this,Collections.emptyList(),false),new LinearLayout.LayoutParams(-1,ui.dp(130)));
+            empty.addView(ui.text("favorites".equals(projectFilter)?"Seus favoritos aparecem aqui.":"Sua primeira ideia começa aqui.",22,UiKit.TEXT,true));
+            ui.addFull(empty,ui.text("favorites".equals(projectFilter)?"Toque na estrela de um projeto para adicioná-lo.":"Crie um projeto ou personalize um modelo da Biblioteca.",15,UiKit.MUTED,false),10);
+            ui.addFull(empty,ui.button("favorites".equals(projectFilter)?"Ver todos":"Explorar modelos",true,
+                ()->{if("favorites".equals(projectFilter)){projectFilter="all";render();}else navigate("library");}),17);
+            ui.addFull(p,empty,20);return;
+        }
         LinearLayout row=null;
         for(int i=0;i<projects.size();i++){
             ProjectStore.ProjectSummary item=projects.get(i);
-            if(!wide||i%2==0){row=wide?ui.row():ui.vertical();row.setGravity(Gravity.TOP);ui.addFull(p,row,18);}
-            LinearLayout c=ui.card();
-            if(!item.corrupt)try{c.addView(new UiKit.BlockArt(this,store.load(item.projectId).project.blocks,false),new LinearLayout.LayoutParams(-1,ui.dp(140)));}catch(IOException ignored){}
-            c.addView(ui.text(item.name,22,UiKit.TEXT,true));
-            ui.addFull(c,ui.text(item.blockCount+" blocos · "+date(item.updatedAt),13,UiKit.MUTED,false),8);
-            if(item.corrupt||item.recovered)ui.addFull(c,ui.text(item.warning,14,UiKit.DANGER,false),10);
-            Button open=ui.button("Abrir projeto",true,()->openProject(item.projectId));open.setEnabled(!item.corrupt);ui.addFull(c,open,16);ui.addFull(c,ui.button("Opções do projeto",false,()->projectMenu(item)),8);addResponsiveCard(row,c,wide);
+            if(!wide||i%2==0){row=wide?ui.row():ui.vertical();row.setGravity(Gravity.TOP);ui.addFull(p,row,14);}
+            LinearLayout card=ui.card();
+            if(!item.corrupt)try{card.addView(new UiKit.BlockArt(this,store.load(item.projectId).project.blocks,false),new LinearLayout.LayoutParams(-1,ui.dp(142)));}catch(IOException ignored){}
+            LinearLayout heading=ui.row();
+            heading.addView(ui.text(item.name,21,UiKit.TEXT,true),new LinearLayout.LayoutParams(0,-2,1));
+            Button favorite=ui.button(favorites.contains(item.projectId)?"★":"☆",false,()->toggleFavorite(item.projectId));
+            favorite.setContentDescription(favorites.contains(item.projectId)?"Remover dos favoritos":"Adicionar aos favoritos");
+            heading.addView(favorite,new LinearLayout.LayoutParams(ui.dp(53),-2));
+            card.addView(heading);
+            ui.addFull(card,ui.text(item.blockCount+" blocos  ·  "+date(item.updatedAt),13,UiKit.MUTED,false),6);
+            if(item.corrupt||item.recovered)ui.addFull(card,ui.text(item.warning,14,UiKit.DANGER,false),9);
+            Button open=ui.button("Continuar criando  →",true,()->openProject(item.projectId));open.setEnabled(!item.corrupt);
+            ui.addFull(card,open,15);
+            ui.addFull(card,ui.button("Mais opções",false,()->projectMenu(item)),8);
+            addResponsiveCard(row,card,wide);
         }
     }
     private void projectMenu(ProjectStore.ProjectSummary item){
-        if(item.corrupt){new AlertDialog.Builder(this).setTitle("Arquivo indisponível").setMessage(item.warning).setPositiveButton("Fechar",null).setNegativeButton("Excluir arquivo",(d,w)->deleteProject(item)).show();return;}
-        new AlertDialog.Builder(this).setTitle(item.name).setItems(new String[]{"Renomear","Exportar JSON","Excluir"},(d,index)->{
-            if(index==0)renameProject(item);else if(index==1)try{exportProject(store.load(item.projectId).project);}catch(IOException e){error("Não foi possível exportar",e.getMessage());}else deleteProject(item);
-        }).show();
+        if(item.corrupt){
+            new AlertDialog.Builder(this).setTitle("Arquivo indisponível").setMessage(item.warning)
+                .setPositiveButton("Fechar",null).setNegativeButton("Excluir arquivo",(d,w)->deleteProject(item)).show();return;
+        }
+        new AlertDialog.Builder(this).setTitle(item.name)
+            .setItems(new String[]{"Duplicar","Renomear","Exportar JSON","Excluir"},(d,index)->{
+                if(index==0)duplicateProject(item);
+                else if(index==1)renameProject(item);
+                else if(index==2)try{exportProject(store.load(item.projectId).project);}
+                    catch(IOException e){error("Não foi possível exportar",e.getMessage());}
+                else deleteProject(item);
+            }).show();
     }
-    private void renameProject(ProjectStore.ProjectSummary item){
+
+        private void renameProject(ProjectStore.ProjectSummary item){
         if(blockForTransfer())return;
         EditText field=nameField(item.name);AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Renomear projeto").setView(field).setPositiveButton("Salvar",null).setNegativeButton("Cancelar",null).create();
         dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
@@ -367,7 +433,7 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
     private void deleteProject(ProjectStore.ProjectSummary item){
         if(blockForTransfer())return;
         new AlertDialog.Builder(this).setTitle("Excluir “"+item.name+"”?").setMessage("O projeto e sua cópia anterior serão removidos deste aparelho. Você pode exportar o JSON antes de excluir.").setNegativeButton("Cancelar",null).setPositiveButton("Excluir",(d,w)->{
-            try{store.delete(item.projectId);if(current!=null&&current.projectId.equals(item.projectId)){current=null;world.initialize(Collections.emptyList());dirty=false;projectSaved=false;sessionChanged();clearRecoveryAfterSave();prefs.edit().remove("last_project").apply();}render();toast("Projeto excluído.");}catch(IOException e){error("Exclusão não concluída",e.getMessage());render();}
+            try{store.delete(item.projectId);Set<String> next=favorites();if(next.remove(item.projectId))prefs.edit().putStringSet("favorite_projects",next).apply();if(current!=null&&current.projectId.equals(item.projectId)){current=null;world.initialize(Collections.emptyList());dirty=false;projectSaved=false;sessionChanged();clearRecoveryAfterSave();prefs.edit().remove("last_project").apply();}render();toast("Projeto excluído.");}catch(IOException e){error("Exclusão não concluída",e.getMessage());render();}
         }).show();
     }
 
