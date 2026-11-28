@@ -96,6 +96,13 @@ export const materials = [
     "pattern": 6
   }
 ];
+materials.push({id:"fabric",name:"Tecido técnico",color:0xe2e2e2,metal:0,rough:.82,pattern:6},{id:"paint",name:"Pintura automotiva",color:0xd4251d,metal:.3,rough:.4,pattern:4});
+export const detailed = {
+ wood:{color:"wood-color.jpg",normal:"wood-normal.jpg",rough:"wood-rough.jpg",repeat:3,tint:0xffffff,normalScale:.85},
+ carbon:{normal:"carbon-normal.png",ao:"carbon-ao.png",repeat:3,tint:0x313741,normalScale:1.2,anisotropy:.5},
+ fabric:{color:"fabric-color.png",normal:"fabric-normal.png",rough:"fabric-orm.png",repeat:10,tint:0xffffff,normalScale:.7,sheen:1},
+ paint:{normal:"paint-normal.png",repeat:3,tint:0xd4251d,normalScale:.2,clearcoat:1}
+};
 export const profiles = {eco:{size:256,dpr:1,segments:24,shadow:0},balanced:{size:512,dpr:1.5,segments:48,shadow:1024},ultra:{size:1024,dpr:2,segments:64,shadow:2048}};
 export const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 export function grain(x,y,seed=0){let n=Math.imul(x+seed*13,374761393)+Math.imul(y+seed*7,668265263);n=Math.imul(n^(n>>>13),1274126177);return ((n^(n>>>16))>>>0)/4294967295;}
