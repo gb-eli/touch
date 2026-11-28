@@ -70,8 +70,8 @@ public final class AppUpdater {
         if(!isEnabled())return "Atualizações da versão de produção serão feitas pela loja oficial.";
         if(busy)return "Consultando ou baixando uma atualização…";
         if(hasUpdate())return "Versão "+currentFeed.versionName+" disponível para instalar.";
-        if(currentFeed!=null&&currentFeed.newerButUnavailable(installedCode))
-            return "Versão anunciada, mas o APK ainda não foi publicado.";
+        if(currentFeed!=null&&currentFeed.apkUrl.isEmpty())
+            return "Canal de testes preparado. Ainda não existe APK assinado publicado para download.";
         if(currentFeed!=null&&currentFeed.versionCode>installedCode
                 &&currentFeed.minSdk>Build.VERSION.SDK_INT)
             return "Uma nova versão existe, mas exige um Android mais recente.";
