@@ -24,6 +24,12 @@ export function validateGLB(buffer,decode=b=>new TextDecoder('utf-8',{fatal:true
  const buffers=j.buffers||[];if(buffers.length>1||buffers.some(b=>!Number.isInteger(b.byteLength)||b.byteLength<0||b.byteLength>bin))throw Error('Buffer binário inválido.');
  const unsupported=['KHR_draco_mesh_compression','KHR_texture_basisu','EXT_meshopt_compression'];if((j.extensionsUsed||[]).some(e=>unsupported.includes(e)))throw Error('Modelo comprimido não suportado nesta versão.');
  if((j.nodes||[]).length>1500||(j.meshes||[]).length>500||(j.images||[]).length>24)throw Error('Modelo excede o limite de complexidade.');
+ // Validate the scene graph before handing untrusted structures to GLTFLoader.
+ const nodes=j.nodes||[],marks=new Uint8Array(nodes.length),parents=new Uint16Array(nodes.length);
+ const visit=(id,depth)=>{if(!Number.isInteger(id)||id<0||id>=nodes.length)throw Error('Referência de nó inválida.');if(depth>64)throw Error('Hierarquia GLB profunda demais.');if(marks[id]===1)throw Error('Ciclo na hierarquia GLB.');if(marks[id]===2)return;marks[id]=1;for(const child of nodes[id].children||[])visit(child,depth+1);marks[id]=2;};
+ for(const node of nodes){if(!node||typeof node!=='object'||node.children!==undefined&&!Array.isArray(node.children))throw Error('Nó GLB inválido.');for(const child of node.children||[]){if(!Number.isInteger(child)||child<0||child>=nodes.length)throw Error('Referência de nó inválida.');if(++parents[child]>1)throw Error('Nó GLB com múltiplos pais.');}}
+ for(let i=0;i<nodes.length;i++)if(!parents[i])visit(i,0);for(let i=0;i<nodes.length;i++)if(!marks[i])visit(i,0);
+ for(const scene of j.scenes||[])for(const id of scene.nodes||[]){if(!Number.isInteger(id)||id<0||id>=nodes.length||parents[id])throw Error('Raiz de cena GLB inválida.');}
  let count=0;for(const a of j.accessors||[]){if(!Number.isInteger(a.count)||a.count<0)throw Error('Accessor inválido.');count+=a.count;}if(count>2000000)throw Error('Modelo excede o limite de dados geométricos.');
  return j;
 }

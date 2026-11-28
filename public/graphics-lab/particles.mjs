@@ -29,7 +29,7 @@ const fragment=`
 `;
 export class ParticleEngine{
  constructor(renderer,scene){
-  this.scene=scene;this.renderer=renderer;this.pool=createPool(CAPACITY,SEED);this.id='off';this.time=0;this.running=false;this.count=0;this.disposed=false;this.intensity=1;this.density=1;
+  this.scene=scene;this.renderer=renderer;this.pool=createPool(CAPACITY,SEED);this.id='off';this.time=0;this.running=false;this.count=0;this.disposed=false;this.intensity=1;this.density=1;this.lastUpdateKey='';
   const g=this.geometry=new THREE.BufferGeometry();
   for(const [name,array,size] of [['position',this.pool.positions,3],['particleSize',this.pool.sizes,1],['particleOpacity',this.pool.opacity,1]])g.setAttribute(name,new THREE.BufferAttribute(array,size).setUsage(THREE.DynamicDrawUsage));
   g.setDrawRange(0,0);
@@ -49,7 +49,7 @@ export class ParticleEngine{
   const scale=Math.max(.5,Math.min(3.5,radius));this.points.scale.setScalar(scale);
   this.material.uniforms.worldScale.value=scale;
   this.material.uniforms.pixelScale.value=this.renderer.domElement.height*(camera?.projectionMatrix.elements[5]||1)*.5;
-  this.count=fillParticles(this.pool,this.id,this.time,count,intensity);this.geometry.setDrawRange(0,this.count);this.points.visible=this.count>0;
+  const key=[this.id,this.time,count,intensity].join(':');if(key===this.lastUpdateKey)return;this.lastUpdateKey=key;this.count=fillParticles(this.pool,this.id,this.time,count,intensity);this.geometry.setDrawRange(0,this.count);this.points.visible=this.count>0;
   if(this.count)for(const name of ['position','particleSize','particleOpacity']){const a=this.geometry.getAttribute(name);a.clearUpdateRanges();a.addUpdateRange(0,this.count*a.itemSize);a.needsUpdate=true;}
  }
  snapshot(){return {preset:this.id,playing:this.active,particles:this.count,density:this.density,intensity:this.intensity,seed:this.pool.seed,simulationTime:Math.round(this.time*1000)/1000,pointSizeLimit:this.material.uniforms.maxPointSize.value};}

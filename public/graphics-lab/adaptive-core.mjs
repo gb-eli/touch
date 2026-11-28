@@ -9,7 +9,7 @@ export function summarize(intervals,submit=[]){
 }
 export function createAdaptive(index=2){return {index:Math.max(0,Math.min(AUTO_SCALES.length-1,index)),low:0,high:0};}
 export function adapt(state,stats){
- if(!stats||stats.samples<10)return {...state,low:0,high:0};
+ if(!stats||stats.samples<2||stats.samples<10&&!(stats.elapsedMs>=1500))return {...state,low:0,high:0};
  let low=stats.fps<28||stats.p95FrameMs>50?state.low+1:0;
  let high=stats.fps>=50&&stats.p95FrameMs<=25?state.high+1:0;
  let index=state.index;
