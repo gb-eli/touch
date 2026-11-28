@@ -48,8 +48,12 @@ def main():
     if not re.search(r"^(?:minSdkVersion|sdkVersion):'26'$", badging, re.MULTILINE) or "targetSdkVersion:'35'" not in badging:
         raise ValueError("Unexpected SDK requirements in APK.")
     permission_names = re.findall(r"uses-permission[^:]*: name='([^']+)'", permissions)
-    if permission_names:
-        raise ValueError("The initial MVP must not request permissions: " + ", ".join(permission_names))
+    expected_permissions = {
+        "android.permission.INTERNET",
+        "android.permission.REQUEST_INSTALL_PACKAGES",
+    }
+    if set(permission_names) != expected_permissions:
+        raise ValueError("Unexpected permissions for the opt-in update channel: " + ", ".join(permission_names))
     with zipfile.ZipFile(apk) as archive:
         names = archive.namelist()
         if "classes.dex" not in names or "AndroidManifest.xml" not in names:

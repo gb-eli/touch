@@ -1,8 +1,8 @@
-# TV Touch Android — MVP 0.1.1-dev
+# TV Touch Android — MVP 0.1.2-dev
 
 Aplicativo Android nativo de construção com blocos 3D, missões e projetos locais. O MVP usa **Java, Views Android e OpenGL ES 2.0**, com um código compartilhado para o Galaxy S25 Ultra e a Samsung WA86F. A decisão de implementação e sua relação com o planejamento inicial estão registradas em [Arquitetura e build](../docs/android/BUILD.md).
 
-O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev`, versão **`0.1.1-dev`**, código **`4`**, e aparece no launcher como **AGV Touch · Teste**. O aceite físico no S25 Ultra e na WA86F está **pendente**; execução em um aparelho ou emulador não homologa o outro.
+O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev`, versão **`0.1.2-dev`**, código **`5`**, e aparece no launcher como **AGV Touch · Teste**. O aceite físico no S25 Ultra e na WA86F está **pendente**; execução em um aparelho ou emulador não homologa o outro.
 
 ## Telas e funções implementadas
 
@@ -13,7 +13,7 @@ O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev`, versão **`0.
 | **Missão** | Prévia do objetivo, instruções e início da atividade escolhida. |
 | **Construtor** | Seleção e confirmação de posições, adicionar/apagar blocos, girar, aproximar, afastar, enquadrar a construção e escolher coordenadas. Nove materiais, desfazer/refazer, contagem e progresso. |
 | **Projetos** | Salvar, abrir, renomear, excluir mediante confirmação, importar e exportar JSON. |
-| **Ajustes** | Perfil visual, preferência de movimento reduzido, limite de renderização de 30/60 FPS e diagnóstico local exportável. |
+| **Ajustes** | Perfil visual, preferência de movimento reduzido, limite de renderização de 30/60 FPS, atualizações verificadas e diagnóstico local exportável. |
 
 A grade mede **8 × 8 × 6**, com até **256 blocos** e **40 estados anteriores** no histórico. O histórico é preservado na mudança de configuração da atividade; a restauração após encerramento do processo recupera o projeto, sem prometer o histórico completo da sessão anterior.
 
@@ -65,7 +65,7 @@ O diagnóstico informa aparelho, Android, arquiteturas, janela, renderizador, ú
 
 ## Próximas experiências
 
-**Câmera, ARCore/realidade aumentada, reconhecimento corporal ou de mãos e VR não estão implementados neste APK.** O acesso ao laboratório de câmera apresenta informação sobre essas próximas etapas. O manifesto não solicita câmera, microfone ou internet nesta versão.
+**Câmera, ARCore/realidade aumentada, reconhecimento corporal ou de mãos e VR não estão implementados neste APK.** O acesso ao laboratório de câmera apresenta informação sobre essas próximas etapas. O manifesto não solicita câmera ou microfone. A permissão de internet permite somente consultar o catálogo e baixar APKs quando o usuário solicita a atualização.
 
 A implementação futura de RA terá validação inicial no S25 Ultra. Captura externa na WA86F dependerá do caminho de câmera realmente exposto pelo aparelho. VR exigirá definição de equipamento e experiência próprios.
 
@@ -87,3 +87,13 @@ O runner `tests/run-core-tests.sh` executa conformidade com o modelo web, valida
 ## Aceite
 
 Execute e preencha o [roteiro de aceite](../docs/android/ACCEPTANCE.md). Ele separa testes em casa, testes na escola e regressões de sessão/dados. Uma compilação bem-sucedida e testes de domínio não substituem o uso do APK no Android nem o aceite físico da WA86F.
+
+## Atualização pelo próprio aplicativo (canal de testes)
+
+Em **Ajustes → Atualizações do aplicativo**, o usuário pode consultar o catálogo público, conhecer a versão nova e baixar o APK após confirmar. Na abertura do aplicativo há uma checagem no máximo a cada 24 horas. O resultado é discreto; o núcleo 3D continua totalmente offline. O app não envia nome de projeto, diagnóstico nem identificadores ao catálogo.
+
+O catálogo fixo é `https://raw.githubusercontent.com/gb-eli/touch/main/docs/android/updates/dev.json`. Apenas o pacote `br.com.agv.touch.dev` é aceito; o instalador exige APK HTTPS de um release do repositório, código maior que o instalado, tamanho declarado, SHA-256 e mesma assinatura do app já instalado. Ao receber um pacote válido, o app permite abrir o instalador Android, que exige confirmação explícita e, quando necessário, autorização de instalação dessa origem. **Não há instalação silenciosa.** Uma versão publicada com certificado diferente é rejeitada.
+
+O JSON entregue inicialmente **não contém APK**: o canal só oferecerá download depois que um release for assinado com a mesma chave de desenvolvimento da instalação atual e os metadados forem publicados. É preciso uma última instalação manual do APK 0.1.2-dev para habilitar o fluxo. Builds efêmeras do GitHub Actions usam outra chave e **não são atualizações compatíveis**. Caso se adote Play Store, substituir o mecanismo por Play In-App Updates na variante de produção, removendo a permissão de instalação de APKs.
+
+A URL de release deve apontar para uma versão assinada e verificada. Não publique chaves, backups de keystore ou senhas no repositório. A instalação pela TV pode estar bloqueada por políticas de administração; nesse caso, o app apresenta o bloqueio e conserva os dados.

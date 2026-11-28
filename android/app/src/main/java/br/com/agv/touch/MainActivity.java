@@ -28,6 +28,7 @@ import br.com.agv.touch.core.ProjectCodec;
 import br.com.agv.touch.core.ProjectStore;
 import br.com.agv.touch.core.ProjectTransfers;
 import br.com.agv.touch.core.VoxelWorld;
+import br.com.agv.touch.updates.AppUpdater;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Collections;
@@ -56,6 +57,7 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
     private String gpu="Abra o construtor para detectar";
     private String sessionToken=UUID.randomUUID().toString(),pendingImportToken;
     private ProjectTransfers transfers;
+    private AppUpdater updater;
     private AlertDialog transferDialog;
     private boolean interruptedTransfer,resetEditorCamera;
 
@@ -86,8 +88,10 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
             if(id!=null)try{ProjectStore.LoadResult r=store.load(id);current=r.project;world.initialize(current.blocks);mission=current.mission;projectSaved=true;dirty=r.recovered;if(r.recovered)storageWarning=r.warning;}catch(IOException ignored){ }
         }
         if("builder".equals(screen)&&current==null)screen="home";
+        updater=new AppUpdater(this,prefs,()->{if("settings".equals(screen))render();});
         render();
         if(!retained&&store!=null)content.post(()->offerRecovery(state!=null));
+        content.post(()->{if(updater!=null)updater.checkIfDue();});
     }
 
     @Override protected void onSaveInstanceState(Bundle out) {
@@ -98,8 +102,8 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
         if(current!=null)try{out.putString("project",ProjectCodec.encode(snapshot(current.name)));}catch(Exception ignored){persistRecovery();}
     }
     @Override protected void onPause(){if(transfers!=null)transfers.detach();dismissTransferDialog();persistRecovery();if(builder!=null)builder.scene.onPause();super.onPause();}
-    @Override protected void onResume(){super.onResume();if(builder!=null)builder.scene.onResume();if(transfers!=null)transfers.attach(this);if(interruptedTransfer){interruptedTransfer=false;Toast.makeText(this,"A sessão de transferência foi interrompida pelo sistema. Confira Projetos e o arquivo de destino antes de tentar novamente.",Toast.LENGTH_LONG).show();}}
-    @Override protected void onDestroy(){dismissTransferDialog();if(transfers!=null){transfers.detach();if(!isChangingConfigurations())transfers.close();}super.onDestroy();}
+    @Override protected void onResume(){super.onResume();if(updater!=null)updater.onResume();if(builder!=null)builder.scene.onResume();if(transfers!=null)transfers.attach(this);if(interruptedTransfer){interruptedTransfer=false;Toast.makeText(this,"A sessão de transferência foi interrompida pelo sistema. Confira Projetos e o arquivo de destino antes de tentar novamente.",Toast.LENGTH_LONG).show();}}
+    @Override protected void onDestroy(){if(updater!=null)updater.close();dismissTransferDialog();if(transfers!=null){transfers.detach();if(!isChangingConfigurations())transfers.close();}super.onDestroy();}
     @Override public Object onRetainNonConfigurationInstance(){return new RetainedSession(world,transfers);}
     @Override public void onBackPressed(){
         if(blockForTransfer())return;
@@ -261,6 +265,20 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
         ui.addFull(controls,ui.text("O MVP usa movimento apenas nos controles da cena. Esta preferência será preservada para as próximas experiências.",13,UiKit.MUTED,false),4);
         ui.addFull(controls,ui.button("Limite de renderização: "+prefs.getInt("target_fps",30)+" FPS",false,()->new AlertDialog.Builder(this).setTitle("Limite de renderização").setItems(new String[]{"30 FPS · referência inicial","60 FPS · avaliar no aparelho"},(d,index)->{prefs.edit().putInt("target_fps",index==0?30:60).apply();render();}).setNegativeButton("Cancelar",null).show()),16);
         ui.addFull(controls,ui.text("Este é um limite configurado. O desempenho obtido será medido durante o uso.",13,UiKit.MUTED,false),10);p.addView(controls);
+        LinearLayout updates=ui.card();updates.addView(ui.text("Atualizações do aplicativo",22,UiKit.TEXT,true));
+        ui.addFull(updates,ui.text("Versão instalada: "+appVersion(),15,UiKit.TEXT,false),10);
+        ui.addFull(updates,ui.text(updater==null?"Atualizador inicializando…":updater.status(),14,UiKit.MUTED,false),8);
+        if(updater!=null&&updater.isEnabled()){
+            Button checkUpdates=ui.button("Verificar atualizações",false,()->updater.check(true));
+            checkUpdates.setEnabled(!updater.isBusy());
+            ui.addFull(updates,checkUpdates,14);
+            if(updater.hasUpdate()){
+                ui.addFull(updates,ui.text(updater.releaseNotes(),14,UiKit.TEXT,false),10);
+                ui.addFull(updates,ui.button("Baixar e instalar "+updater.latestVersion(),true,()->updater.download()),10);
+            }
+        }
+        ui.addFull(updates,ui.text("Somente o canal Android de testes. A instalação de APKs exige autorização e confirmação do Android; seus projetos locais são preservados se o aplicativo for atualizado com a mesma identidade e assinatura.",13,UiKit.MUTED,false),12);
+        ui.addFull(p,updates,18);
         LinearLayout diag=ui.card();diag.addView(ui.text("Diagnóstico local",22,UiKit.TEXT,true));
         diagLine(diag,"Aparelho",Build.MANUFACTURER+" "+Build.MODEL);diagLine(diag,"Sistema","Android "+Build.VERSION.RELEASE+" · API "+Build.VERSION.SDK_INT);diagLine(diag,"Arquiteturas",String.join(", ",Build.SUPPORTED_ABIS));
         android.util.DisplayMetrics metrics=getResources().getDisplayMetrics();diagLine(diag,"Janela",metrics.widthPixels+" × "+metrics.heightPixels+" px · "+getResources().getConfiguration().screenWidthDp+" dp de largura");
