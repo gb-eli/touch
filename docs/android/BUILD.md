@@ -11,11 +11,11 @@ O aplicativo inicial não depende de um site ou WebView para renderizar as ativi
 - Namespace: `br.com.agv.touch`.
 - Aplicativo de desenvolvimento: `br.com.agv.touch.dev`.
 - Nome no launcher da variante de desenvolvimento: `AGV Touch · Teste`.
-- Revisão atual: `0.1.1-dev`, código `4` (revisão de controles, enquadramento, recuperação e transferências).
+- Revisão atual: `0.1.2-dev`, código `5` (revisão de controles, enquadramento, recuperação e transferências).
 - Android mínimo: API 26. Compilação e alvo: API 35.
 - Gráficos: OpenGL ES 2.0 obrigatório; toque e RA não filtram a instalação.
 - Fontes Java compatíveis com Java 8; compilação com JDK 17 ou superior.
-- Sem permissões de internet, câmera ou microfone nesta primeira configuração.
+- Sem permissões de câmera ou microfone. A versão de testes inclui `INTERNET` e `REQUEST_INSTALL_PACKAGES` apenas para consultar releases assinados e encaminhar instalação confirmada pelo Android.
 - Nenhuma biblioteca nativa específica de ABI é empacotada pelo MVP inicial. Isso evita antecipar uma restrição ARM32/ARM64 antes do diagnóstico da WA86F. Plugins futuros podem mudar essa propriedade.
 
 O Samsung Galaxy S25 Ultra é o aparelho de testes portáteis. A Samsung WA86F é o alvo de sala de aula. Instalação, resolução, entrada de toque e desempenho da WA86F precisam de aceite no aparelho real; execução no telefone ou em emulador não substitui essa etapa.
@@ -77,9 +77,9 @@ O smoke de navegador também esperava oito atalhos, embora o link TECH NEWS já 
 
 Gradle usa uma chave de desenvolvimento local. Para isolar a chave deste projeto, defina `AGV_DEBUG_KEYSTORE` com o caminho de um keystore de desenvolvimento, alias `androiddebugkey` e senha padrão de teste `android`. A chave deve permanecer fora do repositório. Não use essa chave de teste para uma publicação de produção.
 
-O APK de teste entregue com esta candidata usa a chave de desenvolvimento do projeto, preservada em backup privado fora do Git. Os artefatos de APK produzidos pelo CI podem ter outro certificado de debug e não substituem automaticamente o APK entregue como uma atualização; preservar a instalação existente exige a mesma assinatura.
+O APK de teste 0.1.1 anteriormente entregue usa a chave de desenvolvimento do projeto, preservada em backup privado fora do Git. **A revisão 0.1.2 ainda não tem APK assinado com essa chave publicado.** Os artefatos de APK produzidos pelo CI podem ter outro certificado de debug e não substituem automaticamente o APK entregue como uma atualização; preservar a instalação existente exige a mesma assinatura.
 
-O projeto não inclui credenciais de produção nem uma configuração que publique automaticamente. A assinatura de produção, o canal de distribuição e a política de atualizações são decisões posteriores.
+O projeto não inclui credenciais de produção nem uma configuração que publique automaticamente. A assinatura de produção e o canal de distribuição definitivo continuam pendentes. A variante de desenvolvimento 0.1.2 inclui o canal experimental documentado em `android/README.md`; não disponibilizar APK de CI como atualização do 0.1.1, pois o certificado pode ser diferente. Publicar primeiro o APK assinado e só depois preencher `docs/android/updates/dev.json` com URL, bytes e SHA-256. O canal de produção pela Google Play deverá utilizar o mecanismo da loja, sem `REQUEST_INSTALL_PACKAGES` para autoatualização.
 
 Builds de desenvolvimento precisam usar a mesma chave para atualizar uma instalação existente. Os runners novos do CI geram chaves de teste próprias; um APK de outro runner pode exigir reinstalação. Exporte as construções antes de trocar para um build assinado por outra chave. Uma futura versão de produção usará identidade e assinatura próprias.
 
