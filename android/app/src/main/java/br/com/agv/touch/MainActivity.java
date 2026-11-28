@@ -330,8 +330,11 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
     private void missionResult(){
         VoxelWorld.Progress progress=world.progress(mission);if(!progress.complete)return;
         prefs.edit().putBoolean("mission_done_"+mission,true).apply();
-        LinearLayout panel=ui.vertical();panel.setPadding(ui.dp(22),0,ui.dp(22),ui.dp(12));panel.addView(new UiKit.BlockArt(this,world.blocks(),false),new LinearLayout.LayoutParams(-1,ui.dp(170)));
-        panel.addView(ui.text("Você completou as "+progress.total+" posições de "+missionTitle(mission)+". Sua construção continua disponível para explorar.",16,UiKit.PAPER,false));
+        LinearLayout panel=ui.vertical();panel.setPadding(ui.dp(22),ui.dp(9),ui.dp(22),ui.dp(16));
+        panel.addView(ui.overline("✦  DESAFIO CONCLUÍDO",UiKit.VIOLET));
+        ui.addFull(panel,ui.text("Você conseguiu!",25,UiKit.TEXT,true),9);
+        panel.addView(new UiKit.BlockArt(this,world.blocks(),false),new LinearLayout.LayoutParams(-1,ui.dp(170)));
+        ui.addFull(panel,ui.text("Você completou as "+progress.total+" posições de "+missionTitle(mission)+". Essa conquista foi registrada na sua jornada.",16,UiKit.TEXT,false),8);
         new AlertDialog.Builder(this).setTitle("Objetivo concluído!").setView(panel).setPositiveButton("Salvar projeto",(d,w)->saveDialog(null)).setNegativeButton("Continuar criando",null).setNeutralButton("Ver outras missões",(d,w)->navigate("explore")).show();
     }
 
