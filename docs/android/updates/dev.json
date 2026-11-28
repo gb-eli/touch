@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "packageName": "br.com.agv.touch.dev",
+  "versionCode": 5,
+  "versionName": "0.1.2-dev",
+  "minSdk": 26,
+  "notes": "Atualizador interno em testes. O APK assinado ainda não foi publicado; consulte a PR #40.",
+  "apkUrl": "",
+  "sizeBytes": 0,
+  "sha256": ""
+}
