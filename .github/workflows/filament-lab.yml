@@ -1,0 +1,88 @@
+name: AGV Filament Lab | isolated APK
+on:
+  push:
+    branches: [feat/android-filament-lab]
+    paths:
+      - '.github/workflows/filament-lab.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: filament-lab-apk
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/feat/android-filament-lab'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Set up JDK
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+          cache-dependency-path: |
+            android/filament-lab/**/*.gradle
+            android/gradle/wrapper/gradle-wrapper.properties
+      - name: Prepare Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdk="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          test -d "$sdk"
+          echo "ANDROID_HOME=$sdk" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$sdk" >> "$GITHUB_ENV"
+          if [ ! -f "$sdk/platforms/android-35/android.jar" ] || [ ! -x "$sdk/build-tools/35.0.1/apksigner" ] || [ ! -x "$sdk/build-tools/35.0.1/aapt2" ]; then
+            manager="$(find "$sdk/cmdline-tools" -type f -name sdkmanager | head -n 1)"
+            test -n "$manager"
+            "$manager" --sdk_root="$sdk" 'platforms;android-35' 'build-tools;35.0.1'
+          fi
+          test -f "$sdk/platforms/android-35/android.jar"
+          test -x "$sdk/build-tools/35.0.1/aapt2"
+          test -x "$sdk/build-tools/35.0.1/apksigner"
+      - name: Run native statistics contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          classes="$(mktemp -d)"
+          javac -d "$classes" filament-lab/app/src/main/java/br/com/agv/touch/filamentlab/FrameStats.java filament-lab/tests/FrameStatsTest.java
+          java -cp "$classes" br.com.agv.touch.filamentlab.FrameStatsTest
+      - name: Build only the experimental package
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash gradlew -p filament-lab --no-daemon :app:assembleDebug :app:lintDebug
+      - name: Verify package, signature and binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p filament-lab/app/build/verified
+          python3 filament-lab/tools/verify_apk.py filament-lab/app/build/outputs/apk/debug/app-debug.apk --out filament-lab/app/build/verified/apk-verification.json
+          cp filament-lab/app/build/outputs/apk/debug/app-debug.apk filament-lab/app/build/verified/AGV_FILAMENT_LAB_2.0_ALPHA2.apk
+          git rev-parse HEAD > filament-lab/app/build/verified/source-commit.txt
+      - name: Upload verified experimental APK
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: agv-filament-lab-alpha2-${{ github.run_number }}
+          path: android/filament-lab/app/build/verified/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Upload lint evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: agv-filament-lint-${{ github.run_number }}
+          path: android/filament-lab/app/build/reports/lint-results-debug.*
+          if-no-files-found: ignore
+          retention-days: 7
