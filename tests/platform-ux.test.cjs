@@ -78,7 +78,7 @@ test('Som ao clicar e motor Arcade 4K preservados',()=>{
 
 test('Assets offline e scripts compilam',()=>{
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.8\.0-landscape-gesture-qa/);
+  assert.match(sw,/tvtouch-studio-v3\.8\.0-tech-news-v2/);
   for(const file of ['agv-ux.css','platform-ux.js','agv-synapse-crystal.svg','arcade.js'])
     assert.ok(sw.includes(file),file);
   for(const file of ['public/js/platform-ux.js','public/js/site-synapses.js','public/js/app.js','public/js/arcade.js','public/service-worker.js'])

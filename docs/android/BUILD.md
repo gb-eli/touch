@@ -11,7 +11,7 @@ O aplicativo inicial não depende de um site ou WebView para renderizar as ativi
 - Namespace: `br.com.agv.touch`.
 - Aplicativo de desenvolvimento: `br.com.agv.touch.dev`.
 - Nome no launcher da variante de desenvolvimento: `AGV Touch · Teste`.
-- Versão inicial: `0.1.0-dev`, código `1`.
+- Versão inicial: `0.1.0-dev`, código `2` (segunda candidata de teste).
 - Android mínimo: API 26. Compilação e alvo: API 35.
 - Gráficos: OpenGL ES 2.0 obrigatório; toque e RA não filtram a instalação.
 - Fontes Java compatíveis com Java 8; compilação com JDK 17 ou superior.
@@ -51,9 +51,13 @@ O workflow `.github/workflows/android.yml` executa o contrato entre o modelo Jav
 
 Os testes JVM usam `org.json:json:20240303` somente como dependência de teste. O aplicativo usa `org.json` do Android; o JAR de testes não é empacotado no APK. O download do CI é conferido contra o SHA-256 `3cf6cd6892e32e2b4c1c39e0f52f5248a2f5b37646fdfbb79a66b46b618414ed`.
 
+Na primeira execução da PR, o runner tinha os pacotes Android necessários, mas `sdkmanager` não estava no `PATH`. O workflow agora resolve e exporta a raiz do SDK, verifica a plataforma 35 e as ferramentas 35.0.1 e só procura o instalador pelo caminho absoluto se algum pacote estiver ausente. As oito expectativas antigas de cache nos testes web também foram alinhadas a `tvtouch-studio-v3.8.0-tech-news-v2`, valor já presente na `main`; o service worker de produção e as demais asserções foram preservados.
+
 ## Assinatura e distribuição
 
 Gradle usa uma chave de desenvolvimento local. Para isolar a chave deste projeto, defina `AGV_DEBUG_KEYSTORE` com o caminho de um keystore de desenvolvimento, alias `androiddebugkey` e senha padrão de teste `android`. A chave deve permanecer fora do repositório. Não use essa chave de teste para uma publicação de produção.
+
+O APK de teste entregue com esta candidata usa a chave de desenvolvimento do projeto, preservada em backup privado fora do Git. Os artefatos de APK produzidos pelo CI podem ter outro certificado de debug e não substituem automaticamente o APK entregue como uma atualização; preservar a instalação existente exige a mesma assinatura.
 
 O projeto não inclui credenciais de produção nem uma configuração que publique automaticamente. A assinatura de produção, o canal de distribuição e a política de atualizações são decisões posteriores.
 

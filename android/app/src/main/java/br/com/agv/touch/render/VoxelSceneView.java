@@ -148,7 +148,7 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
         GLES20.glUseProgram(program);
         float aspect=(float)viewWidth/viewHeight;
         float a=(float)Math.toRadians(yaw),p=(float)Math.toRadians(pitch),d=distance*Math.max(1f,1.05f/aspect);
-        Matrix.perspectiveM(projection,0,42,aspect,.1f,100f);
+        Matrix.perspectiveM(projection,0,42,aspect,.5f,100f);
         Matrix.setLookAtM(view,0,(float)(Math.cos(a)*Math.cos(p)*d),(float)(Math.sin(p)*d+1),(float)(Math.sin(a)*Math.cos(p)*d),0,1,0,0,1,0);
         Matrix.multiplyMM(pv,0,projection,0,view,0);
         float[] inv=new float[16]; if(Matrix.invertM(inv,0,pv,0)){inverse=inv;inverseReady=true;}
@@ -157,7 +157,10 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
             float tint=(x+z)%2==0?.91f:.94f;
             draw(floor,floorNormals,6,GLES20.GL_TRIANGLES,x-3.5f,-.015f,z-3.5f,1,new float[]{tint,tint+.025f,tint+.005f,1},false);
         }
+        // Grid lines precede all blocks; disable depth here to avoid coplanar flicker.
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         draw(grid,null,gridVertices,GLES20.GL_LINES,0,0,0,1,new float[]{.76f,.82f,.78f,1},false);
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         List<VoxelWorld.Block> blocks=world.blocks();
         for(VoxelWorld.Block b:blocks) draw(cube,cubeNormals,36,GLES20.GL_TRIANGLES,b.x-3.5f,b.y+.5f,b.z-3.5f,.97f,rgba(VoxelWorld.materialColor(b.material),1),true);
         GLES20.glEnable(GLES20.GL_BLEND);GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA,GLES20.GL_ONE_MINUS_SRC_ALPHA);GLES20.glDepthMask(false);

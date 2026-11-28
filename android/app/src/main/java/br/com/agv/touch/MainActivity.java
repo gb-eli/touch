@@ -125,7 +125,7 @@ public final class MainActivity extends Activity {
             LinearLayout item=rail?ui.row():ui.vertical();item.setGravity(Gravity.CENTER);item.setPadding(ui.dp(rail?14:2),ui.dp(10),ui.dp(rail?10:2),ui.dp(10));
             item.setBackground(ui.shape(chosen?0xff23404d:UiKit.INK,14));item.setClickable(true);item.setFocusable(true);item.setSelected(chosen);item.setContentDescription(d[1]+(chosen?", selecionado":""));
             item.addView(new UiKit.Icon(this,d[0],chosen?UiKit.LIME:0xffc4d3d7),new LinearLayout.LayoutParams(ui.dp(22),ui.dp(22)));
-            TextView label=ui.text(d[1],rail?15:12,chosen?UiKit.PAPER:0xffc4d3d7,chosen);if(rail)label.setPadding(ui.dp(12),0,0,0);else label.setPadding(0,ui.dp(4),0,0);item.addView(label);item.setOnClickListener(v->navigate(d[0]));
+            TextView label=ui.text(d[1],rail?15:12,chosen?UiKit.PAPER:0xffc4d3d7,chosen);label.setGravity(rail?Gravity.CENTER_VERTICAL:Gravity.CENTER);if(rail)label.setPadding(ui.dp(12),0,0,0);else label.setPadding(0,ui.dp(4),0,0);item.addView(label);item.setOnClickListener(v->navigate(d[0]));
             LinearLayout.LayoutParams p=rail?new LinearLayout.LayoutParams(-1,ui.dp(56)):new LinearLayout.LayoutParams(0,-1,1);if(rail)p.topMargin=ui.dp(8);nav.addView(item,p);
         }
         if(rail){ui.addGap(nav,28);nav.addView(ui.text("Seu espaço de criação",12,0xffa7bdc5,false));}

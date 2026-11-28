@@ -60,7 +60,9 @@ final class BuilderScreen extends LinearLayout {
 
         LinearLayout dock=ui.vertical();dock.setPadding(ui.dp(12),ui.dp(10),ui.dp(12),ui.dp(10));dock.setBackgroundColor(UiKit.PAPER);
         LinearLayout toolRow=ui.row();
+        if(getResources().getConfiguration().screenWidthDp>=840)addSpaced(toolRow,ui.button("Voltar",false,host::back));
         addTool(toolRow,"add","Adicionar");addTool(toolRow,"erase","Apagar");addTool(toolRow,"orbit","Girar");
+        addSpaced(toolRow,ui.button("Salvar projeto",true,host::save));
         if(compact)addSpaced(toolRow,ui.button("Material",false,this::chooseMaterial));
         addSpaced(toolRow,ui.button("Coordenadas",false,this::chooseCoordinates));
         addSpaced(toolRow,ui.button("Girar à esquerda",false,()->scene.orbit(30)));

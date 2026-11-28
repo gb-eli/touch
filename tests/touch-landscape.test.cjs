@@ -48,7 +48,7 @@ test('Contraste da paleta e cache da interface permanecem locais',()=>{
     assert.ok(css.includes(color),color+' preserva acento vibrante');
   assert.doesNotMatch(css,/https?:\/\//);
   const sw=read('public/service-worker.js');
-  assert.match(sw,/tvtouch-studio-v3\.8\.0-landscape-gesture-qa/);
+  assert.match(sw,/tvtouch-studio-v3\.8\.0-tech-news-v2/);
   assert.ok(sw.includes('./css/touch-vivid.css'));
   assert.ok(sw.includes('./js/touch-fullscreen.js'));
 });

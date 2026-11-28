@@ -45,7 +45,40 @@ jobs:
             android/app/build.gradle
             android/gradle/wrapper/gradle-wrapper.properties
       - name: Prepare SDK packages
-        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.1'
+        run: |
+          set -euo pipefail
+          agv_sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ ! -d "$agv_sdk_root" ]; then
+            printf '::error::Android SDK not found at %s\n' "$agv_sdk_root"
+            exit 1
+          fi
+          export ANDROID_HOME="$(cd "$agv_sdk_root" && pwd -P)"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          printf 'ANDROID_HOME=%s\nANDROID_SDK_ROOT=%s\n' \
+            "$ANDROID_HOME" "$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          agv_sdk_ready() {
+            test -f "$ANDROID_HOME/platforms/android-35/android.jar" &&
+            test -x "$ANDROID_HOME/build-tools/35.0.1/aapt2" &&
+            test -x "$ANDROID_HOME/build-tools/35.0.1/zipalign" &&
+            test -x "$ANDROID_HOME/build-tools/35.0.1/apksigner"
+          }
+          if ! agv_sdk_ready; then
+            agv_sdkmanager=""
+            for agv_candidate in "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+              "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager; do
+              if [ -x "$agv_candidate" ]; then
+                agv_sdkmanager="$agv_candidate"
+                break
+              fi
+            done
+            if [ -z "$agv_sdkmanager" ]; then
+              printf '::error::SDK packages are missing and sdkmanager was not found under %s\n' "$ANDROID_HOME"
+              exit 1
+            fi
+            "$agv_sdkmanager" --sdk_root="$ANDROID_HOME" \
+              'platforms;android-35' 'build-tools;35.0.1'
+          fi
+          agv_sdk_ready
       - name: Check voxel contract fixture
         working-directory: .
         run: |
