@@ -36,6 +36,8 @@ Salvar nesta prévia grava apenas no `localStorage` do navegador, com indicaçã
 
 ## Referências visuais
 
+A revisão 0.1.1 acrescenta [capturas e relatório da paisagem curta em 844 × 390](evidence/review-0.1.1/README.md). O conjunto abaixo preserva a referência inicial.
+
 As capturas incluem uma construção de cores e uma ponte produzidas em uma sessão isolada de verificação. São exemplos de demonstração, não dados de usuários nem projetos pré-carregados no produto.
 
 | Referência | Paisagem 1280 × 720 | Móvel 412 × 915 |

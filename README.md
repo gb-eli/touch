@@ -1,10 +1,11 @@
 # TV TOUCH · AGV
 
-## Aplicativo Android · MVP 0.1
+## Aplicativo Android · MVP 0.1.1
 
-O repositório agora inclui a primeira implementação Android nativa para testar no **Galaxy S25 Ultra** e, separadamente, na **Samsung WA86F de 86″**. O MVP reúne construtor 3D por toque, nove materiais, quatro missões, projetos locais, recuperação de rascunhos, importação/exportação JSON e diagnóstico. A câmera, a realidade aumentada e o reconhecimento corporal têm etapas próprias de desenvolvimento e não são simulados pelo APK inicial.
+O repositório inclui o app Android nativo **0.1.1-dev, código 4**, para testar no **Galaxy S25 Ultra** e, separadamente, na **Samsung WA86F de 86″**. O MVP reúne construtor 3D por toque, nove materiais, quatro missões, projetos locais, recuperação de rascunhos, importação/exportação JSON e diagnóstico. Esta revisão melhora o espaço do construtor, o enquadramento da câmera, os controles com fonte ampliada e a segurança de recuperação e transferência dos projetos. Câmera do dispositivo, realidade aumentada, reconhecimento corporal e VR ainda não estão implementados; o aceite físico nos dois aparelhos permanece pendente.
 
 - [Aplicativo: funcionalidades e instruções](android/README.md).
+- [Revisão 0.1.1: melhorias, resultados e pendências](docs/android/REVIEW_0.1.1.md).
 - [Mapa de telas, baixa e alta fidelidade navegáveis](docs/app-design/README.md).
 - [Arquitetura Android e compilação](docs/android/BUILD.md).
 - [Contrato de compatibilidade com os projetos do site](docs/android/DOMAIN_CONTRACT.md).

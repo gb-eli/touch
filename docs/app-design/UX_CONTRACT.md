@@ -92,3 +92,5 @@ A implementação nativa usa um painel lateral quando a janela tem pelo menos 60
 O botão **Ferramentas** reúne coordenadas, enquadramento, zoom e rotação. A posição escolhida no diálogo de coordenadas é lembrada durante a sessão da tela. Adicionar, apagar, desfazer e refazer produzem mensagens específicas, separadas das instruções de seleção. A preferência de movimento reduzido remove as transições dessas mensagens.
 
 **Enquadrar construção** considera o piso inteiro, a altura existente e o objetivo da missão. O enquadramento se adapta à proporção da janela, preserva o zoom escolhido na rotação e não muda automaticamente a cada bloco. O token de texto secundário foi escurecido para melhorar a leitura nos fundos claros.
+
+Em retrato com fonte do sistema ampliada acima de 120%, o construtor nativo coloca **Desfazer/Refazer** em uma linha e a confirmação em outra, usando toda a largura. Essa adaptação evita quebrar palavras do comando principal em telas estreitas.

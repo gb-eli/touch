@@ -177,8 +177,14 @@ final class BuilderScreen extends LinearLayout {
             ui.addFull(dock,choices,8);
         }
         dock.addView(status,new LayoutParams(-1,-2));
-        LinearLayout actions=ui.row();spaced(actions,undo);spaced(actions,redo);
-        actions.addView(confirm,new LayoutParams(0,-2,1));dock.addView(actions,new LayoutParams(-1,-2));
+        LinearLayout actions=ui.row();
+        if(!wide&&getResources().getConfiguration().fontScale>1.2f){
+            weighted(actions,undo,0);weighted(actions,redo,8);
+            dock.addView(actions,new LayoutParams(-1,-2));ui.addFull(dock,confirm,8);
+        }else{
+            spaced(actions,undo);spaced(actions,redo);
+            actions.addView(confirm,new LayoutParams(0,-2,1));dock.addView(actions,new LayoutParams(-1,-2));
+        }
         ui.addFull(dock,result,8);return dock;
     }
 

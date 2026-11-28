@@ -1,5 +1,7 @@
 # Evidências do MVP Android e dos protótipos
 
+A revisão atual **0.1.1-dev / código 4** está em [review-0.1.1](review-0.1.1/README.md). O restante desta página preserva o registro histórico de 0.1.0.
+
 Este diretório registra o que foi efetivamente verificado no MVP `0.1.0-dev`. O pacote entregue é `br.com.agv.touch.dev`, código de versão **3**, nome no launcher **AGV Touch · Teste**. O identificador da árvore Git Android e o SHA-256 do APK estão em [apk-verification.json](apk-verification.json).
 
 ## Como ler os resultados

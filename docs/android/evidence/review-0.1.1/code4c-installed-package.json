@@ -1,0 +1,11 @@
+{
+  "applicationId": "br.com.agv.touch.dev",
+  "versionCode": 4,
+  "versionName": "0.1.1-dev",
+  "minSdk": 26,
+  "targetSdk": 35,
+  "apk_sha256": "392cceaf1f3a0672b28d29e4d0da5654562f74b696181a3b8be555200e96d782",
+  "android_api": "28",
+  "android_release": "9",
+  "abi": "x86"
+}

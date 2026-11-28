@@ -45,7 +45,7 @@ Os projetos explícitos e o rascunho de recuperação são armazenados separadam
 
 Descartar alterações de um projeto recuperado exige primeiro abrir sua versão salva ou uma cópia anterior válida. Se ambas estiverem ilegíveis, o rascunho permanece disponível e o app informa o erro. Essa proteção também vale para **Descartar rascunho** no aviso de recuperação ao iniciar. Um rascunho novo, sem projeto salvo associado, pode ser descartado após a escolha explícita.
 
-Em **Projetos → Importar JSON**, o app aceita o formato voxel legado `version:1` e suas próprias exportações. Valida UTF-8, tamanho, tipos, coordenadas, materiais e duplicatas antes de salvar; bytes de texto inválidos são rejeitados. **Cada importação recebe um novo UUID**: identidades recebidas no arquivo não substituem projetos existentes nem definem caminhos locais.
+Em **Projetos → Importar JSON**, o app aceita o formato voxel legado `version:1` e suas próprias exportações. O seletor permite escolher arquivos sem depender da classificação MIME do provedor; é o conteúdo que precisa passar pela validação JSON. Valida UTF-8, tamanho, tipos, coordenadas, materiais e duplicatas antes de salvar; bytes de texto inválidos são rejeitados. **Cada importação recebe um novo UUID**: identidades recebidas no arquivo não substituem projetos existentes nem definem caminhos locais.
 
 Para obter uma cópia externa, use **Projetos → Opções do projeto → Exportar JSON** e escolha o destino no seletor de arquivos Android. O núcleo funciona offline; para testar importação/exportação sem rede, escolha um provedor de arquivos local.
 

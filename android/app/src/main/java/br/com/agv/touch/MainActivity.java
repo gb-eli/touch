@@ -330,7 +330,7 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
 
     private void pickImport(){
         if(blockForTransfer())return;
-        leaveEditor(()->{pendingImportToken=sessionToken;Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");i.putExtra(Intent.EXTRA_MIME_TYPES,new String[]{"application/json","text/plain"});try{startActivityForResult(i,IMPORT_PROJECT);}catch(Exception e){pendingImportToken=null;error("Importação indisponível","Este aparelho não disponibilizou um seletor de arquivos.");}});
+        leaveEditor(()->{pendingImportToken=sessionToken;Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");try{startActivityForResult(i,IMPORT_PROJECT);}catch(Exception e){pendingImportToken=null;error("Importação indisponível","Este aparelho não disponibilizou um seletor de arquivos.");}});
     }
     private void exportProject(ProjectCodec.Project project){try{startExport(ProjectCodec.encode(project),"tv-touch-"+project.name.replaceAll("[^a-zA-Z0-9_-]","-")+".json");}catch(ProjectCodec.ProjectFormatException e){error("Não foi possível exportar",e.getMessage());}}
     private void startExport(String data,String name){if(blockForTransfer())return;pendingExport=data;Intent i=new Intent(Intent.ACTION_CREATE_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("application/json");i.putExtra(Intent.EXTRA_TITLE,name);try{startActivityForResult(i,EXPORT_DOCUMENT);}catch(Exception e){pendingExport=null;error("Exportação indisponível","Este aparelho não disponibilizou um seletor de arquivos.");}}

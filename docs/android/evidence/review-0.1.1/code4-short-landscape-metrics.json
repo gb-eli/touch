@@ -1,0 +1,19 @@
+{
+  "versionCode": 4,
+  "viewport_px": [
+    1600,
+    720
+  ],
+  "density": 280,
+  "fontScale": 1.0,
+  "scene": {
+    "bounds_px": [
+      0,
+      152,
+      1047,
+      720
+    ],
+    "width_px": 1047,
+    "height_px": 568
+  }
+}

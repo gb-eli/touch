@@ -6,8 +6,8 @@ Este documento define os ensaios do aplicativo `br.com.agv.touch.dev`. As caixas
 
 | Ambiente | Estado deste registro |
 | --- | --- |
-| Contrato do domínio e filesystem do host | Executado: 36 cenários, 239 operações comparadas ao JS legado, testes adicionais de JSON/persistência/concorrência e picking. Detalhes em [DOMAIN_CONTRACT.md](DOMAIN_CONTRACT.md). |
-| APK em Android/emulador | Execução nativa registrada em emulador AOSP API 28/x86 com SwiftShader. Consultar [native-qa.json](evidence/native-qa.json) para o estado atualizado, a versão testada e as evidências de cada ensaio; esse registro não substitui o aceite físico. |
+| Contrato do domínio e filesystem do host | Executado: 36 cenários, 239 operações comparadas ao JS legado, testes adicionais de JSON/persistência/concorrência, picking, 33 asserções de transferência/recuperação e 5.376 projeções da câmera. Detalhes em [DOMAIN_CONTRACT.md](DOMAIN_CONTRACT.md). |
+| APK em Android/emulador | Execução nativa registrada em emulador AOSP API 28/x86 com SwiftShader. Consultar [a revisão 0.1.1](evidence/review-0.1.1/native-qa.json) e [o registro anterior](evidence/native-qa.json) para a versão testada e as evidências de cada ensaio; esse registro não substitui o aceite físico. |
 | Galaxy S25 Ultra físico, em casa | **Pendente.** |
 | Samsung WA86F física, na escola | **Pendente.** |
 | Câmera, RA, reconhecimento corporal/mãos e VR | Não implementados no MVP; fora do aceite funcional desta versão. |
@@ -77,7 +77,7 @@ Executar em Android/emulador e repetir os fluxos essenciais no aparelho real. En
 | R05 | Tornar ilegível o rascunho principal, preservando sua cópia anterior válida. | Diálogo informa **cópia anterior** e apresenta aviso; não promete recuperar a última edição corrompida. | Pendente |
 | R06 | Com rascunho válido, tornar ilegíveis principal e backup do salvo; solicitar Descartar no diálogo inicial e, em ensaio separado, após recuperar no editor. | Falha é informada e o rascunho é preservado, pois a substituição não pôde ser preparada. | Pendente |
 | R07 | Provocar falha de limpeza do rascunho após uma gravação explícita bem-sucedida. | App reconhece que o projeto foi salvo; eventual aviso de limpeza não transforma sucesso em perda de dados. | Pendente |
-| R08 | Cancelar o seletor de importação/exportação; repetir com arquivo inválido, destino indisponível ou permissão revogada. | Sem falsa confirmação; projeto atual e arquivos anteriores preservados. | Pendente |
+| R08 | Cancelar o seletor de importação/exportação; selecionar JSON de provedores locais diferentes; repetir com arquivo inválido, destino indisponível ou permissão revogada. | JSON selecionável independentemente da classificação MIME do provedor; sem falsa confirmação; projeto atual e arquivos anteriores preservados. | Pendente |
 | R09 | Exportar projeto, importar duas vezes e verificar a lista. | Três identidades distintas: original e duas cópias. UUID recebido não substitui outro projeto. | Pendente |
 | R10 | Tentar importar coordenada ausente, string numérica, duplicata, material desconhecido e mais de 256 blocos. | Todos rejeitados sem modificar projeto em edição ou salvo. | Pendente |
 | R11 | Excluir projeto e cancelar primeiro; depois confirmar em projeto descartável. | Cancelar mantém os dados; confirmar remove projeto e cópia anterior, com estado da sessão coerente. | Pendente |
