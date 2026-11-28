@@ -69,6 +69,11 @@ jobs:
           BROWSER_EXECUTABLE_PATH: /usr/bin/google-chrome
           TV_TOUCH_PROTOTYPE_OUTPUT: browser-artifacts/prototype
         run: node docs/app-design/verify-prototype.cjs
+      - name: Validate Studio Prism responsive prototype in Chrome
+        env:
+          BROWSER_EXECUTABLE_PATH: /usr/bin/google-chrome
+          TV_TOUCH_PRISM_OUTPUT: browser-artifacts/prism
+        run: node docs/app-design/verify-prism.cjs
       - name: Upload screenshots and QA report
         if: always()
         uses: actions/upload-artifact@v4
