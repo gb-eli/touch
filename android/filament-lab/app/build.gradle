@@ -1,0 +1,20 @@
+plugins { id 'com.android.application' version '8.9.2' }
+android {
+    namespace 'br.com.agv.touch.filamentlab'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'br.com.agv.touch.filamentlab'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '2.0-alpha.1'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+dependencies {
+    implementation 'com.google.android.filament:filament-android:1.56.0'
+    implementation 'com.google.android.filament:gltfio-android:1.56.0'
+}
