@@ -120,6 +120,12 @@ final class BuilderScreen extends LinearLayout {
             b.setTextSize(sideDock?13:14);b.setPadding(ui.dp(6),ui.dp(9),ui.dp(6),ui.dp(9));
             tools.put(choice[0],b);weighted(row,b,row.getChildCount()==0?0:6);
         }
+        if(!wide&&!sideDock){
+            Button more=ui.button("Mais",false,this::showTools);
+            more.setTextSize(13);
+            more.setContentDescription("Mais ferramentas: coordenadas, zoom e enquadramento");
+            weighted(row,more,6);
+        }
         return row;
     }
 
@@ -197,8 +203,6 @@ final class BuilderScreen extends LinearLayout {
             ui.addFull(dock,palette,8);
         }else{
             dock.addView(toolGroup(),new LayoutParams(-1,-2));
-            LinearLayout choices=ui.row();weighted(choices,materialButton(),0);weighted(choices,optionsButton(),8);
-            ui.addFull(dock,choices,7);
             ui.addFull(dock,materialStrip(),8);
         }
         dock.addView(status,new LayoutParams(-1,-2));
