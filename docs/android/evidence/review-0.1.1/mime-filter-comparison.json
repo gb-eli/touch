@@ -1,0 +1,11 @@
+{
+  "apk_sha256": "68a53239dcf0828f2939c226993c9800c37f9013a5297636b6943f86ff63564b",
+  "provider": "com.android.providers.downloads.documents",
+  "api": 28,
+  "same_content_sha256": "48bcd4f3f366f620ba2cbec10dac73255911038b30c1f0a32d4c80f7661149fa",
+  "json_selectable": false,
+  "txt_selectable": true,
+  "mime_observed": null,
+  "mime_query": "shell content gettype",
+  "mime_query_result": "Permission denied: provider requires ACTION_OPEN_DOCUMENT grant. No permissions were changed."
+}

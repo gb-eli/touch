@@ -1,0 +1,12 @@
+{
+  "apk_sha256": "392cceaf1f3a0672b28d29e4d0da5654562f74b696181a3b8be555200e96d782",
+  "fixture_file": "ponte-missao-concluida.json",
+  "fixture_project_id": "0430c8ab-2904-4e62-aebf-0e8c9318569b",
+  "imported_project_id": "a6664bd0-b544-4cf2-91fc-b8825684bf1d",
+  "new_identity": true,
+  "blocks": 5,
+  "mission": "bridge",
+  "progress": "5 de 5",
+  "original_saved_unchanged": true,
+  "stored_project_sha256": "d506ea1269432bb900d9bc28494d091de83e59e06db3de319f0262e86b50decc"
+}

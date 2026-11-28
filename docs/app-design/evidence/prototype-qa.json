@@ -1,0 +1,85 @@
+{
+  "status": "passed",
+  "checks": [
+    "Selecionar não cria; confirmação, desfazer e refazer corretos.",
+    "Falha forçada do localStorage mantém alterações, diálogo aberto e zero projetos; nenhum falso sucesso.",
+    "Nome obrigatório, salvar, persistir após reload, renomear e exportar JSON verificados.",
+    "Importação válida aceita; posição fora da grade rejeitada sem alterar projetos.",
+    "Missão ponte 5/5, resultado real e proteção de saída com alterações verificados.",
+    "Perfil TV altera controles e pode retornar ao automático.",
+    "Home, explorar, construtor, projetos e ajustes sem rolagem horizontal em 1280×720 e 412×915.",
+    "Nenhum erro JavaScript ou de console; nenhuma requisição HTTP/HTTPS externa."
+  ],
+  "errors": [],
+  "consoleErrors": [],
+  "externalRequests": [],
+  "viewportChecks": [
+    {
+      "screen": "home",
+      "viewport": "1280×720",
+      "contentWidth": 1280,
+      "overflow": false
+    },
+    {
+      "screen": "explore",
+      "viewport": "1280×720",
+      "contentWidth": 1280,
+      "overflow": false
+    },
+    {
+      "screen": "builder",
+      "viewport": "1280×720",
+      "contentWidth": 1280,
+      "overflow": false
+    },
+    {
+      "screen": "projects",
+      "viewport": "1280×720",
+      "contentWidth": 1280,
+      "overflow": false
+    },
+    {
+      "screen": "settings",
+      "viewport": "1280×720",
+      "contentWidth": 1280,
+      "overflow": false
+    },
+    {
+      "screen": "home",
+      "viewport": "412×915",
+      "contentWidth": 412,
+      "overflow": false
+    },
+    {
+      "screen": "explore",
+      "viewport": "412×915",
+      "contentWidth": 412,
+      "overflow": false
+    },
+    {
+      "screen": "builder",
+      "viewport": "412×915",
+      "contentWidth": 412,
+      "overflow": false
+    },
+    {
+      "screen": "projects",
+      "viewport": "412×915",
+      "contentWidth": 412,
+      "overflow": false
+    },
+    {
+      "screen": "settings",
+      "viewport": "412×915",
+      "contentWidth": 412,
+      "overflow": false
+    }
+  ],
+  "viewports": [
+    "1280×720",
+    "412×915"
+  ],
+  "examples": "As construções das capturas foram criadas ou importadas em contexto isolado de QA; não são dados de usuários e não acompanham o estado inicial.",
+  "scope": "Protótipo HTML; não certifica hardware, APK, RA ou câmera.",
+  "generatedAt": "2026-11-28T05:07:29.553Z"
+}

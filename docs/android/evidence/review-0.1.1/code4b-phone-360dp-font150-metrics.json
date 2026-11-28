@@ -1,0 +1,55 @@
+{
+  "apk_sha256": "68a53239dcf0828f2939c226993c9800c37f9013a5297636b6943f86ff63564b",
+  "versionCode": 4,
+  "viewport_px": [
+    720,
+    1600
+  ],
+  "density": 320,
+  "fontScale": 1.5,
+  "scene": {
+    "bounds_px": [
+      0,
+      183,
+      720,
+      902
+    ],
+    "width_px": 720,
+    "height_px": 719
+  },
+  "controls": [
+    {
+      "id": "br.com.agv.touch.dev:id/builder_undo",
+      "text": "Desfazer",
+      "bounds_px": [
+        24,
+        1266,
+        352,
+        1367
+      ],
+      "enabled": "false"
+    },
+    {
+      "id": "br.com.agv.touch.dev:id/builder_redo",
+      "text": "Refazer",
+      "bounds_px": [
+        368,
+        1266,
+        696,
+        1367
+      ],
+      "enabled": "false"
+    },
+    {
+      "id": "br.com.agv.touch.dev:id/builder_confirm",
+      "text": "Colocar bloco",
+      "bounds_px": [
+        24,
+        1383,
+        696,
+        1484
+      ],
+      "enabled": "false"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "synthetic": true,
+  "fixtures": [
+    {
+      "name": "ae19226f-5433-46bb-9b8d-d647ddb230d4.json",
+      "purpose": "Salvo sintético de um bloco, preparado com code3 parado antes da atualização.",
+      "bytes": 247,
+      "sha256": "c4fb1b24caecb32ad308d4f8c4e834afa30a722024daade18240446abc9427ee",
+      "utf8_text": "{\n  \"version\": 1,\n  \"projectId\": \"ae19226f-5433-46bb-9b8d-d647ddb230d4\",\n  \"name\": \"QA_Update\",\n  \"updatedAt\": 1795868547772,\n  \"mission\": \"free\",\n  \"blocks\": [\n    {\n      \"x\": 0,\n      \"y\": 0,\n      \"z\": 0,\n      \"material\": \"grass\"\n    }\n  ]\n}\n"
+    },
+    {
+      "name": "recovery.json",
+      "purpose": "Rascunho sintético de dois blocos da mesma identidade, preparado antes da atualização.",
+      "bytes": 327,
+      "sha256": "6c9933208e7bddef5a5c3ed94d8f0169f291a39ad6236e25fd304303bf4e4866",
+      "utf8_text": "{\n  \"version\": 1,\n  \"projectId\": \"ae19226f-5433-46bb-9b8d-d647ddb230d4\",\n  \"name\": \"QA_Update\",\n  \"updatedAt\": 1795868548772,\n  \"mission\": \"free\",\n  \"blocks\": [\n    {\n      \"x\": 0,\n      \"y\": 0,\n      \"z\": 0,\n      \"material\": \"grass\"\n    },\n    {\n      \"x\": 1,\n      \"y\": 0,\n      \"z\": 0,\n      \"material\": \"wood\"\n    }\n  ]\n}\n"
+    },
+    {
+      "name": "ponte-missao-concluida.json",
+      "purpose": "Envelope sintético com cinco posições de ponte; importado pelo seletor Android para testar importação e resultado.",
+      "bytes": 583,
+      "sha256": "48bcd4f3f366f620ba2cbec10dac73255911038b30c1f0a32d4c80f7661149fa",
+      "utf8_text": "{\n  \"version\": 1,\n  \"blocks\": [\n    {\n      \"x\": 2,\n      \"y\": 0,\n      \"z\": 3,\n      \"material\": \"grass\"\n    },\n    {\n      \"x\": 4,\n      \"y\": 0,\n      \"z\": 3,\n      \"material\": \"grass\"\n    },\n    {\n      \"x\": 2,\n      \"y\": 1,\n      \"z\": 3,\n      \"material\": \"grass\"\n    },\n    {\n      \"x\": 3,\n      \"y\": 1,\n      \"z\": 3,\n      \"material\": \"grass\"\n    },\n    {\n      \"x\": 4,\n      \"y\": 1,\n      \"z\": 3,\n      \"material\": \"grass\"\n    }\n  ],\n  \"projectId\": \"0430c8ab-2904-4e62-aebf-0e8c9318569b\",\n  \"name\": \"Ponte concluída QA\",\n  \"updatedAt\": 1795868407342,\n  \"mission\": \"bridge\"\n}\n"
+    },
+    {
+      "name": "utf8-invalido.json",
+      "purpose": "JSON com byte FF inválido em UTF-8; escolhido pelo seletor Android para testar rejeição sem gravação.",
+      "bytes": 57,
+      "sha256": "e34e3e6d8e7b920862276648ec8602f49c25882b74c7d23a3d9b7a451bee2bda",
+      "hex_bytes": "7b2276657273696f6e223a312c226e616d65223a224e6f6d65ff222c226d697373696f6e223a2266726565222c22626c6f636b73223a5b5d7d"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="builder_stage" type="id" />
+    <item name="builder_dock" type="id" />
+    <item name="builder_confirm" type="id" />
+    <item name="builder_status" type="id" />
+    <item name="builder_feedback" type="id" />
+    <item name="builder_material" type="id" />
+    <item name="builder_options" type="id" />
+    <item name="builder_undo" type="id" />
+    <item name="builder_redo" type="id" />
+    <item name="builder_result" type="id" />
+    <item name="builder_save" type="id" />
+    <item name="builder_back" type="id" />
+</resources>

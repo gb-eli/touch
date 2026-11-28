@@ -1,0 +1,582 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-11-28T12:46:04.368839+00:00",
+  "status": "passed_after_fixes",
+  "releaseCandidate": "code4c",
+  "releaseApkSha256": "392cceaf1f3a0672b28d29e4d0da5654562f74b696181a3b8be555200e96d782",
+  "candidates": {
+    "code3": {
+      "apkSha256": "e4de26fd1c7a06feced4a4cae7a40bb4d4bac58e26453c9d1bd32ab66d67d28d",
+      "versionCode": 3,
+      "versionName": "0.1.0-dev"
+    },
+    "code4": {
+      "apkSha256": "2fef53a4b42d3fed6b50002bfb072e99862a5607d5f4020856c4d77fb30232c3",
+      "versionCode": 4,
+      "versionName": "0.1.1-dev"
+    },
+    "code4b": {
+      "apkSha256": "68a53239dcf0828f2939c226993c9800c37f9013a5297636b6943f86ff63564b",
+      "versionCode": 4,
+      "versionName": "0.1.1-dev"
+    },
+    "code4c": {
+      "apkSha256": "392cceaf1f3a0672b28d29e4d0da5654562f74b696181a3b8be555200e96d782",
+      "versionCode": 4,
+      "versionName": "0.1.1-dev"
+    }
+  },
+  "environment": {
+    "kind": "AOSP emulator",
+    "androidApi": 28,
+    "androidRelease": "9",
+    "abi": "x86",
+    "emulatorVersion": "37.3.10",
+    "gpuConfiguration": "swiftshader_indirect, software rendering",
+    "hardwareAcceleration": "TCG; no KVM",
+    "physicalDevice": false,
+    "controllerStopped": true,
+    "installedPackage": {
+      "applicationId": "br.com.agv.touch.dev",
+      "versionCode": 4,
+      "versionName": "0.1.1-dev",
+      "minSdk": 26,
+      "targetSdk": 35,
+      "apk_sha256": "392cceaf1f3a0672b28d29e4d0da5654562f74b696181a3b8be555200e96d782",
+      "android_api": "28",
+      "android_release": "9",
+      "abi": "x86"
+    }
+  },
+  "method": "Jornadas na UI Android via ADB, XML do UIAutomator, capturas PNG brutas, leitura de arquivos do app de teste e comparação de hashes. O conteúdo semeado está discriminado por ensaio e reproduzível em fixtures.json.",
+  "checkCount": 12,
+  "checks": [
+    {
+      "id": "update_preserves_saved_and_draft",
+      "status": "passed",
+      "candidate": "code4",
+      "setup": "Fixtures sintéticas gravadas com code3 parado; atualização real por install -r.",
+      "observed": "Salvo de 1 bloco e rascunho de 2 blocos mantiveram os hashes após a instalação.",
+      "evidence": [
+        "update-setup.json",
+        "code4-update-preservation.json"
+      ]
+    },
+    {
+      "id": "recover_then_discard",
+      "status": "passed",
+      "candidate": "code4",
+      "journey": "Recuperar pela UI → observar 2 blocos → Voltar → Descartar → Continuar projeto.",
+      "observed": "Rascunho removido, arquivo salvo inalterado e UI reaberta com 1 bloco em estado salvo.",
+      "evidence": [
+        "code4-recovery-offer.png",
+        "code4-recovered-two.png",
+        "code4-discard-dialog.png",
+        "code4-restored-one.png",
+        "code4-restored-one.xml"
+      ]
+    },
+    {
+      "id": "short_landscape_layout",
+      "status": "passed",
+      "candidate": "code4",
+      "setup": "Mesma missão Torre vazia, 1600 × 720 px, densidade 280, fonte 100%, em code3 e code4.",
+      "observed": "Palco passou de 184 para 568 px de altura, com piso e alvo inteiro visíveis; confirmação cabe no painel lateral.",
+      "baseline_scene_bounds_px": [
+        0,
+        166,
+        1516,
+        350
+      ],
+      "revised_scene_bounds_px": [
+        0,
+        152,
+        1047,
+        720
+      ],
+      "height_ratio": 3.0869565217391304,
+      "evidence": [
+        "code3-mission-short-landscape.png",
+        "code3-mission-short-landscape.xml",
+        "code4-mission-short-landscape.png",
+        "code4-mission-short-landscape.xml",
+        "code4-short-landscape-metrics.json"
+      ]
+    },
+    {
+      "id": "portrait_360dp_font150",
+      "status": "passed_after_fix",
+      "candidate": "code4b",
+      "setup": "720 × 1600 px, densidade 320, fonte 150%; equivalente a 360 dp de largura.",
+      "observed": "Confirmar ocupa a largura completa, com Colocar bloco em uma linha; Desfazer/Refazer têm linha própria. Palco mantém 719 px de altura.",
+      "evidence": [
+        "code4-phone-360dp-font150.png",
+        "code4-phone-360dp-font150-metrics.json",
+        "code4b-phone-360dp-font150.png",
+        "code4b-phone-360dp-font150.xml",
+        "code4b-phone-360dp-font150-metrics.json"
+      ]
+    },
+    {
+      "id": "material_coordinates_preview_confirm_history",
+      "status": "passed",
+      "candidate": "code4b",
+      "setup": "Projeto livre novo, aberto e editado pela UI; sem semear seu conteúdo.",
+      "journey": "Material Madeira → Ferramentas → Escolher coordenadas → selecionar (0,0,0) → confirmar → Desfazer → Refazer.",
+      "observed": "Prévia manteve contador 0 e mostrou posição/material; confirmar gerou 1 bloco de madeira. Desfazer voltou a 0, Refazer a 1; screenshots e leitura do rascunho conferiram os resultados.",
+      "evidence": [
+        "code4b-material-picker.png",
+        "code4b-after-material-selection.png",
+        "code4b-tools.png",
+        "code4b-coordinate-dialog.png",
+        "code4b-coordinate-preview.png",
+        "code4b-confirmed-one.png",
+        "code4b-edited-recovery.json",
+        "code4b-undo-zero.png",
+        "code4b-redo-one.png"
+      ]
+    },
+    {
+      "id": "editor_rotation_preserves_undo",
+      "status": "passed",
+      "candidate": "code4b",
+      "journey": "Girar retrato para paisagem após Refazer; acionar Desfazer na orientação nova.",
+      "observed": "Um bloco, Madeira e Desfazer habilitado sobreviveram à rotação. Desfazer na paisagem levou o contador e o rascunho a zero.",
+      "evidence": [
+        "code4b-after-rotation.xml",
+        "code4b-undo-after-rotation.png"
+      ]
+    },
+    {
+      "id": "json_selectable_with_provider_mime_variation",
+      "status": "passed_after_fix",
+      "candidate": "code4c",
+      "setup": "Mesmo arquivo ponte-missao-concluida.json e mesmo provedor Downloads/API 28 antes e depois da correção.",
+      "observed": "code4b desabilitava .json enquanto cópia idêntica .txt era selecionável. code4c tornou o mesmo .json selecionável. MIME exato não foi observado: gettype via shell foi negado pelo provedor.",
+      "evidence": [
+        "mime-filter-comparison.json",
+        "code4b-saf-downloads.png",
+        "code4b-saf-downloads.xml",
+        "code4b-saf-txt-downloads.png",
+        "code4b-saf-txt-downloads.xml",
+        "code4c-saf-downloads.png",
+        "code4c-saf-downloads.xml"
+      ]
+    },
+    {
+      "id": "saf_valid_import",
+      "status": "passed",
+      "candidate": "code4c",
+      "setup": "Fixture sintética de ponte completa colocada em Downloads; escolha e leitura pelo seletor nativo.",
+      "observed": "Projeto salvo com 5 blocos, missão bridge, identidade nova e conteúdo igual à fixture; QA_Update anterior manteve seu hash.",
+      "evidence": [
+        "code4c-imported-bridge.png",
+        "code4c-imported-bridge.xml",
+        "code4c-saf-import-proof.json",
+        "code4c-imported-project.json"
+      ]
+    },
+    {
+      "id": "mission_result",
+      "status": "passed",
+      "candidate": "code4c",
+      "setup": "Ponte completa importada da fixture; os 5 blocos não foram posicionados manualmente nesta jornada.",
+      "journey": "Abrir Objetivo concluído · Ver resultado.",
+      "observed": "Diálogo confirmou 5 posições, renderizou a ponte e mostrou Salvar projeto, Continuar criando e Ver outras missões.",
+      "evidence": [
+        "code4c-mission-result.png",
+        "code4c-mission-result.xml"
+      ]
+    },
+    {
+      "id": "saf_invalid_utf8_preserves_projects",
+      "status": "passed",
+      "candidate": "code4c",
+      "journey": "Selecionar utf8-invalido.json em Downloads.",
+      "observed": "Arquivo não importado, com mensagem de UTF-8 inválido. Lista e hashes de ambos os projetos salvos permaneceram idênticos; nenhum projeto foi criado.",
+      "evidence": [
+        "code4c-invalid-utf8.png",
+        "code4c-invalid-utf8.xml",
+        "code4c-saf-invalid-proof.json"
+      ]
+    },
+    {
+      "id": "saf_export_with_picker_rotation",
+      "status": "passed",
+      "candidate": "code4c",
+      "journey": "Opções da ponte salva → Exportar JSON → girar retrato para paisagem com ACTION_CREATE_DOCUMENT aberto → Save → ler arquivo exportado.",
+      "observed": "Nome/destino permaneceram disponíveis; exportação terminou sem diálogo de erro. JSON exportado foi semanticamente e byte a byte igual ao salvo, com 5 blocos e os mesmos metadados.",
+      "sha256": "d506ea1269432bb900d9bc28494d091de83e59e06db3de319f0262e86b50decc",
+      "evidence": [
+        "code4c-export-picker-portrait.png",
+        "code4c-export-picker-portrait.xml",
+        "code4c-export-picker-rotated.png",
+        "code4c-export-picker-rotated.xml",
+        "code4c-export-complete.png",
+        "code4c-saf-export-proof.json",
+        "code4c-exported-project.json"
+      ]
+    },
+    {
+      "id": "app_failure_log_review",
+      "status": "passed",
+      "candidate": "code4c",
+      "observed": "Buffer de crash vazio; nenhum FATAL com processo do app nem ANR do app nos buffers coletados. Um ANR de com.android.systemui ocorreu durante mudanças de densidade/fonte do emulador.",
+      "evidence": [
+        "code4c-runtime-errors.txt",
+        "code4c-crash-buffer.txt",
+        "code4c-installed-package.json"
+      ]
+    }
+  ],
+  "findingsFixed": [
+    {
+      "id": "font150_confirm_word_break",
+      "detectedIn": "code4",
+      "fixedAndRetestedIn": "code4b",
+      "description": "Em 360 dp/fonte 150%, Colocar quebrava dentro da palavra. Confirmação passou para linha de largura completa."
+    },
+    {
+      "id": "mime_filter_disabled_json",
+      "detectedIn": "code4b",
+      "fixedAndRetestedIn": "code4c",
+      "description": "O filtro MIME desabilitava arquivos .json deste Downloads. ACTION_OPEN_DOCUMENT manteve tipo */* e validação estrita do conteúdo pelo codec."
+    }
+  ],
+  "logs": {
+    "appFatalExceptionFound": false,
+    "appAnrFound": false,
+    "crashBufferBytes": 0,
+    "systemUiAnrCount": 1,
+    "coverage": "Buffers coletados ao fim desta sessão; não constituem monitoramento indefinido."
+  },
+  "automationNotes": [
+    "UIAutomator retornou null root após algumas dispensas de diálogo; nesses passos, capturas recentes e leitura do rascunho foram usadas. Não se reutilizou XML antigo como prova de um novo estado.",
+    "Uma captura colhida no meio da animação Android de rotação foi excluída da evidência entregue. XML estável e captura de Desfazer após a rotação foram preservados.",
+    "MIME via shell recebeu SecurityException do provedor, que exigiu concessão por ACTION_OPEN_DOCUMENT. Nenhuma permissão foi alterada; a jornada final usou o seletor nativo."
+  ],
+  "limits": [
+    "Aceite físico pendente no Galaxy S25 Ultra e Samsung WA86F; nenhum ensaio físico foi realizado nesta rodada.",
+    "Execução nativa restrita a API28/x86/SwiftShader; não mede FPS, latência, câmera, multitouch ou uso sustentado nos aparelhos alvo.",
+    "SAF nativo foi exercitado no provedor local Downloads. Rotação ocorreu com o seletor de exportação aberto; não foi simulada uma rotação durante IO lento.",
+    "Falhas de provedor remoto, cancelamento em corrida, commit e guardas com arquivos salvos corrompidos pertencem à cobertura de host documentada separadamente; não são reivindicados como ensaios nativos aqui.",
+    "As verificações code4/code4b não foram repetidas integralmente em code4c. Os hashes identificam qual candidata executou cada passo; code4c contém as correções anteriores e foi usado para toda a jornada SAF final."
+  ],
+  "evidenceIntegrity": [
+    {
+      "file": "code3-mission-short-landscape.png",
+      "bytes": 88043,
+      "sha256": "9f089cab098cb6878c4346dd05fa5dc28948b2182783ffd3a01892a1d5401391"
+    },
+    {
+      "file": "code3-mission-short-landscape.xml",
+      "bytes": 12667,
+      "sha256": "e5d3b7b6af1d134a8241c0f1c69458483c45f36f623cb0f2dc8d08716bd8e166"
+    },
+    {
+      "file": "code4-discard-dialog.png",
+      "bytes": 87142,
+      "sha256": "073f230f7034c249ed5ba7850e6542e711ff52d8718a524cbbd562efa5954023"
+    },
+    {
+      "file": "code4-discard-dialog.xml",
+      "bytes": 6106,
+      "sha256": "2d75af415914724c9a6612c33fc11f3b6ca0f273de79a1eeeafdde075c7dd59d"
+    },
+    {
+      "file": "code4-mission-short-landscape.png",
+      "bytes": 85284,
+      "sha256": "eee488d8e9b80de835d3d21084abc8298d3dd31a7008a41ffa7c47718b383379"
+    },
+    {
+      "file": "code4-mission-short-landscape.xml",
+      "bytes": 12504,
+      "sha256": "07162c8f4f97a5a1da411de27193521cb72dc9734bf9361d1b75fda420545858"
+    },
+    {
+      "file": "code4-phone-360dp-font150-metrics.json",
+      "bytes": 853,
+      "sha256": "ac4a1cfcb49faa30afa983d637266fe6e09ab538256169c682a5b180ceac84df"
+    },
+    {
+      "file": "code4-phone-360dp-font150.png",
+      "bytes": 104771,
+      "sha256": "d1caf9e19a8f40dc487daa4fa1693df5a2356f66c7c1747ab3e19114c933aa69"
+    },
+    {
+      "file": "code4-phone-360dp-font150.xml",
+      "bytes": 11481,
+      "sha256": "1e6bf9858e839ed048bef4742f13ac1db332684d5522b3c65e02cbb830f0b591"
+    },
+    {
+      "file": "code4-recovered-two.png",
+      "bytes": 68781,
+      "sha256": "4dce731d2b45439b5b98a114cea93d4c86c21bfe29579736ea7bcdc8ed54ed3b"
+    },
+    {
+      "file": "code4-recovered-two.xml",
+      "bytes": 11455,
+      "sha256": "8d73211cc03d785a115d7942815b10b333998e526be5ed21086c0e38cd8bacc9"
+    },
+    {
+      "file": "code4-recovery-offer.png",
+      "bytes": 103115,
+      "sha256": "d91ca28accc3cd9ba78267003195e186ea7354ce0c7d0ea575e0b57361ba56df"
+    },
+    {
+      "file": "code4-recovery-offer.xml",
+      "bytes": 5737,
+      "sha256": "baa9eb8f5807697bd9c1db2814029d2fe8ae60043bcbd871266124cbc511688d"
+    },
+    {
+      "file": "code4-restored-one.png",
+      "bytes": 76052,
+      "sha256": "723bc4f28c8cdc7a88bff26d611364780df36f282763583f84e85cc0bf9ad0a0"
+    },
+    {
+      "file": "code4-restored-one.xml",
+      "bytes": 12475,
+      "sha256": "e8fb0f6381283f1afb5dd3b315c80164404b0b5b88eb9f5f7b603e5960976eac"
+    },
+    {
+      "file": "code4-short-landscape-metrics.json",
+      "bytes": 232,
+      "sha256": "5363cf22f54f8702581d9eaf1bcfb97cd2df44b07796211e0b4f9520574f5d5f"
+    },
+    {
+      "file": "code4-update-preservation.json",
+      "bytes": 408,
+      "sha256": "17c338ce2cd298f769cde54f3af86af331f19d3ae927cdfa664f326f2a54ddd0"
+    },
+    {
+      "file": "code4b-after-material-selection.png",
+      "bytes": 76466,
+      "sha256": "7b1c173e98fa8d8a68fced50b631fa9dafb45c5a35f8855e9bf11a9a4c475898"
+    },
+    {
+      "file": "code4b-after-rotation.xml",
+      "bytes": 12484,
+      "sha256": "405a838a190f18a40a5046b0b19199ec2374bb7c73324cebaa209fa40ef78758"
+    },
+    {
+      "file": "code4b-confirmed-one.png",
+      "bytes": 85398,
+      "sha256": "4977c60c8446e7f8fdc6b02905c7e8952cd789bcf338531d9e693488b3f17745"
+    },
+    {
+      "file": "code4b-coordinate-dialog.png",
+      "bytes": 79803,
+      "sha256": "8a0b0db4fcff5fa895edb29c1764a1908fb517e43218c99fa739e21a35461cd9"
+    },
+    {
+      "file": "code4b-coordinate-dialog.xml",
+      "bytes": 9993,
+      "sha256": "1316cb43ea1f833cf1bcc38b3e25792bcb4c7e535b12418c6d1569eda8ccb7f0"
+    },
+    {
+      "file": "code4b-coordinate-preview.png",
+      "bytes": 79002,
+      "sha256": "608e868aabb67c0b455a912c883f8e2ca576e0815881c50b05a83bdf08f35379"
+    },
+    {
+      "file": "code4b-edited-recovery.json",
+      "bytes": 184,
+      "sha256": "c7bc94075a260983f4649fe891ea293bd57c276cfddaf71c32ffbe1955e90d8a"
+    },
+    {
+      "file": "code4b-material-picker.png",
+      "bytes": 94054,
+      "sha256": "41b20325c78aea6a1cddcdd784475347633a166cba37f1ae22e3cf6b3b7beb0a"
+    },
+    {
+      "file": "code4b-material-picker.xml",
+      "bytes": 7809,
+      "sha256": "74c347067c1145b77f1aae43618c1e4c92091f378654dc9d9ce920ff80176378"
+    },
+    {
+      "file": "code4b-phone-360dp-font150-metrics.json",
+      "bytes": 936,
+      "sha256": "895df828aa7ec5eb2e5ad862c592c34d5c5c27981371beeb66eb640fc6bcb0c9"
+    },
+    {
+      "file": "code4b-phone-360dp-font150.png",
+      "bytes": 95930,
+      "sha256": "da5e068879c1001780216cc873ac60743c16372ab9a24a50f3f728152de0be5d"
+    },
+    {
+      "file": "code4b-phone-360dp-font150.xml",
+      "bytes": 11456,
+      "sha256": "c0cd3dada01659f2153b63f03ba248816c3697dc095d75761e9f7514441470cd"
+    },
+    {
+      "file": "code4b-redo-one.png",
+      "bytes": 86186,
+      "sha256": "25799e59b50ff02a96af900abb46d11d5cc577954213e6f37a9033f3dd52002f"
+    },
+    {
+      "file": "code4b-saf-downloads.png",
+      "bytes": 36495,
+      "sha256": "2718c8e3aa2b77023db5da4f9c3daf72edb6162bb88a575d69eb882cc0b82a09"
+    },
+    {
+      "file": "code4b-saf-downloads.xml",
+      "bytes": 20873,
+      "sha256": "a14b62597ab64e6fba7d5a22eef485f6885dafadaf6b33b419b8caad65859d87"
+    },
+    {
+      "file": "code4b-saf-txt-downloads.png",
+      "bytes": 45557,
+      "sha256": "d6c721335b84da3fc473972eafe97082d55d4eba98ac36e201619068f1559cab"
+    },
+    {
+      "file": "code4b-saf-txt-downloads.xml",
+      "bytes": 26934,
+      "sha256": "7eee33f1356786f0be220d6951d69612d4ede7d7108a3ae580d5bb226c4ede46"
+    },
+    {
+      "file": "code4b-tools.png",
+      "bytes": 88495,
+      "sha256": "f7d819a52cb38a003fcb25b0e5e7fa76c47057afcab0cacb0156ebc4fba7723e"
+    },
+    {
+      "file": "code4b-tools.xml",
+      "bytes": 6782,
+      "sha256": "89d59d5e5623a41aae12f6027f0dc7db0e502ccce26624195d74c8065d2591bd"
+    },
+    {
+      "file": "code4b-undo-after-rotation.png",
+      "bytes": 96711,
+      "sha256": "7b0547a0925f0c548eb79c1e86525d3caf21050d2bb09f2526d0b62cef648608"
+    },
+    {
+      "file": "code4b-undo-zero.png",
+      "bytes": 86753,
+      "sha256": "dac9071b89babf4fee66b4f4d360d735d871bb7122092082ad3434b954313731"
+    },
+    {
+      "file": "code4c-crash-buffer.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "code4c-export-complete.png",
+      "bytes": 69838,
+      "sha256": "127e1b65131f2753534926a47ddd6692b24fb729e856739a81be9eaa180aea93"
+    },
+    {
+      "file": "code4c-export-complete.xml",
+      "bytes": 12420,
+      "sha256": "cb58cb4eedd9eb130b9ce608c9181f9b062ebf11e0034c264b571a86fd81e455"
+    },
+    {
+      "file": "code4c-export-picker-portrait.png",
+      "bytes": 43736,
+      "sha256": "71ab8cb43407928d2e2beace4eda8e133a28fa77c86ec5709c8c7a0982c97e6c"
+    },
+    {
+      "file": "code4c-export-picker-portrait.xml",
+      "bytes": 22955,
+      "sha256": "e7374cad92a38fda1df49500a4055f916f0f30d5dc38475b0a0202cc5de8423e"
+    },
+    {
+      "file": "code4c-export-picker-rotated.png",
+      "bytes": 36044,
+      "sha256": "d81a027197b9a421315a42a1e956cdea5d8a580fc10d17e4d59334151270ddad"
+    },
+    {
+      "file": "code4c-export-picker-rotated.xml",
+      "bytes": 17412,
+      "sha256": "f01ae3bf1b70f0b365a2c8539fd87f35a120e9373d68a0fec98d92d2516eef7c"
+    },
+    {
+      "file": "code4c-exported-project.json",
+      "bytes": 344,
+      "sha256": "d506ea1269432bb900d9bc28494d091de83e59e06db3de319f0262e86b50decc"
+    },
+    {
+      "file": "code4c-imported-bridge.png",
+      "bytes": 88431,
+      "sha256": "d0c08a5c524f8f1a7eed3a86da7b17e9f9a9dc71c92c9455c045722211605b42"
+    },
+    {
+      "file": "code4c-imported-bridge.xml",
+      "bytes": 11877,
+      "sha256": "2c59a84180ee761763b809787868653dc1a1a89961b0d42eebd80b97df0e2dab"
+    },
+    {
+      "file": "code4c-imported-project.json",
+      "bytes": 344,
+      "sha256": "d506ea1269432bb900d9bc28494d091de83e59e06db3de319f0262e86b50decc"
+    },
+    {
+      "file": "code4c-installed-package.json",
+      "bytes": 280,
+      "sha256": "a905c47b1a0de3ec87bdaa813fdbfc7027555f4f8e60f875188338cc8ab5570b"
+    },
+    {
+      "file": "code4c-invalid-utf8.png",
+      "bytes": 100077,
+      "sha256": "3742b29a4e79b74f2ba7321680e20cc75a50d634261092a6d4861dcd747b1f9c"
+    },
+    {
+      "file": "code4c-invalid-utf8.xml",
+      "bytes": 5348,
+      "sha256": "dd79ba5510e56863dbdfe97fc02a7beb35c9eae125233ecd053f3177fa2357e3"
+    },
+    {
+      "file": "code4c-mission-result.png",
+      "bytes": 102668,
+      "sha256": "af89422590be25a96f38c956f01cfcb092c93700e058cf4e592405658ecfde2a"
+    },
+    {
+      "file": "code4c-mission-result.xml",
+      "bytes": 6117,
+      "sha256": "44173bf85640e0aeb1f34d2b7281b0ce8032cde95c1569a4fe4c063b8618f5cb"
+    },
+    {
+      "file": "code4c-runtime-errors.txt",
+      "bytes": 7830,
+      "sha256": "764376e01d804348ce97dd0dbb7d9dd4201c71296175c4821e8f54fd84de0b61"
+    },
+    {
+      "file": "code4c-saf-downloads.png",
+      "bytes": 44497,
+      "sha256": "608b5169a74257a2cc8df6dfab7653a4994b6bf08d48e5d8ef8ecac33a8ad811"
+    },
+    {
+      "file": "code4c-saf-downloads.xml",
+      "bytes": 20840,
+      "sha256": "2c9f55ef59d7b0c58092c1ddf6d21b7e505ed6be56a47dab28a1187740786177"
+    },
+    {
+      "file": "code4c-saf-export-proof.json",
+      "bytes": 530,
+      "sha256": "cbf4973e3c0c303d41a5952a04f6f7e2daa8bf9bc322786143d3288cbce33f04"
+    },
+    {
+      "file": "code4c-saf-import-proof.json",
+      "bytes": 482,
+      "sha256": "38fa13b81a40816a0f403ef1864b84e0a867779a3afe5e17faf9017b0c104dd3"
+    },
+    {
+      "file": "code4c-saf-invalid-proof.json",
+      "bytes": 825,
+      "sha256": "d477429b366890696137662ea5c1bcb959af97db913cada20172683796bdb313"
+    },
+    {
+      "file": "fixtures.json",
+      "bytes": 2728,
+      "sha256": "1762ad178f78a574f6413c3a59c4dbbd582459e5fe2ef497b65044c0d9adfa0b"
+    },
+    {
+      "file": "mime-filter-comparison.json",
+      "bytes": 492,
+      "sha256": "3a4af40be4fdaa4667e7ece067131a0681a8534b7496569929d549016e06f0f7"
+    },
+    {
+      "file": "update-setup.json",
+      "bytes": 671,
+      "sha256": "9d03acc6ff0bba253771f11a701dd613b9aea16bf3e2ed069fe90fe07d19c480"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "versionCode": 4,
+  "viewport_px": [
+    720,
+    1600
+  ],
+  "density": 320,
+  "fontScale": 1.5,
+  "scene": {
+    "bounds_px": [
+      0,
+      183,
+      720,
+      913
+    ],
+    "width_px": 720,
+    "height_px": 730
+  },
+  "controls": [
+    {
+      "id": "br.com.agv.touch.dev:id/builder_undo",
+      "text": "Desfazer",
+      "bounds_px": [
+        24,
+        1330,
+        267,
+        1431
+      ],
+      "enabled": "false"
+    },
+    {
+      "id": "br.com.agv.touch.dev:id/builder_redo",
+      "text": "Refazer",
+      "bounds_px": [
+        279,
+        1330,
+        498,
+        1431
+      ],
+      "enabled": "false"
+    },
+    {
+      "id": "br.com.agv.touch.dev:id/builder_confirm",
+      "text": "Colocar bloco",
+      "bounds_px": [
+        510,
+        1277,
+        696,
+        1484
+      ],
+      "enabled": "false"
+    }
+  ]
+}

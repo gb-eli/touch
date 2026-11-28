@@ -1,0 +1,19 @@
+{
+  "apk_sha256": "392cceaf1f3a0672b28d29e4d0da5654562f74b696181a3b8be555200e96d782",
+  "fixture_file": "utf8-invalido.json",
+  "dialog_title": "Arquivo não importado",
+  "messages": [
+    "Arquivo não importado",
+    "O arquivo contém codificação UTF-8 inválida.",
+    "ENTENDI"
+  ],
+  "before": {
+    "a6664bd0-b544-4cf2-91fc-b8825684bf1d.json": "d506ea1269432bb900d9bc28494d091de83e59e06db3de319f0262e86b50decc",
+    "ae19226f-5433-46bb-9b8d-d647ddb230d4.json": "c4fb1b24caecb32ad308d4f8c4e834afa30a722024daade18240446abc9427ee"
+  },
+  "after": {
+    "a6664bd0-b544-4cf2-91fc-b8825684bf1d.json": "d506ea1269432bb900d9bc28494d091de83e59e06db3de319f0262e86b50decc",
+    "ae19226f-5433-46bb-9b8d-d647ddb230d4.json": "c4fb1b24caecb32ad308d4f8c4e834afa30a722024daade18240446abc9427ee"
+  },
+  "projects_unchanged": true
+}

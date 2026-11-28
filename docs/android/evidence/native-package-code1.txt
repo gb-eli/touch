@@ -1,0 +1,64 @@
+Activity Resolver Table:
+  Non-Data Actions:
+      android.intent.action.MAIN:
+        45d0d8a br.com.agv.touch.dev/br.com.agv.touch.MainActivity filter b88ae65
+          Action: "android.intent.action.MAIN"
+          Category: "android.intent.category.LAUNCHER"
+
+Key Set Manager:
+  [br.com.agv.touch.dev]
+      Signing KeySets: 5
+
+Packages:
+  Package [br.com.agv.touch.dev] (87afffb):
+    userId=10067
+    pkg=Package{d7fa818 br.com.agv.touch.dev}
+    codePath=/data/app/br.com.agv.touch.dev-WNbHSXlsvml9Nw5htYfUZA==
+    resourcePath=/data/app/br.com.agv.touch.dev-WNbHSXlsvml9Nw5htYfUZA==
+    legacyNativeLibraryDir=/data/app/br.com.agv.touch.dev-WNbHSXlsvml9Nw5htYfUZA==/lib
+    primaryCpuAbi=null
+    secondaryCpuAbi=null
+    versionCode=1 minSdk=26 targetSdk=35
+    versionName=0.1.0-dev
+    splits=[base]
+    apkSigningVersion=2
+    applicationInfo=ApplicationInfo{f221271 br.com.agv.touch.dev}
+    flags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ]
+    privateFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE ]
+    dataDir=/data/user/0/br.com.agv.touch.dev
+    supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
+    timeStamp=2026-11-28 03:17:56
+    firstInstallTime=2026-11-28 03:17:57
+    lastUpdateTime=2026-11-28 03:17:57
+    signatures=PackageSignatures{7867856 version:2, signatures:[cc6361be], past signatures:[]}
+    installPermissionsFixed=true
+    pkgFlags=[ DEBUGGABLE HAS_CODE ALLOW_CLEAR_USER_DATA ]
+    User 0: ceDataInode=-4294852162 installed=true hidden=false suspended=false stopped=false notLaunched=false enabled=0 instant=false virtual=false
+      runtime permissions:
+
+Package Changes:
+  Sequence number=27
+  User 0:
+    seq=0, package=com.android.systemui
+    seq=2, package=com.android.sdksetup
+    seq=3, package=com.android.provision
+    seq=4, package=com.android.settings
+    seq=5, package=com.android.calendar
+    seq=6, package=br.com.agv.touch.dev
+    seq=8, package=com.android.camera2
+    seq=17, package=com.android.email
+    seq=19, package=com.android.gallery3d
+    seq=20, package=com.android.inputmethod.latin
+    seq=25, package=com.android.messaging
+    seq=26, package=com.android.nfc
+
+
+Dexopt state:
+  [br.com.agv.touch.dev]
+    path: /data/app/br.com.agv.touch.dev-WNbHSXlsvml9Nw5htYfUZA==/base.apk
+      x86: [status=run-from-apk] [reason=unknown]
+
+
+Compiler stats:
+  [br.com.agv.touch.dev]
+    (No recorded stats)

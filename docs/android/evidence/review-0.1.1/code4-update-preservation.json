@@ -1,0 +1,13 @@
+{
+  "apk_sha256": "2fef53a4b42d3fed6b50002bfb072e99862a5607d5f4020856c4d77fb30232c3",
+  "files": {
+    "ae19226f-5433-46bb-9b8d-d647ddb230d4.json": {
+      "sha256": "c4fb1b24caecb32ad308d4f8c4e834afa30a722024daade18240446abc9427ee",
+      "unchanged": true
+    },
+    "recovery.json": {
+      "sha256": "6c9933208e7bddef5a5c3ed94d8f0169f291a39ad6236e25fd304303bf4e4866",
+      "unchanged": true
+    }
+  }
+}

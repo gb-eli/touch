@@ -1,0 +1,19 @@
+{
+  "apk": "TV_TOUCH_MVP_0.1.0_Android.apk",
+  "application_id": "br.com.agv.touch.dev",
+  "bytes": 79100,
+  "sha256": "e4de26fd1c7a06feced4a4cae7a40bb4d4bac58e26453c9d1bd32ab66d67d28d",
+  "minimum_api": 26,
+  "target_api": 35,
+  "permissions": [],
+  "native_libraries": [],
+  "private_key_files": [],
+  "signature_verified": true,
+  "alignment_verified": true,
+  "scope": "Static APK verification; physical device validation remains separate.",
+  "version_name": "0.1.0-dev",
+  "version_code": 3,
+  "source_pull_request": "https://github.com/gb-eli/touch/pull/40",
+  "android_source_tree_sha": "fbe10add66dcc953132d6e057ad5e1798d9292c8",
+  "signing_certificate_sha256": "a9154ab40c8744eab6d110cd1371686a85ed394ed9a35bf876a30becdf5eaf0a"
+}

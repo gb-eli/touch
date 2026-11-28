@@ -171,13 +171,13 @@ try{
             bottoms:rects.map(r=>Math.round(r.bottom))
           };
         });
-        assert.equal(shortcuts.count,8,'launcher deve ter 8 atalhos sem Arcade duplicado: '+JSON.stringify(shortcuts));
+        assert.equal(shortcuts.count,9,'launcher deve ter 9 atalhos, incluindo TECH NEWS, sem Arcade duplicado: '+JSON.stringify(shortcuts));
         assert.equal(shortcuts.arcades,1,'somente um Arcade');
         assert.equal(shortcuts.replays,1,'reabrir teste de toque permanece disponível');
         assert.ok(Math.max(...shortcuts.tops)-Math.min(...shortcuts.tops)<=3,
           'atalhos precisam ficar em uma unica linha na paisagem: '+JSON.stringify(shortcuts));
         assert.ok(shortcuts.minHeight>=27,'alvos touch nao podem ficar pequenos: '+JSON.stringify(shortcuts));
-        note(profile.name+' launcher 8 atalhos em uma linha','pass',JSON.stringify(shortcuts));
+        note(profile.name+' launcher 9 atalhos em uma linha','pass',JSON.stringify(shortcuts));
       }
       if(pageName==='oficina'&&profile.width>=760&&profile.height<=650){
         const scene=await page.evaluate(()=>{

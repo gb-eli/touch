@@ -1,0 +1,61 @@
+{
+  "candidate": {
+    "version_name": "0.1.0-dev",
+    "version_code": 3,
+    "application_id": "br.com.agv.touch.dev"
+  },
+  "android_build": {
+    "assembleDebug": "passed",
+    "lintDebug": "passed",
+    "lint_issues_by_severity": {
+      "Warning": 18
+    },
+    "lint_issues_by_id": {
+      "DrawAllocation": 6,
+      "ObsoleteSdkInt": 1,
+      "MonochromeLauncherIcon": 1,
+      "ViewConstructor": 4,
+      "SetTextI18n": 6
+    },
+    "artifact_verification": "apk-verification.json"
+  },
+  "domain": {
+    "legacy_scenarios": 36,
+    "compared_operations": 239,
+    "legacy_picking_vectors": 6,
+    "strict_json_storage_backup_recovery_and_concurrency": "passed",
+    "runner": "android/tests/run-core-tests.sh"
+  },
+  "web_regression": {
+    "node_tests": 110,
+    "node_failed": 0,
+    "node_skipped": 0,
+    "browser_checks": 120,
+    "browser_issues": [],
+    "profiles": 7,
+    "browser": "Chromium 158",
+    "automation": "Playwright 1.62.1",
+    "scope": "Legacy website regression; does not validate Android performance."
+  },
+  "prototype_report": "../../app-design/evidence/prototype-qa.json",
+  "native_report": "native-qa.json",
+  "physical_devices": {
+    "Galaxy S25 Ultra": "pending",
+    "Samsung WA86F": "pending"
+  },
+  "not_implemented": [
+    "camera capture",
+    "ARCore",
+    "hand/body tracking",
+    "VR"
+  ],
+  "native_execution": {
+    "environment": "AOSP API 28/x86, SwiftShader software",
+    "passed": 13,
+    "failed": 0,
+    "not_run": 3,
+    "final_wide_pixels": "1600x720",
+    "final_wide_density": 160,
+    "controller": "stopped"
+  }
+}
