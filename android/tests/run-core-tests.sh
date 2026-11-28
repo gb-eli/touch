@@ -9,17 +9,20 @@ TV_TOUCH_TEST_CP="$TV_TOUCH_JSON_JAR:$TV_TOUCH_ANDROID_JAR"
 java com.sun.tools.javac.Main -source 8 -target 8 -Xlint:-options -encoding UTF-8 -cp "$TV_TOUCH_TEST_CP" \
   -d "$TV_TOUCH_CLASSES_DIR" \
   "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/core/VoxelWorld.java" \
+  "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/core/CreativeLibrary.java" \
   "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/core/ProjectCodec.java" \
   "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/core/ProjectStore.java" \
   "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/core/ProjectTransfers.java" \
   "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/render/RayPicker.java" \
   "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/render/SceneCamera.java" \
   "$TV_TOUCH_REPO_ROOT/android/tests/CoreContractTest.java" \
+  "$TV_TOUCH_REPO_ROOT/android/tests/CreativeLibraryContractTest.java" \
   "$TV_TOUCH_REPO_ROOT/android/tests/ProjectTransfersTest.java" \
   "$TV_TOUCH_REPO_ROOT/android/tests/RayPickerContractTest.java" \
   "$TV_TOUCH_REPO_ROOT/android/app/src/main/java/br/com/agv/touch/updates/UpdateFeed.java" \
   "$TV_TOUCH_REPO_ROOT/android/tests/UpdateFeedTest.java" \
   "$TV_TOUCH_REPO_ROOT/android/tests/CameraFramingContractTest.java"
+java -cp "$TV_TOUCH_CLASSES_DIR:$TV_TOUCH_TEST_CP" br.com.agv.touch.core.tests.CreativeLibraryContractTest
 java -cp "$TV_TOUCH_CLASSES_DIR:$TV_TOUCH_TEST_CP" br.com.agv.touch.core.tests.CoreContractTest \
   "$TV_TOUCH_REPO_ROOT/tests/fixtures/voxel-contract.json"
 java -cp "$TV_TOUCH_CLASSES_DIR:$TV_TOUCH_TEST_CP" br.com.agv.touch.core.tests.RayPickerContractTest \

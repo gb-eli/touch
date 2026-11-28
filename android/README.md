@@ -1,19 +1,20 @@
-# TV Touch Android — MVP 0.1.2-dev
+# TV Touch Android — Studio Prism 0.2.0-dev
 
 Aplicativo Android nativo de construção com blocos 3D, missões e projetos locais. O MVP usa **Java, Views Android e OpenGL ES 2.0**, com um código compartilhado para o Galaxy S25 Ultra e a Samsung WA86F. A decisão de implementação e sua relação com o planejamento inicial estão registradas em [Arquitetura e build](../docs/android/BUILD.md).
 
-O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev`, versão **`0.1.2-dev`**, código **`5`**, e aparece no launcher como **AGV Touch · Teste**. O aceite físico no S25 Ultra e na WA86F está **pendente**; execução em um aparelho ou emulador não homologa o outro.
+O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev`, versão **`0.2.0-dev`**, código **`6`**, e aparece no launcher como **AGV Touch · Teste**. O aceite físico no S25 Ultra e na WA86F está **pendente**; execução em um aparelho ou emulador não homologa o outro.
 
 ## Telas e funções implementadas
 
 | Tela | Funções disponíveis |
 | --- | --- |
-| **Início** | Abrir construção livre, continuar projeto ou rascunho da sessão e acessar missões. |
-| **Explorar** | Construção livre, quatro missões e informação sobre as próximas experiências de câmera. |
+| **Início** | Hero criativo Studio Prism, construção livre, retomar projeto ou rascunho, visita guiada, destaques de missões e acesso à Biblioteca. |
+| **Explorar** | Jornada de quatro missões com progresso local, construção livre e informações honestas sobre experiências futuras. |
 | **Missão** | Prévia do objetivo, instruções e início da atividade escolhida. |
 | **Construtor** | Seleção e confirmação de posições, adicionar/apagar blocos, girar, aproximar, afastar, enquadrar a construção e escolher coordenadas. Nove materiais, desfazer/refazer, contagem e progresso. |
-| **Projetos** | Salvar, abrir, renomear, excluir mediante confirmação, importar e exportar JSON. |
-| **Ajustes** | Perfil visual, preferência de movimento reduzido, limite de renderização de 30/60 FPS, atualizações verificadas e diagnóstico local exportável. |
+| **Biblioteca** | Seis modelos voxel originais, inteiramente offline e editáveis como novo projeto com UUID próprio. |
+| **Projetos** | Salvar, abrir, favoritar, duplicar, ordenar por recentes/favoritos, renomear, excluir mediante confirmação, importar e exportar JSON. |
+| **Ajustes** | Perfil visual, preferência de movimento reduzido, visita guiada, limite 30/60 FPS, atualizações verificadas e diagnóstico local exportável. |
 
 A grade mede **8 × 8 × 6**, com até **256 blocos** e **40 estados anteriores** no histórico. O histórico é preservado na mudança de configuração da atividade; a restauração após encerramento do processo recupera o projeto, sem prometer o histórico completo da sessão anterior.
 
@@ -25,6 +26,16 @@ A grade mede **8 × 8 × 6**, com até **256 blocos** e **40 estados anteriores*
 - **Espelho de blocos:** preencher as seis posições do padrão simétrico.
 
 A conclusão considera as coordenadas-alvo; permite materiais diferentes e blocos extras. As regras e o formato de dados estão em [Contrato do domínio](../docs/android/DOMAIN_CONTRACT.md).
+
+## Studio Prism 0.2: UX/UI e novos módulos
+
+A versão 0.2 apresenta cinco destinos: **Início, Explorar, Biblioteca, Projetos e Ajustes**. A experiência visual combina Ink `#10142F`, Violet `#6352E8`, Lime `#BDFA79`, Cyan `#77DCF0`, Lavender `#EAE5FF` e superfícies claras. A troca de páginas tem transição breve (190 ms), desativada ao selecionar movimento reduzido.
+
+No telefone em retrato, o construtor apresenta uma faixa horizontal de materiais, **Desfazer, Refazer e Salvar** próximos à borda inferior e o comando de **Colocar bloco** em largura total; a opção **Mais** abre coordenadas e controles de câmera. Em paisagem curta, o dock é lateral e rolável, com Salvar e Colocar mantidos acessíveis. Em telas largas, a navegação é lateral e os botões de edição são adaptados a alvos maiores. Ainda é necessário avaliar a legibilidade e alcance na WA86F física.
+
+A **Biblioteca** inclui Jardim de cores, Foguete criativo, Robô de blocos, Castelo inventado, Ponte luminosa e Escultura em espiral. Todos são conjuntos de blocos reais e editáveis. Ao escolher um modelo, o projeto recebe novo UUID e permanece como rascunho até Salvar. **Nunca** substitui o modelo original ou um projeto existente.
+
+Em **Explorar**, o progresso das quatro missões fica no aparelho. Em **Projetos**, os favoritos são preferências locais: o JSON exportado continua representando apenas a construção, sem mudança de contrato. A visita guiada de três passos pode ser reaberta em Ajustes. O design e os fluxos estão em [Plano completo Studio 0.2](../docs/android/STUDIO_0.2_PRODUCT_PLAN.md) e [Protótipo interativo](../docs/app-design/03-studio-prism-high-fidelity.html).
 
 ## Como experimentar o construtor
 

@@ -22,14 +22,20 @@ import java.util.List;
 
 /** Product-specific visual tokens shared by every native screen. No network assets. */
 final class UiKit {
-    static final int INK=0xff0d2230, SURFACE=0xfff4f7f3, PAPER=Color.WHITE;
-    static final int TEXT=0xff163141, MUTED=0xff526875, LIME=0xffc7f36b;
-    static final int CYAN=0xff79dcec, BORDER=0xffdce7e3, DANGER=0xffb23b43;
+    static final int INK=0xff10142f, SURFACE=0xfff6f6fc, PAPER=Color.WHITE;
+    static final int TEXT=0xff191c39, MUTED=0xff58657b, LIME=0xffbdfa79;
+    static final int CYAN=0xff77dcf0, BORDER=0xffe0e4ef, DANGER=0xffac3157;
+    static final int VIOLET=0xff6352e8, PEACH=0xffffb29c, LAVENDER=0xffeae5ff, MINT=0xffb9f6db;
     final Context context;
     UiKit(Context context) { this.context=context; }
     int dp(float value) { return Math.round(value*context.getResources().getDisplayMetrics().density); }
     GradientDrawable shape(int color,int radius) {
         GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(radius));return d;
+    }
+    GradientDrawable gradient(int radius,int... colors) {
+        GradientDrawable d=new GradientDrawable(GradientDrawable.Orientation.TL_BR,colors);
+        d.setCornerRadius(dp(radius));
+        return d;
     }
     GradientDrawable outline(int color,int radius,int borderColor) {
         GradientDrawable d=shape(color,radius);d.setStroke(dp(1),borderColor);return d;
@@ -40,16 +46,16 @@ final class UiKit {
         v.setIncludeFontPadding(false);v.setLineSpacing(dp(2),1);return v;
     }
     TextView label(String value) {
-        TextView v=text(value,12,MUTED,true);v.setLetterSpacing(.12f);return v;
+        TextView v=text(value,12,MUTED,true);v.setLetterSpacing(.14f);return v;
     }
     Button button(String label,boolean primary,Runnable action) {
-        return button(label,primary?LIME:PAPER,TEXT,action);
+        return button(label,primary?VIOLET:PAPER,primary?PAPER:TEXT,action);
     }
     Button button(String label,int background,int foreground,Runnable action) {
         Button b=new Button(context);b.setText(label);b.setAllCaps(false);b.setTextSize(15);
         b.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
         boolean tv="tv".equals(context.getSharedPreferences("preferences",Context.MODE_PRIVATE).getString("profile","auto"));
-        b.setMinHeight(dp(tv?56:50));b.setMinimumHeight(dp(tv?56:50));b.setMinWidth(0);b.setMinimumWidth(0);
+        b.setMinHeight(dp(tv?64:52));b.setMinimumHeight(dp(tv?64:52));b.setMinWidth(0);b.setMinimumWidth(0);
         b.setPadding(dp(16),dp(10),dp(16),dp(10));b.setStateListAnimator(null);
         styleButton(b,background,foreground,false);
         b.setOnClickListener(v->action.run());return b;
@@ -57,14 +63,28 @@ final class UiKit {
     void styleButton(Button b,int background,int foreground,boolean selected) {
         b.setTextColor(new ColorStateList(new int[][]{new int[]{-android.R.attr.state_enabled},new int[]{}},new int[]{0xff677b79,foreground}));
         StateListDrawable states=new StateListDrawable();
-        states.addState(new int[]{-android.R.attr.state_enabled},shape(0xffe7ece8,14));
+        states.addState(new int[]{-android.R.attr.state_enabled},shape(0xffe8eaf1,17));
         int ripple=foreground==PAPER?0x3dffffff:0x26163141;
-        states.addState(new int[]{},new RippleDrawable(ColorStateList.valueOf(ripple),outline(background,14,selected?TEXT:background==PAPER?BORDER:background),shape(Color.WHITE,14)));
+        states.addState(new int[]{},new RippleDrawable(ColorStateList.valueOf(ripple),outline(background,17,selected?VIOLET:background==PAPER?BORDER:background),shape(Color.WHITE,17)));
         b.setBackground(states);b.setSelected(selected);
     }
     LinearLayout vertical() {LinearLayout v=new LinearLayout(context);v.setOrientation(LinearLayout.VERTICAL);return v;}
     LinearLayout row() {LinearLayout v=new LinearLayout(context);v.setOrientation(LinearLayout.HORIZONTAL);v.setGravity(Gravity.CENTER_VERTICAL);return v;}
-    LinearLayout card() {LinearLayout v=vertical();v.setPadding(dp(20),dp(20),dp(20),dp(20));v.setBackground(shape(PAPER,20));return v;}
+    LinearLayout card() {
+        LinearLayout v=vertical();v.setPadding(dp(20),dp(20),dp(20),dp(20));
+        v.setBackground(outline(PAPER,24,BORDER));
+        v.setElevation(dp(2));
+        return v;
+    }
+    LinearLayout featureCard(int first,int second){
+        LinearLayout v=vertical();
+        v.setPadding(dp(20),dp(22),dp(20),dp(22));
+        v.setBackground(gradient(24,first,second));
+        return v;
+    }
+    TextView overline(String value,int color){
+        TextView v=text(value,11,color,true);v.setLetterSpacing(.15f);return v;
+    }
     View gap(int height) {View v=new View(context);v.setLayoutParams(new LinearLayout.LayoutParams(1,dp(height)));return v;}
     void addGap(LinearLayout parent,int height) {parent.addView(gap(height));}
     void addFull(LinearLayout parent,View v,int top) {
@@ -82,6 +102,12 @@ final class UiKit {
             Path path=new Path();
             if("home".equals(kind)) {path.moveTo(3,11);path.lineTo(12,3);path.lineTo(21,11);path.moveTo(5,10);path.lineTo(5,21);path.lineTo(10,21);path.lineTo(10,15);path.lineTo(14,15);path.lineTo(14,21);path.lineTo(19,21);path.lineTo(19,10);c.drawPath(path,p);}
             else if("explore".equals(kind)) {for(int y:new int[]{4,14})for(int x:new int[]{4,14})c.drawRoundRect(x,y,x+6,y+6,1,1,p);}
+            else if("library".equals(kind)) {
+                path.moveTo(4,5);path.lineTo(10,4);path.lineTo(10,20);path.lineTo(4,21);path.close();
+                path.moveTo(12,4);path.lineTo(19,5);path.lineTo(20,21);path.lineTo(12,20);path.close();
+                path.moveTo(7,8);path.lineTo(7,16);path.moveTo(15,8);path.lineTo(16,16);
+                c.drawPath(path,p);
+            }
             else if("projects".equals(kind)) {path.moveTo(3,8);path.lineTo(3,5);path.lineTo(10,5);path.lineTo(12,8);path.lineTo(21,8);path.lineTo(21,20);path.lineTo(3,20);path.close();c.drawPath(path,p);}
             else if("settings".equals(kind)) {c.drawCircle(12,12,6,p);c.drawCircle(12,12,2,p);for(int i=0;i<8;i++){double a=i*Math.PI/4;c.drawLine(12+(float)Math.cos(a)*8,12+(float)Math.sin(a)*8,12+(float)Math.cos(a)*10,12+(float)Math.sin(a)*10,p);}}
             else if("cube".equals(kind)) {path.moveTo(12,2);path.lineTo(21,7);path.lineTo(21,17);path.lineTo(12,22);path.lineTo(3,17);path.lineTo(3,7);path.close();path.moveTo(3,7);path.lineTo(12,12);path.lineTo(21,7);path.moveTo(12,12);path.lineTo(12,22);c.drawPath(path,p);}

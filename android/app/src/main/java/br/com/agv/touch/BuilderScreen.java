@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
@@ -69,12 +70,12 @@ final class BuilderScreen extends LinearLayout {
         status.setPadding(0,ui.dp(8),0,ui.dp(8));status.setMinHeight(ui.dp(36));
         feedback=ui.text("",14,UiKit.TEXT,true);feedback.setId(R.id.builder_feedback);
         feedback.setPadding(ui.dp(14),ui.dp(10),ui.dp(14),ui.dp(10));
-        feedback.setBackground(ui.outline(0xffe4f2ce,14,0xffa7c978));
+        feedback.setBackground(ui.outline(UiKit.LAVENDER,16,0xffd2cafd));
         feedback.setAccessibilityLiveRegion(ACCESSIBILITY_LIVE_REGION_POLITE);feedback.setVisibility(GONE);
         undo=ui.button("Desfazer",false,()->edit(world.undo(),"Edição desfeita"));undo.setId(R.id.builder_undo);
         redo=ui.button("Refazer",false,()->edit(world.redo(),"Edição refeita"));redo.setId(R.id.builder_redo);
         confirm=ui.button("Colocar bloco",true,this::confirm);confirm.setId(R.id.builder_confirm);
-        result=ui.button("Ver resultado",UiKit.INK,UiKit.PAPER,host::completed);result.setId(R.id.builder_result);
+        result=ui.button("Ver resultado",UiKit.VIOLET,UiKit.PAPER,host::completed);result.setId(R.id.builder_result);
         result.setVisibility(GONE);
 
         addView(header(),new LayoutParams(-1,-2));
@@ -103,7 +104,7 @@ final class BuilderScreen extends LinearLayout {
     private FrameLayout stage(){
         FrameLayout stage=new FrameLayout(getContext());stage.setId(R.id.builder_stage);
         stage.addView(scene,new FrameLayout.LayoutParams(-1,-1));
-        info.setPadding(ui.dp(12),ui.dp(8),ui.dp(12),ui.dp(8));info.setBackground(ui.shape(UiKit.PAPER,12));
+        info.setPadding(ui.dp(13),ui.dp(9),ui.dp(13),ui.dp(9));info.setBackground(ui.outline(UiKit.PAPER,14,UiKit.BORDER));
         FrameLayout.LayoutParams badge=new FrameLayout.LayoutParams(-2,-2,Gravity.TOP|Gravity.START);
         badge.setMargins(ui.dp(12),ui.dp(12),ui.dp(12),0);stage.addView(info,badge);
         FrameLayout.LayoutParams note=new FrameLayout.LayoutParams(-2,-2,Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
@@ -119,12 +120,18 @@ final class BuilderScreen extends LinearLayout {
             b.setTextSize(sideDock?13:14);b.setPadding(ui.dp(6),ui.dp(9),ui.dp(6),ui.dp(9));
             tools.put(choice[0],b);weighted(row,b,row.getChildCount()==0?0:6);
         }
+        if(!wide&&!sideDock){
+            Button more=ui.button("Mais",false,this::showTools);
+            more.setTextSize(13);
+            more.setContentDescription("Mais ferramentas: coordenadas, zoom e enquadramento");
+            weighted(row,more,6);
+        }
         return row;
     }
 
     private LinearLayout dock(){
         LinearLayout dock=ui.vertical();dock.setId(R.id.builder_dock);
-        dock.setPadding(ui.dp(12),ui.dp(10),ui.dp(12),ui.dp(10));dock.setBackgroundColor(UiKit.PAPER);
+        dock.setPadding(ui.dp(12),ui.dp(10),ui.dp(12),ui.dp(10));dock.setBackground(ui.outline(UiKit.PAPER,22,UiKit.BORDER));
         return dock;
     }
 
@@ -139,16 +146,39 @@ final class BuilderScreen extends LinearLayout {
         b.setContentDescription("Ferramentas: coordenadas, zoom e enquadramento da vista");return b;
     }
 
+    private HorizontalScrollView materialStrip(){
+        HorizontalScrollView scroll=new HorizontalScrollView(getContext());
+        scroll.setHorizontalScrollBarEnabled(false);
+        scroll.setFillViewport(false);
+        LinearLayout chips=ui.row();
+        for(VoxelWorld.Material item:VoxelWorld.materials()){
+            Button chip=ui.button(item.label,false,()->setMaterial(item.id));
+            chip.setTextSize(12);chip.setPadding(ui.dp(9),ui.dp(8),ui.dp(9),ui.dp(8));
+            GradientDrawable swatch=ui.shape(item.color,6);
+            swatch.setSize(ui.dp(16),ui.dp(16));
+            chip.setCompoundDrawablesWithIntrinsicBounds(swatch,null,null,null);
+            chip.setCompoundDrawablePadding(ui.dp(5));
+            materials.put(item.id,chip);
+            LayoutParams lp=new LayoutParams(ui.dp(106),-2);
+            if(chips.getChildCount()>0)lp.leftMargin=ui.dp(7);
+            chips.addView(chip,lp);
+        }
+        scroll.addView(chips);
+        scroll.setContentDescription("Materiais. Deslize horizontalmente para ver mais cores.");
+        return scroll;
+    }
+
     private LinearLayout sideControls(){
         LinearLayout dock=dock();
         dockScroll=new ScrollView(getContext());dockScroll.setFillViewport(false);dockScroll.setVerticalScrollBarEnabled(true);
         LinearLayout contents=ui.vertical();contents.addView(toolGroup(),new LayoutParams(-1,-2));
         LinearLayout choices=ui.row();weighted(choices,materialButton(),0);weighted(choices,optionsButton(),6);
-        ui.addFull(contents,choices,8);contents.addView(status,new LayoutParams(-1,-2));
+        ui.addFull(contents,choices,8);ui.addFull(contents,ui.overline("MATERIAIS",UiKit.VIOLET),11);ui.addFull(contents,materialStrip(),7);contents.addView(status,new LayoutParams(-1,-2));
         LinearLayout history=ui.row();weighted(history,undo,0);weighted(history,redo,6);contents.addView(history);
         ui.addFull(contents,result,8);dockScroll.addView(contents);
         dock.addView(dockScroll,new LayoutParams(-1,0,1));
-        LayoutParams place=new LayoutParams(-1,-2);place.topMargin=ui.dp(8);dock.addView(confirm,place);
+        footerSave=ui.button("Salvar projeto",false,host::save);ui.addFull(dock,footerSave,8);
+        LayoutParams place=new LayoutParams(-1,-2);place.topMargin=ui.dp(6);dock.addView(confirm,place);
         return dock;
     }
 
@@ -173,17 +203,20 @@ final class BuilderScreen extends LinearLayout {
             ui.addFull(dock,palette,8);
         }else{
             dock.addView(toolGroup(),new LayoutParams(-1,-2));
-            LinearLayout choices=ui.row();weighted(choices,materialButton(),0);weighted(choices,optionsButton(),8);
-            ui.addFull(dock,choices,8);
+            ui.addFull(dock,materialStrip(),8);
         }
         dock.addView(status,new LayoutParams(-1,-2));
         LinearLayout actions=ui.row();
-        if(!wide&&getResources().getConfiguration().fontScale>1.2f){
-            weighted(actions,undo,0);weighted(actions,redo,8);
-            dock.addView(actions,new LayoutParams(-1,-2));ui.addFull(dock,confirm,8);
+        if(!wide){
+            weighted(actions,undo,0);weighted(actions,redo,7);
+            footerSave=ui.button("Salvar",false,host::save);
+            weighted(actions,footerSave,7);
+            dock.addView(actions,new LayoutParams(-1,-2));
+            ui.addFull(dock,confirm,8);
         }else{
             spaced(actions,undo);spaced(actions,redo);
-            actions.addView(confirm,new LayoutParams(0,-2,1));dock.addView(actions,new LayoutParams(-1,-2));
+            actions.addView(confirm,new LayoutParams(0,-2,1));
+            dock.addView(actions,new LayoutParams(-1,-2));
         }
         ui.addFull(dock,result,8);return dock;
     }
@@ -289,12 +322,12 @@ final class BuilderScreen extends LinearLayout {
     void refresh(){
         for(Map.Entry<String,Button> entry:tools.entrySet()){
             boolean chosen=entry.getKey().equals(tool);Button b=entry.getValue();
-            ui.styleButton(b,chosen?UiKit.INK:UiKit.SURFACE,chosen?UiKit.PAPER:UiKit.TEXT,chosen);
+            ui.styleButton(b,chosen?UiKit.VIOLET:UiKit.SURFACE,chosen?UiKit.PAPER:UiKit.TEXT,chosen);
             b.setContentDescription(b.getText()+(chosen?", selecionado":""));
         }
         for(Map.Entry<String,Button> entry:materials.entrySet()){
             boolean chosen=entry.getKey().equals(material);Button b=entry.getValue();
-            ui.styleButton(b,chosen?UiKit.LIME:UiKit.PAPER,UiKit.TEXT,chosen);
+            ui.styleButton(b,chosen?UiKit.LAVENDER:UiKit.PAPER,UiKit.TEXT,chosen);
             b.setContentDescription(VoxelWorld.materialLabel(entry.getKey())+(chosen?", selecionado":""));
         }
         if(materialChoice!=null){
@@ -308,7 +341,7 @@ final class BuilderScreen extends LinearLayout {
         info.setText(world.count()+" / 256 blocos"+(progress.total>0?"\nMissão "+progress.done+" de "+progress.total:""));
         result.setVisibility(progress.complete&&!"free".equals(mission)?VISIBLE:GONE);
         result.setText("Objetivo concluído · Ver resultado");
-        ui.styleButton(confirm,"erase".equals(tool)?UiKit.DANGER:UiKit.LIME,"erase".equals(tool)?UiKit.PAPER:UiKit.TEXT,false);
+        ui.styleButton(confirm,"erase".equals(tool)?UiKit.DANGER:UiKit.VIOLET,UiKit.PAPER,false);
         updateSelection();
     }
     private void updateSelection(){
