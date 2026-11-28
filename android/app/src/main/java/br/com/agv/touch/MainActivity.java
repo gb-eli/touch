@@ -186,6 +186,14 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
         artParams.leftMargin=ui.dp(12);artRow.addView(art,artParams);
         ui.addFull(hero,artRow,12);
         p.addView(hero,new LinearLayout.LayoutParams(-1,-2));
+        if(updater!=null&&updater.hasUpdate()){
+            LinearLayout updateNotice=ui.featureCard(UiKit.LAVENDER,0xffddf5ef);
+            updateNotice.addView(ui.overline("NOVA VERSÃO DISPONÍVEL",UiKit.VIOLET));
+            ui.addFull(updateNotice,ui.text("TV Touch "+updater.latestVersion(),21,UiKit.TEXT,true),9);
+            ui.addFull(updateNotice,ui.text("Veja as novidades e atualize sem perder seus projetos.",14,UiKit.MUTED,false),7);
+            ui.addFull(updateNotice,ui.button("Ver atualização  →",false,()->navigate("settings")),14);
+            ui.addFull(p,updateNotice,14);
+        }
         if(current!=null){
             LinearLayout resume=ui.card();
             resume.addView(ui.overline(dirty||!projectSaved?"RASCUNHO EM ANDAMENTO":"SEU ÚLTIMO PROJETO",UiKit.VIOLET));
@@ -472,6 +480,7 @@ public final class MainActivity extends Activity implements ProjectTransfers.Lis
                 ui.addFull(updates,ui.button("Baixar e instalar "+updater.latestVersion(),true,()->updater.download()),10);
             }
         }
+        ui.addFull(updates,ui.text("Quando houver uma versão publicada, o TV Touch mostrará as novidades e baixará o APK após sua confirmação. A instalação final é feita pelo Android. Caso não apareça uma versão nova, use Verificar atualizações novamente após conectar-se à internet.",13,UiKit.MUTED,false),12);
         ui.addFull(updates,ui.text("Somente o canal Android de testes. A instalação de APKs exige autorização e confirmação do Android; seus projetos locais são preservados se o aplicativo for atualizado com a mesma identidade e assinatura.",13,UiKit.MUTED,false),12);
         ui.addFull(p,updates,18);
         LinearLayout diag=ui.card();diag.addView(ui.text("Diagnóstico local",22,UiKit.TEXT,true));
