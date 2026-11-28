@@ -13,8 +13,9 @@ import br.com.agv.touch.core.VoxelWorld;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -28,7 +29,7 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
     private final Listener listener;
     private final ScaleGestureDetector scaleDetector;
     private final int slop;
-    private volatile float yaw = 45, pitch = 36, distance = 14;
+    private volatile SceneCamera camera = SceneCamera.initial(1f);
     private volatile float[] inverse = new float[16];
     private volatile boolean inverseReady;
     private volatile int viewWidth = 1, viewHeight = 1;
@@ -41,7 +42,15 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
     private float startX,startY,lastX,lastY;
     private long lastRender;
     private int program, posLocation, normalLocation, mvpLocation, colorLocation, lightLocation;
-    private FloatBuffer cube, cubeNormals, edges, floor, floorNormals, grid;
+    private FloatBuffer cube, cubeNormals, edges, floorEven, floorOdd, floorNormals, grid;
+    private static final int FLOOR_BATCH_VERTICES = 32 * 6;
+    private static final float[] FLOOR_EVEN_COLOR = {.91f,.935f,.915f,1};
+    private static final float[] FLOOR_ODD_COLOR = {.94f,.965f,.945f,1};
+    private static final float[] GRID_COLOR = {.76f,.82f,.78f,1};
+    private static final float[] GOAL_FILL_COLOR = {.22f,.65f,.72f,.12f};
+    private static final float[] GOAL_EDGE_COLOR = {.18f,.57f,.64f,.65f};
+    private static final Map<String,float[]> MATERIAL_COLORS = materialColors();
+    private final float[] selectionColor = new float[4];
     private int gridVertices;
     private long statsStart;
     private int frames;
@@ -57,6 +66,7 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
 
     public VoxelSceneView(Context context, VoxelWorld world, Listener listener) {
         super(context); this.world=world; this.listener=listener;
+        camera=SceneCamera.initial(sceneHeight());
         setEGLContextClientVersion(2);
         setEGLConfigChooser(8,8,8,8,16,0);
         setPreserveEGLContextOnPause(true);
@@ -66,25 +76,31 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
         scaleDetector=new ScaleGestureDetector(context,new ScaleGestureDetector.SimpleOnScaleGestureListener(){
             @Override public boolean onScale(ScaleGestureDetector detector) {
                 suppressTap=true;
-                distance=Math.max(6f,Math.min(25f,distance/detector.getScaleFactor()));
+                camera=camera.zoomBy(1f/detector.getScaleFactor());
                 return true;
             }
         });
         setContentDescription("Área de construção 3D. Toque para selecionar uma posição e use o botão para confirmar. Na ferramenta Girar, arraste para mudar a vista. Use dois dedos para aproximar.");
         setFocusable(true);
     }
-    public void setMission(String value) { mission=value; }
+    public void setMission(String value) { mission=value;camera=camera.withFramingHeight(sceneHeight()); }
     public void setTool(String value) { tool=value; selected=null; listener.onSelection(null); }
     public void setMaterial(String value) { material=value; }
     public void setTargetFps(int value) { targetFps=value==60?60:30; }
-    public void orbit(float degrees) { yaw+=degrees; }
-    public void zoom(float factor) { distance=Math.max(6f,Math.min(25f,distance*factor)); }
-    public void resetCamera() { yaw=45; pitch=36; distance=14; }
+    public void orbit(float degrees) { camera=camera.rotateBy(degrees,0); }
+    public void zoom(float factor) { camera=camera.zoomBy(factor); }
+    public void resetCamera() { camera=SceneCamera.initial(sceneHeight()); }
     public void clearSelection() { selected=null; listener.onSelection(null); }
     public RayPicker.Hit selection() { return selected; }
     public void selectCell(int x,int y,int z) { selected=new RayPicker.Hit(world.get(x,y,z),x,y,z,0);listener.onSelection(selected); }
-    public float[] cameraState() { return new float[]{yaw,pitch,distance}; }
-    public void restoreCamera(float[] data) { if(data!=null&&data.length==3) { yaw=data[0];pitch=Math.max(15,Math.min(75,data[1]));distance=Math.max(6,Math.min(25,data[2])); } }
+    public float[] cameraState() { return camera.save(); }
+    public void restoreCamera(float[] data) { if(data!=null)camera=SceneCamera.restore(data,sceneHeight()); }
+    private float sceneHeight() {
+        int height=1;
+        for(VoxelWorld.Block block:world.blocks())height=Math.max(height,block.y+1);
+        for(VoxelWorld.Block block:VoxelWorld.goals(mission))height=Math.max(height,block.y+1);
+        return height;
+    }
     @Override protected void onAttachedToWindow() { super.onAttachedToWindow(); startFrames(); }
     @Override protected void onDetachedFromWindow() { stopFrames(); super.onDetachedFromWindow(); }
     private void startFrames() { if(!active) { active=true;Choreographer.getInstance().postFrameCallback(ticker); } }
@@ -106,7 +122,7 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
             float x=e.getX(i),y=e.getY(i);
             if(Math.hypot(x-startX,y-startY)>slop) moved=true;
             if("orbit".equals(tool)&&e.getPointerCount()==1&&!suppressTap) {
-                yaw-=(x-lastX)*.3f;pitch=Math.max(15,Math.min(75,pitch+(y-lastY)*.22f));
+                camera=camera.rotateBy(-(x-lastX)*.3f,(y-lastY)*.22f);
             }
             lastX=x;lastY=y;return true;
         }
@@ -142,31 +158,30 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
         makeGeometry();gpu=GLES20.glGetString(GLES20.GL_RENDERER);statsStart=SystemClock.elapsedRealtime();frames=0;
     }
     private static int shader(int type,String source) { int s=GLES20.glCreateShader(type);GLES20.glShaderSource(s,source);GLES20.glCompileShader(s);int[] ok=new int[1];GLES20.glGetShaderiv(s,GLES20.GL_COMPILE_STATUS,ok,0);if(ok[0]==0) throw new IllegalStateException(GLES20.glGetShaderInfoLog(s));return s; }
-    @Override public void onSurfaceChanged(GL10 gl,int width,int height) {viewWidth=width;viewHeight=Math.max(1,height);GLES20.glViewport(0,0,width,height);}
+    @Override public void onSurfaceChanged(GL10 gl,int width,int height) {viewWidth=Math.max(1,width);viewHeight=Math.max(1,height);GLES20.glViewport(0,0,width,height);}
     @Override public void onDrawFrame(GL10 gl) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glUseProgram(program);
         float aspect=(float)viewWidth/viewHeight;
-        float a=(float)Math.toRadians(yaw),p=(float)Math.toRadians(pitch),d=distance*Math.max(1f,1.05f/aspect);
-        Matrix.perspectiveM(projection,0,42,aspect,.5f,100f);
-        Matrix.setLookAtM(view,0,(float)(Math.cos(a)*Math.cos(p)*d),(float)(Math.sin(p)*d+1),(float)(Math.sin(a)*Math.cos(p)*d),0,1,0,0,1,0);
+        SceneCamera pose=camera;
+        float a=(float)Math.toRadians(pose.yaw),p=(float)Math.toRadians(pose.pitch),d=pose.distance(aspect);
+        Matrix.perspectiveM(projection,0,SceneCamera.VERTICAL_FOV_DEGREES,aspect,SceneCamera.NEAR_PLANE,pose.farPlane(aspect));
+        Matrix.setLookAtM(view,0,(float)(Math.cos(a)*Math.cos(p)*d),(float)(Math.sin(p)*d+pose.targetY),(float)(Math.sin(a)*Math.cos(p)*d),0,pose.targetY,0,0,1,0);
         Matrix.multiplyMM(pv,0,projection,0,view,0);
         float[] inv=new float[16]; if(Matrix.invertM(inv,0,pv,0)){inverse=inv;inverseReady=true;}
         GLES20.glEnableVertexAttribArray(posLocation);GLES20.glEnableVertexAttribArray(normalLocation);
-        for(int x=0;x<8;x++) for(int z=0;z<8;z++) {
-            float tint=(x+z)%2==0?.91f:.94f;
-            draw(floor,floorNormals,6,GLES20.GL_TRIANGLES,x-3.5f,-.015f,z-3.5f,1,new float[]{tint,tint+.025f,tint+.005f,1},false);
-        }
+        draw(floorEven,floorNormals,FLOOR_BATCH_VERTICES,GLES20.GL_TRIANGLES,0,0,0,1,FLOOR_EVEN_COLOR,false);
+        draw(floorOdd,floorNormals,FLOOR_BATCH_VERTICES,GLES20.GL_TRIANGLES,0,0,0,1,FLOOR_ODD_COLOR,false);
         // Grid lines precede all blocks; disable depth here to avoid coplanar flicker.
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-        draw(grid,null,gridVertices,GLES20.GL_LINES,0,0,0,1,new float[]{.76f,.82f,.78f,1},false);
+        draw(grid,null,gridVertices,GLES20.GL_LINES,0,0,0,1,GRID_COLOR,false);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         List<VoxelWorld.Block> blocks=world.blocks();
-        for(VoxelWorld.Block b:blocks) draw(cube,cubeNormals,36,GLES20.GL_TRIANGLES,b.x-3.5f,b.y+.5f,b.z-3.5f,.97f,rgba(VoxelWorld.materialColor(b.material),1),true);
+        for(VoxelWorld.Block b:blocks) draw(cube,cubeNormals,36,GLES20.GL_TRIANGLES,b.x-3.5f,b.y+.5f,b.z-3.5f,.97f,materialColor(b.material),true);
         GLES20.glEnable(GLES20.GL_BLEND);GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA,GLES20.GL_ONE_MINUS_SRC_ALPHA);GLES20.glDepthMask(false);
         for(VoxelWorld.Block b:VoxelWorld.goals(mission)) if(!world.has(b.x,b.y,b.z)) {
-            draw(cube,cubeNormals,36,GLES20.GL_TRIANGLES,b.x-3.5f,b.y+.5f,b.z-3.5f,.92f,new float[]{.22f,.65f,.72f,.12f},false);
-            draw(edges,null,24,GLES20.GL_LINES,b.x-3.5f,b.y+.5f,b.z-3.5f,.93f,new float[]{.18f,.57f,.64f,.65f},false);
+            draw(cube,cubeNormals,36,GLES20.GL_TRIANGLES,b.x-3.5f,b.y+.5f,b.z-3.5f,.92f,GOAL_FILL_COLOR,false);
+            draw(edges,null,24,GLES20.GL_LINES,b.x-3.5f,b.y+.5f,b.z-3.5f,.93f,GOAL_EDGE_COLOR,false);
         }
         RayPicker.Hit hit=selected;
         if(hit!=null) {
@@ -175,7 +190,9 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
             if(erase&&hit.block!=null) {sx=hit.block.x;sy=hit.block.y;sz=hit.block.z;}
             if((erase&&hit.block!=null)||(!erase&&hit.inBounds)) {
                 boolean valid=erase?hit.block!=null:world.canPlace(sx,sy,sz);
-                float[] c=erase||!valid?new float[]{.82f,.24f,.29f,.3f}:rgba(VoxelWorld.materialColor(material),.45f);
+                float[] c=selectionColor;
+                if(erase||!valid){c[0]=.82f;c[1]=.24f;c[2]=.29f;c[3]=.3f;}
+                else {float[] tint=materialColor(material);c[0]=tint[0];c[1]=tint[1];c[2]=tint[2];c[3]=.45f;}
                 draw(cube,cubeNormals,36,GLES20.GL_TRIANGLES,sx-3.5f,sy+.5f,sz-3.5f,1.015f,c,false);
                 c[3]=1;draw(edges,null,24,GLES20.GL_LINES,sx-3.5f,sy+.5f,sz-3.5f,1.025f,c,false);
             }
@@ -191,7 +208,17 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
         if(normals!=null){GLES20.glEnableVertexAttribArray(normalLocation);normals.position(0);GLES20.glVertexAttribPointer(normalLocation,3,GLES20.GL_FLOAT,false,0,normals);}else {GLES20.glDisableVertexAttribArray(normalLocation);GLES20.glVertexAttrib3f(normalLocation,0,1,0);}
         GLES20.glDrawArrays(mode,0,count);
     }
-    private static float[] rgba(int value,float alpha) {return new float[]{((value>>16)&255)/255f,((value>>8)&255)/255f,(value&255)/255f,alpha};}
+    private static Map<String,float[]> materialColors() {
+        Map<String,float[]> colors=new HashMap<>();
+        for(VoxelWorld.Material material:VoxelWorld.materials()) {
+            int c=material.color;colors.put(material.id,new float[]{((c>>16)&255)/255f,((c>>8)&255)/255f,(c&255)/255f,1});
+        }
+        return colors;
+    }
+    private static float[] materialColor(String id) {
+        float[] color=MATERIAL_COLORS.get(id);
+        return color!=null?color:MATERIAL_COLORS.get("stone");
+    }
     private static FloatBuffer buffer(float[] values) {FloatBuffer b=ByteBuffer.allocateDirect(values.length*4).order(ByteOrder.nativeOrder()).asFloatBuffer();b.put(values).position(0);return b;}
     private void makeGeometry() {
         float[][] corners={{-.5f,-.5f,-.5f},{.5f,-.5f,-.5f},{.5f,.5f,-.5f},{-.5f,.5f,-.5f},{-.5f,-.5f,.5f},{.5f,-.5f,.5f},{.5f,.5f,.5f},{-.5f,.5f,.5f}};
@@ -202,8 +229,21 @@ public final class VoxelSceneView extends GLSurfaceView implements GLSurfaceView
         cube=buffer(points);cubeNormals=buffer(normalValues);
         int[][] pairs={{0,1},{1,2},{2,3},{3,0},{4,5},{5,6},{6,7},{7,4},{0,4},{1,5},{2,6},{3,7}};
         float[] e=new float[72];offset=0;for(int[] pair:pairs)for(int index:pair)for(float value:corners[index])e[offset++]=value;edges=buffer(e);
-        floor=buffer(new float[]{-.5f,0,-.5f,.5f,0,-.5f,.5f,0,.5f,-.5f,0,-.5f,.5f,0,.5f,-.5f,0,.5f});
-        floorNormals=buffer(new float[]{0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0});
+        float[][] floorPoints={new float[FLOOR_BATCH_VERTICES*3],new float[FLOOR_BATCH_VERTICES*3]};
+        int[] floorOffsets={0,0};
+        float[] quad={0,0,1,0,1,1,0,0,1,1,0,1};
+        for(int x=0;x<8;x++)for(int z=0;z<8;z++) {
+            int parity=(x+z)%2;
+            for(int vertex=0;vertex<6;vertex++) {
+                floorPoints[parity][floorOffsets[parity]++]=x-4+quad[vertex*2];
+                floorPoints[parity][floorOffsets[parity]++]=-.015f;
+                floorPoints[parity][floorOffsets[parity]++]=z-4+quad[vertex*2+1];
+            }
+        }
+        floorEven=buffer(floorPoints[0]);floorOdd=buffer(floorPoints[1]);
+        float[] normalFloor=new float[FLOOR_BATCH_VERTICES*3];
+        for(int i=1;i<normalFloor.length;i+=3)normalFloor[i]=1;
+        floorNormals=buffer(normalFloor);
         float[] lines=new float[9*4*3];offset=0;for(int i=0;i<=8;i++){float c=i-4;float[] line={c,.001f,-4,c,.001f,4,-4,.001f,c,4,.001f,c};for(float v:line)lines[offset++]=v;}grid=buffer(lines);gridVertices=36;
     }
 }

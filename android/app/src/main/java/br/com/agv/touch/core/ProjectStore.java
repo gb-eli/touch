@@ -96,6 +96,20 @@ public final class ProjectStore {
         return readWithBackup(primary(projectId), previous(projectId), projectId);
     }
 
+    /** Existence is separate from validity: a corrupt saved project still needs protection. */
+    public synchronized boolean hasSavedVersion(String projectId) throws IOException {
+        requireId(projectId);
+        return primary(projectId).exists() || previous(projectId).exists();
+    }
+
+    /** Prepare a saved replacement before deleting a recoverable draft. */
+    public synchronized LoadResult discardRecovery(String projectId, boolean savedExpected) throws IOException {
+        requireId(projectId);
+        LoadResult replacement = savedExpected || hasSavedVersion(projectId) ? load(projectId) : null;
+        clearRecovery();
+        return replacement;
+    }
+
     /** Restore the previous valid saved version. The caller decides when to request this action. */
     public synchronized LoadResult recover(String projectId) throws IOException {
         requireId(projectId);

@@ -8,11 +8,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 
 /** Strict legacy-compatible project JSON. Imported identities never become paths. */
 public final class ProjectCodec {
     public static final int FORMAT_VERSION = 1;
     public static final int MAX_JSON_CHARS = 60000;
+    public static final int MAX_JSON_BYTES = MAX_JSON_CHARS * 4;
     public static final int MAX_NAME_CHARS = 80;
 
     private ProjectCodec() { }
@@ -89,6 +94,20 @@ public final class ProjectCodec {
     /** Every import gets a fresh UUID, including imports of this app's own exports. */
     public static Project decodeImport(String json) throws ProjectFormatException {
         return decode(json, null, true);
+    }
+
+    /** Reject malformed bytes instead of silently changing imported names or data. */
+    public static String decodeUtf8(byte[] bytes) throws ProjectFormatException {
+        if (bytes == null || bytes.length > MAX_JSON_BYTES)
+            throw new ProjectFormatException("Arquivo vazio ou acima do limite de tamanho.");
+        try {
+            return StandardCharsets.UTF_8.newDecoder()
+                    .onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT)
+                    .decode(ByteBuffer.wrap(bytes)).toString();
+        } catch (CharacterCodingException error) {
+            throw new ProjectFormatException("O arquivo contém codificação UTF-8 inválida.", error);
+        }
     }
 
     /** Read app-owned storage and require the identity associated with its filename. */

@@ -34,7 +34,7 @@ O primeiro produto é um laboratório criativo com um construtor de blocos, quat
 | `surface` | `#F4F7F3` | Fundo da área de trabalho |
 | `paper` | `#FFFFFF` | Cards e painéis |
 | `text` | `#163141` | Texto principal |
-| `muted` | `#637984` | Texto secundário |
+| `muted` | `#526875` | Texto secundário |
 | `lime` | `#C7F36B` | Ação principal e pequenos realces |
 | `cyan` | `#79DCEC` | Blocos e experiências de exploração |
 | `border` | `#DCE7E3` | Divisórias e limites |
@@ -84,3 +84,11 @@ Briefing da ponte: “Construa duas bases e una o topo com um vão.” A ativida
 ## Separação entre protótipo e aplicativo
 
 O protótipo de alta fidelidade tem navegação e manipulação demonstrativa de blocos. O ambiente de execução é o navegador. A implementação Android deve seguir as mesmas telas e regras, com persistência adequada ao aplicativo e verificação nativa de capacidades. A primeira validação física usa o Galaxy S25 Ultra; a WA86F possui aceite separado.
+
+## Revisão 0.1.1 · área de construção e feedback
+
+A implementação nativa usa um painel lateral quando a janela tem pelo menos 600 dp de largura e menos de 520 dp de altura. O palco mantém a altura disponível e a confirmação fica ancorada na base do painel. Em retrato, materiais e ferramentas abrem controles identificados; em tela larga, os nove materiais e os comandos de sair/salvar continuam na região inferior. A ação de resultado só ocupa espaço após a conclusão da missão.
+
+O botão **Ferramentas** reúne coordenadas, enquadramento, zoom e rotação. A posição escolhida no diálogo de coordenadas é lembrada durante a sessão da tela. Adicionar, apagar, desfazer e refazer produzem mensagens específicas, separadas das instruções de seleção. A preferência de movimento reduzido remove as transições dessas mensagens.
+
+**Enquadrar construção** considera o piso inteiro, a altura existente e o objetivo da missão. O enquadramento se adapta à proporção da janela, preserva o zoom escolhido na rotação e não muda automaticamente a cada bloco. O token de texto secundário foi escurecido para melhorar a leitura nos fundos claros.

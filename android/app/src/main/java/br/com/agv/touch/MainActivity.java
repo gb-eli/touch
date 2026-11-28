@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.View;
@@ -24,22 +26,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 import br.com.agv.touch.core.ProjectCodec;
 import br.com.agv.touch.core.ProjectStore;
+import br.com.agv.touch.core.ProjectTransfers;
 import br.com.agv.touch.core.VoxelWorld;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 /** Native, offline MVP. Android capability reporting never grants a feature by UI profile. */
-public final class MainActivity extends Activity {
+public final class MainActivity extends Activity implements ProjectTransfers.Listener {
     private static final int IMPORT_PROJECT=20,EXPORT_DOCUMENT=21;
     private VoxelWorld world=new VoxelWorld();
     private UiKit ui;
@@ -54,17 +54,31 @@ public final class MainActivity extends Activity {
     private float latestFps;
     private int observedContacts;
     private String gpu="Abra o construtor para detectar";
+    private String sessionToken=UUID.randomUUID().toString(),pendingImportToken;
+    private ProjectTransfers transfers;
+    private AlertDialog transferDialog;
+    private boolean interruptedTransfer,resetEditorCamera;
+
+    private static final class RetainedSession {
+        final VoxelWorld world;
+        final ProjectTransfers transfers;
+        RetainedSession(VoxelWorld world,ProjectTransfers transfers){this.world=world;this.transfers=transfers;}
+    }
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);ui=new UiKit(this);prefs=getSharedPreferences("preferences",MODE_PRIVATE);
-        boolean retained=getLastNonConfigurationInstance() instanceof VoxelWorld;
-        if(retained)world=(VoxelWorld)getLastNonConfigurationInstance();
+        RetainedSession retainedSession=getLastNonConfigurationInstance() instanceof RetainedSession?(RetainedSession)getLastNonConfigurationInstance():null;
+        boolean retained=retainedSession!=null;
+        if(retained){world=retainedSession.world;transfers=retainedSession.transfers;}
+        else {Handler handler=new Handler(Looper.getMainLooper());transfers=new ProjectTransfers(handler::post);}
         getWindow().setStatusBarColor(UiKit.INK);getWindow().setNavigationBarColor(UiKit.INK);
         try {store=new ProjectStore(this);}catch(IOException e){storageWarning=e.getMessage();}
         if(state!=null) {
             screen=state.getString("screen","home");mission=state.getString("mission","free");briefingMission=state.getString("briefing_mission","bridge");
             editorMaterial=state.getString("material","grass");editorTool=state.getString("tool","add");
             pendingExport=state.getString("pending_export");dirty=state.getBoolean("dirty");projectSaved=state.getBoolean("saved");lastCamera=state.getFloatArray("camera");
+            sessionToken=state.getString("session_token",sessionToken);pendingImportToken=state.getString("pending_import_token");
+            interruptedTransfer=!retained&&state.getBoolean("transfer_pending");
             String draft=state.getString("project");
             if(draft!=null)try{current=ProjectCodec.decodeStored(draft);if(!retained)world.initialize(current.blocks);}catch(Exception e){screen="home";storageWarning="Não foi possível restaurar a sessão. Seus arquivos salvos foram preservados.";}
         } else if(store!=null) {
@@ -73,26 +87,30 @@ public final class MainActivity extends Activity {
         }
         if("builder".equals(screen)&&current==null)screen="home";
         render();
-        if(state==null&&store!=null)content.post(this::offerRecovery);
+        if(!retained&&store!=null)content.post(()->offerRecovery(state!=null));
     }
 
     @Override protected void onSaveInstanceState(Bundle out) {
         super.onSaveInstanceState(out);
         out.putString("screen",screen);out.putString("mission",mission);out.putString("briefing_mission",briefingMission);out.putBoolean("dirty",dirty);out.putBoolean("saved",projectSaved);out.putString("pending_export",pendingExport);
+        out.putString("session_token",sessionToken);out.putString("pending_import_token",pendingImportToken);out.putBoolean("transfer_pending",transfers!=null&&transfers.hasPendingOperation());
         if(builder!=null){lastCamera=builder.scene.cameraState();editorMaterial=builder.material();editorTool=builder.tool();}out.putFloatArray("camera",lastCamera);out.putString("material",editorMaterial);out.putString("tool",editorTool);
         if(current!=null)try{out.putString("project",ProjectCodec.encode(snapshot(current.name)));}catch(Exception ignored){persistRecovery();}
     }
-    @Override protected void onPause(){persistRecovery();if(builder!=null)builder.scene.onPause();super.onPause();}
-    @Override protected void onResume(){super.onResume();if(builder!=null)builder.scene.onResume();}
-    @Override public Object onRetainNonConfigurationInstance(){return world;}
+    @Override protected void onPause(){if(transfers!=null)transfers.detach();dismissTransferDialog();persistRecovery();if(builder!=null)builder.scene.onPause();super.onPause();}
+    @Override protected void onResume(){super.onResume();if(builder!=null)builder.scene.onResume();if(transfers!=null)transfers.attach(this);if(interruptedTransfer){interruptedTransfer=false;Toast.makeText(this,"A sessão de transferência foi interrompida pelo sistema. Confira Projetos e o arquivo de destino antes de tentar novamente.",Toast.LENGTH_LONG).show();}}
+    @Override protected void onDestroy(){dismissTransferDialog();if(transfers!=null){transfers.detach();if(!isChangingConfigurations())transfers.close();}super.onDestroy();}
+    @Override public Object onRetainNonConfigurationInstance(){return new RetainedSession(world,transfers);}
     @Override public void onBackPressed(){
+        if(blockForTransfer())return;
         if("builder".equals(screen)){navigate("home");return;}
         if(!"home".equals(screen)){navigate("home");return;}
         super.onBackPressed();
     }
 
     private void render() {
-        if(builder!=null){lastCamera=builder.scene.cameraState();editorMaterial=builder.material();editorTool=builder.tool();builder.scene.onPause();builder=null;}
+        if(builder!=null){if(!resetEditorCamera)lastCamera=builder.scene.cameraState();editorMaterial=builder.material();editorTool=builder.tool();builder.scene.onPause();builder=null;}
+        if(resetEditorCamera){lastCamera=null;resetEditorCamera=false;}
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         String profile=prefs.getString("profile","auto");
         wide=getResources().getConfiguration().screenWidthDp>=840&&!"phone".equals(profile);
@@ -180,7 +198,7 @@ public final class MainActivity extends Activity {
         builder=new BuilderScreen(this,world,mission,current.name,prefs.getInt("target_fps",30),new BuilderScreen.Host(){
             public void back(){navigate("home");}
             public void save(){saveDialog(null);}
-            public void edited(){dirty=true;updateBuilderState();persistRecovery();}
+            public void edited(){dirty=true;sessionChanged();updateBuilderState();persistRecovery();}
             public void completed(){missionResult();}
             public void stats(float fps,int contacts,String renderer){latestFps=fps;observedContacts=Math.max(observedContacts,contacts);gpu=renderer;}
         });
@@ -219,15 +237,17 @@ public final class MainActivity extends Activity {
         }).show();
     }
     private void renameProject(ProjectStore.ProjectSummary item){
+        if(blockForTransfer())return;
         EditText field=nameField(item.name);AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Renomear projeto").setView(field).setPositiveButton("Salvar",null).setNegativeButton("Cancelar",null).create();
         dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
             String name=field.getText().toString().trim();if(name.isEmpty()){field.setError("Digite um nome.");return;}
-            try{ProjectCodec.Project original=store.load(item.projectId).project;ProjectCodec.Project renamed=ProjectCodec.update(original,name,original.mission,original.blocks);store.save(renamed);if(current!=null&&current.projectId.equals(item.projectId)){current=renamed;mission=current.mission;world.initialize(current.blocks);dirty=false;projectSaved=true;}dialog.dismiss();render();}catch(Exception e){field.setError(e.getMessage());}
+            try{ProjectCodec.Project original=store.load(item.projectId).project;ProjectCodec.Project renamed=ProjectCodec.update(original,name,original.mission,original.blocks);store.save(renamed);if(current!=null&&current.projectId.equals(item.projectId)){current=renamed;mission=current.mission;world.initialize(current.blocks);dirty=false;projectSaved=true;sessionChanged();}dialog.dismiss();render();}catch(Exception e){field.setError(e.getMessage());}
         }));dialog.show();
     }
     private void deleteProject(ProjectStore.ProjectSummary item){
+        if(blockForTransfer())return;
         new AlertDialog.Builder(this).setTitle("Excluir “"+item.name+"”?").setMessage("O projeto e sua cópia anterior serão removidos deste aparelho. Você pode exportar o JSON antes de excluir.").setNegativeButton("Cancelar",null).setPositiveButton("Excluir",(d,w)->{
-            try{store.delete(item.projectId);if(current!=null&&current.projectId.equals(item.projectId)){current=null;world.initialize(Collections.emptyList());dirty=false;projectSaved=false;clearRecoveryAfterSave();prefs.edit().remove("last_project").apply();}render();toast("Projeto excluído.");}catch(IOException e){error("Exclusão não concluída",e.getMessage());render();}
+            try{store.delete(item.projectId);if(current!=null&&current.projectId.equals(item.projectId)){current=null;world.initialize(Collections.emptyList());dirty=false;projectSaved=false;sessionChanged();clearRecoveryAfterSave();prefs.edit().remove("last_project").apply();}render();toast("Projeto excluído.");}catch(IOException e){error("Exclusão não concluída",e.getMessage());render();}
         }).show();
     }
 
@@ -247,18 +267,20 @@ public final class MainActivity extends Activity {
         diagLine(diag,"Renderizador",gpu);diagLine(diag,"Última amostra 3D",latestFps>0?String.format(Locale.US,"%.1f FPS",latestFps):"Abra e use o construtor");diagLine(diag,"Toques observados",String.valueOf(observedContacts));
         diagLine(diag,"Câmera informada pelo sistema",getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)?"Presente; captura não testada":"Não informada");diagLine(diag,"RA e reconhecimento corporal","Em desenvolvimento; não incluídos neste APK");
         ui.addFull(diag,ui.text("S25 Ultra e WA86F têm aceite independente. Estes dados não representam certificação de compatibilidade.",14,UiKit.MUTED,false),16);ui.addFull(diag,ui.button("Exportar diagnóstico",false,this::exportDiagnostics),18);ui.addFull(p,diag,18);
-        LinearLayout about=ui.card();about.addView(ui.label("TV TOUCH · MVP 0.1.0"));ui.addFull(about,ui.text("Projetos locais, sem login, sem envio de dados e sem gravação de câmera nesta versão.",15,UiKit.TEXT,false),12);ui.addFull(about,ui.text("Use Exportar JSON para levar os projetos a outro aparelho ou guardar uma cópia fora do aplicativo.",14,UiKit.MUTED,false),12);ui.addFull(p,about,18);
+        LinearLayout about=ui.card();about.addView(ui.label("TV TOUCH · "+appVersion()));ui.addFull(about,ui.text("Projetos locais, sem login, sem envio de dados e sem gravação de câmera nesta versão.",15,UiKit.TEXT,false),12);ui.addFull(about,ui.text("Use Exportar JSON para levar os projetos a outro aparelho ou guardar uma cópia fora do aplicativo.",14,UiKit.MUTED,false),12);ui.addFull(p,about,18);
     }
     private void chooseProfile(){String[] values={"auto","phone","tv"};String selected=prefs.getString("profile","auto");int index=selected.equals("phone")?1:selected.equals("tv")?2:0;new AlertDialog.Builder(this).setTitle("Perfil de interface").setSingleChoiceItems(new String[]{"Automático","Celular","TV"},index,(d,i)->{prefs.edit().putString("profile",values[i]).apply();d.dismiss();render();}).setNegativeButton("Cancelar",null).show();}
     private void diagLine(LinearLayout parent,String label,String value){ui.addFull(parent,ui.text(label,12,UiKit.MUTED,true),16);ui.addFull(parent,ui.text(value,15,UiKit.TEXT,false),4);}
     private void cameraInfo(){new AlertDialog.Builder(this).setTitle("Laboratório de câmera").setMessage("As próximas experiências são posicionar construções sobre superfícies com ARCore e interagir com jogos usando o corpo.\n\nElas ainda não estão incluídas neste APK. O S25 Ultra será o primeiro aparelho de teste. Na WA86F, a câmera e a forma de captura precisam ser verificadas na escola.\n\nO construtor e os projetos funcionam sem câmera.").setPositiveButton("Entendi",null).show();}
 
     private void navigate(String destination){
+        if(blockForTransfer())return;
         if(destination.equals(screen))return;
         if("builder".equals(screen))leaveEditor(()->{screen=destination;render();});else{screen=destination;render();}
     }
     private void newProject(String selectedMission){
-        leaveEditor(()->{world.initialize(Collections.emptyList());mission=selectedMission;current=ProjectCodec.create("free".equals(mission)?"Minha construção":missionTitle(mission),mission,world.blocks());dirty=false;projectSaved=false;lastCamera=null;screen="builder";render();});
+        if(blockForTransfer())return;
+        leaveEditor(()->{world.initialize(Collections.emptyList());mission=selectedMission;current=ProjectCodec.create("free".equals(mission)?"Minha construção":missionTitle(mission),mission,world.blocks());dirty=false;projectSaved=false;sessionChanged();resetEditorCamera=true;lastCamera=null;screen="builder";render();});
     }
     private void leaveEditor(Runnable next){
         if(!dirty){next.run();return;}
@@ -268,61 +290,97 @@ public final class MainActivity extends Activity {
     }
     private boolean discardDraft(){
         try{
-            ProjectCodec.Project saved=null;
-            if(current!=null&&projectSaved&&store!=null)saved=store.load(current.projectId).project;
-            // Prepare the replacement before removing the only recoverable draft.
-            if(store!=null)store.clearRecovery();
-            current=saved;if(saved!=null){mission=saved.mission;world.initialize(saved.blocks);}else world.initialize(Collections.emptyList());
-            dirty=false;return true;
+            ProjectStore.LoadResult replacement=null;
+            if(current!=null&&store!=null)replacement=store.discardRecovery(current.projectId,projectSaved);
+            current=replacement==null?null:replacement.project;projectSaved=current!=null;
+            if(current!=null){mission=current.mission;world.initialize(current.blocks);}else world.initialize(Collections.emptyList());
+            dirty=replacement!=null&&replacement.recovered;
+            if(dirty)storageWarning=replacement.warning;
+            sessionChanged();return true;
         }catch(IOException e){error("Não foi possível descartar",e.getMessage()+" Seu rascunho continua disponível.");return false;}
     }
-    private void openProject(String id){leaveEditor(()->{try{ProjectStore.LoadResult r=store.load(id);current=r.project;mission=current.mission;world.initialize(current.blocks);dirty=r.recovered;projectSaved=true;lastCamera=null;prefs.edit().putString("last_project",id).apply();screen="builder";render();if(r.recovered)error("Versão anterior recuperada",r.warning+" Use Salvar para registrar esta versão.");}catch(IOException e){error("Não foi possível abrir",e.getMessage());}});}
+    private void openProject(String id){if(blockForTransfer())return;leaveEditor(()->{try{ProjectStore.LoadResult r=store.load(id);current=r.project;mission=current.mission;world.initialize(current.blocks);dirty=r.recovered;projectSaved=true;sessionChanged();resetEditorCamera=true;lastCamera=null;prefs.edit().putString("last_project",id).apply();screen="builder";render();if(r.recovered)error("Versão anterior recuperada",r.warning+" Use Salvar para registrar esta versão.");}catch(IOException e){error("Não foi possível abrir",e.getMessage());}});}
     private ProjectCodec.Project snapshot(String name){return ProjectCodec.update(current,name,mission,world.blocks());}
     private void updateBuilderState(){if(builder!=null&&current!=null)builder.state(current.name,dirty||!projectSaved);}
     private EditText nameField(String name){EditText field=new EditText(this);field.setSingleLine(true);field.setText(name);field.setSelectAllOnFocus(true);field.setFilters(new InputFilter[]{new InputFilter.LengthFilter(60)});field.setPadding(ui.dp(24),ui.dp(16),ui.dp(24),ui.dp(16));field.setHint("Nome do projeto");field.setContentDescription("Nome do projeto");return field;}
     private void saveDialog(Runnable after){
+        if(blockForTransfer())return;
         if(store==null){showStorageError();return;}if(current==null)return;
         EditText field=nameField(current.name);AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Salvar projeto").setView(field).setPositiveButton("Salvar",null).setNegativeButton("Cancelar",null).create();
         dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
             String name=field.getText().toString().trim();if(name.isEmpty()){field.setError("Digite um nome para o projeto.");return;}
-            try{ProjectCodec.Project saved=snapshot(name);store.save(saved);current=saved;dirty=false;projectSaved=true;clearRecoveryAfterSave();prefs.edit().putString("last_project",current.projectId).apply();updateBuilderState();dialog.dismiss();toast("Projeto salvo neste aparelho.");if(after!=null)after.run();}
+            try{ProjectCodec.Project saved=snapshot(name);store.save(saved);current=saved;dirty=false;projectSaved=true;sessionChanged();clearRecoveryAfterSave();prefs.edit().putString("last_project",current.projectId).apply();updateBuilderState();dialog.dismiss();toast("Projeto salvo neste aparelho.");if(after!=null)after.run();}
             catch(Exception e){field.setError("Não foi possível concluir o salvamento. "+e.getMessage());}
         }));dialog.show();
     }
     private void persistRecovery(){if(!dirty||current==null||store==null)return;try{store.saveRecovery(snapshot(current.name));}catch(Exception e){storageWarning="Não foi possível atualizar a recuperação. Use Salvar e exporte uma cópia do projeto.";}}
     private void clearRecoveryAfterSave(){try{if(store!=null)store.clearRecovery();}catch(IOException e){storageWarning="O projeto foi salvo, mas um rascunho anterior ainda não pôde ser removido.";}}
-    private void offerRecovery(){
+    private void offerRecovery(boolean restoredSession){
+        if(isFinishing()||isDestroyed()||store==null||transfers.hasPendingOperation())return;
         try{ProjectStore.LoadResult recovery=store.loadRecovery();if(recovery==null)return;
+            if(restoredSession&&current!=null&&current.projectId.equals(recovery.project.projectId)&&
+                    (current.updatedAt>=recovery.project.updatedAt||sameProjectContent(current,recovery.project)))return;
             try{ProjectStore.LoadResult saved=store.load(recovery.project.projectId);if(!saved.recovered&&saved.project.updatedAt>=recovery.project.updatedAt){clearRecoveryAfterSave();return;}}catch(IOException ignored){ }
             String recoveryMessage="Há alterações de “"+recovery.project.name+"” que ainda não foram salvas como projeto.";
             if(recovery.recovered)recoveryMessage+="\n\n"+recovery.warning;
-            new AlertDialog.Builder(this).setTitle(recovery.recovered?"Cópia anterior do rascunho":"Encontramos um rascunho").setMessage(recoveryMessage).setPositiveButton("Recuperar",(d,w)->{current=recovery.project;mission=current.mission;world.initialize(current.blocks);dirty=true;projectSaved=false;lastCamera=null;screen="builder";render();}).setNegativeButton("Descartar rascunho",(d,w)->{try{store.clearRecovery();}catch(IOException e){error("Rascunho preservado",e.getMessage());}}).setCancelable(false).show();
+            final boolean savedExists=store.hasSavedVersion(recovery.project.projectId);
+            new AlertDialog.Builder(this).setTitle(recovery.recovered?"Cópia anterior do rascunho":"Encontramos um rascunho").setMessage(recoveryMessage).setPositiveButton("Recuperar",(d,w)->{current=recovery.project;mission=current.mission;world.initialize(current.blocks);dirty=true;projectSaved=savedExists;sessionChanged();resetEditorCamera=true;lastCamera=null;screen="builder";render();}).setNegativeButton("Descartar rascunho",(d,w)->{try{store.discardRecovery(recovery.project.projectId,savedExists);}catch(IOException e){error("Rascunho preservado",e.getMessage());}}).setCancelable(false).show();
         }catch(IOException e){error("Recuperação indisponível",e.getMessage()+" Os projetos salvos foram preservados.");}
     }
 
     private void pickImport(){
-        leaveEditor(()->{Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");i.putExtra(Intent.EXTRA_MIME_TYPES,new String[]{"application/json","text/plain"});try{startActivityForResult(i,IMPORT_PROJECT);}catch(Exception e){error("Importação indisponível","Este aparelho não disponibilizou um seletor de arquivos.");}});
+        if(blockForTransfer())return;
+        leaveEditor(()->{pendingImportToken=sessionToken;Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("*/*");i.putExtra(Intent.EXTRA_MIME_TYPES,new String[]{"application/json","text/plain"});try{startActivityForResult(i,IMPORT_PROJECT);}catch(Exception e){pendingImportToken=null;error("Importação indisponível","Este aparelho não disponibilizou um seletor de arquivos.");}});
     }
     private void exportProject(ProjectCodec.Project project){try{startExport(ProjectCodec.encode(project),"tv-touch-"+project.name.replaceAll("[^a-zA-Z0-9_-]","-")+".json");}catch(ProjectCodec.ProjectFormatException e){error("Não foi possível exportar",e.getMessage());}}
-    private void startExport(String data,String name){pendingExport=data;Intent i=new Intent(Intent.ACTION_CREATE_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("application/json");i.putExtra(Intent.EXTRA_TITLE,name);try{startActivityForResult(i,EXPORT_DOCUMENT);}catch(Exception e){pendingExport=null;error("Exportação indisponível","Este aparelho não disponibilizou um seletor de arquivos.");}}
+    private void startExport(String data,String name){if(blockForTransfer())return;pendingExport=data;Intent i=new Intent(Intent.ACTION_CREATE_DOCUMENT);i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("application/json");i.putExtra(Intent.EXTRA_TITLE,name);try{startActivityForResult(i,EXPORT_DOCUMENT);}catch(Exception e){pendingExport=null;error("Exportação indisponível","Este aparelho não disponibilizou um seletor de arquivos.");}}
     private void exportDiagnostics(){
-        try{JSONObject report=new JSONObject();report.put("app","TV Touch MVP 0.1.0");report.put("model",Build.MANUFACTURER+" "+Build.MODEL);report.put("android",Build.VERSION.RELEASE);report.put("api",Build.VERSION.SDK_INT);report.put("abis",new JSONArray(Build.SUPPORTED_ABIS));report.put("renderer",gpu);report.put("lastFpsSample",latestFps);report.put("observedTouchContacts",observedContacts);report.put("targetFps",prefs.getInt("target_fps",30));report.put("blocks",world.count());report.put("cameraCapture","not_implemented");report.put("ar","not_implemented");report.put("physicalAcceptance","not_recorded");startExport(report.toString(2),"tv-touch-diagnostico.json");}catch(Exception e){error("Não foi possível exportar",e.getMessage());}
+        try{JSONObject report=new JSONObject();report.put("app","TV Touch");report.put("versionName",appVersion());android.content.pm.PackageInfo info=getPackageManager().getPackageInfo(getPackageName(),0);report.put("versionCode",Build.VERSION.SDK_INT>=28?info.getLongVersionCode():info.versionCode);report.put("model",Build.MANUFACTURER+" "+Build.MODEL);report.put("android",Build.VERSION.RELEASE);report.put("api",Build.VERSION.SDK_INT);report.put("abis",new JSONArray(Build.SUPPORTED_ABIS));report.put("renderer",gpu);report.put("lastFpsSample",latestFps);report.put("observedTouchContacts",observedContacts);report.put("targetFps",prefs.getInt("target_fps",30));report.put("blocks",world.count());report.put("cameraCapture","not_implemented");report.put("ar","not_implemented");report.put("physicalAcceptance","not_recorded");startExport(report.toString(2),"tv-touch-diagnostico.json");}catch(Exception e){error("Não foi possível exportar",e.getMessage());}
     }
     @Override protected void onActivityResult(int request,int result,Intent data){
         super.onActivityResult(request,result,data);
-        if(result!=RESULT_OK||data==null||data.getData()==null){if(request==EXPORT_DOCUMENT)pendingExport=null;return;}
+        if(result!=RESULT_OK||data==null||data.getData()==null){if(request==EXPORT_DOCUMENT)pendingExport=null;if(request==IMPORT_PROJECT)pendingImportToken=null;return;}
         Uri uri=data.getData();
         if(request==IMPORT_PROJECT){
             if(store==null){showStorageError();return;}
-            try(InputStream in=getContentResolver().openInputStream(uri)){
-                if(in==null)throw new IOException("Arquivo não disponível.");ByteArrayOutputStream bytes=new ByteArrayOutputStream();byte[] buffer=new byte[4096];int count;
-                while((count=in.read(buffer))!=-1){if(bytes.size()+count>ProjectCodec.MAX_JSON_CHARS*4)throw new IOException("O arquivo é grande demais para um projeto.");bytes.write(buffer,0,count);}
-                ProjectCodec.Project imported=ProjectCodec.decodeImport(new String(bytes.toByteArray(),StandardCharsets.UTF_8));store.save(imported);current=imported;mission=current.mission;world.initialize(current.blocks);dirty=false;projectSaved=true;lastCamera=null;prefs.edit().putString("last_project",current.projectId).apply();screen="builder";render();toast("Projeto importado e salvo.");
-            }catch(Exception e){error("Arquivo não importado",e.getMessage()+" Seus projetos existentes foram preservados.");}
+            String token=pendingImportToken==null?sessionToken:pendingImportToken;pendingImportToken=null;
+            if(!transfers.importProject(AndroidDocuments.input(this,uri),store,token))error("Transferência em andamento","Aguarde a operação atual e tente novamente.");
         }else if(request==EXPORT_DOCUMENT){
             if(pendingExport==null){error("Exportação interrompida","Selecione Exportar novamente para gerar uma nova cópia.");return;}
-            try(OutputStream out=getContentResolver().openOutputStream(uri,"wt")){if(out==null)throw new IOException("Destino não disponível.");out.write(pendingExport.getBytes(StandardCharsets.UTF_8));out.flush();toast("Arquivo exportado.");}catch(Exception e){error("Exportação não concluída",e.getMessage());}finally{pendingExport=null;}
+            String exported=pendingExport;pendingExport=null;
+            if(!transfers.exportDocument(AndroidDocuments.output(this,uri),exported,sessionToken))error("Transferência em andamento","Aguarde a operação atual e tente novamente.");
         }
+    }
+
+    private void sessionChanged(){sessionToken=UUID.randomUUID().toString();}
+    private String appVersion(){try{return getPackageManager().getPackageInfo(getPackageName(),0).versionName;}catch(PackageManager.NameNotFoundException e){return "versão indisponível";}}
+    private static boolean sameProjectContent(ProjectCodec.Project a,ProjectCodec.Project b){return a.name.equals(b.name)&&a.mission.equals(b.mission)&&a.blocks.equals(b.blocks);}
+    private boolean blockForTransfer(){if(transfers==null||!transfers.hasPendingOperation())return false;onTransferChanged();return transfers.hasPendingOperation();}
+    private void dismissTransferDialog(){if(transferDialog!=null){transferDialog.dismiss();transferDialog=null;}}
+    @Override public void onTransferChanged(){
+        if(isFinishing()||isDestroyed()||transfers==null)return;
+        ProjectTransfers.Result result=transfers.takeResult();
+        if(result!=null){
+            dismissTransferDialog();
+            if(result.status==ProjectTransfers.Status.SUCCESS){
+                if(result.kind==ProjectTransfers.Kind.IMPORT&&result.project!=null){
+                    if(result.matchesSession(sessionToken)){
+                        current=result.project;mission=current.mission;world.initialize(current.blocks);dirty=false;projectSaved=true;sessionChanged();resetEditorCamera=true;lastCamera=null;
+                        prefs.edit().putString("last_project",current.projectId).apply();screen="builder";render();toast(result.message);
+                    }else{if("projects".equals(screen))render();toast("Projeto importado em Projetos. Sua edição atual foi preservada.");}
+                }else toast(result.message);
+            }else if(result.status==ProjectTransfers.Status.CANCELLED)Toast.makeText(this,result.message,Toast.LENGTH_LONG).show();
+            else error(result.kind==ProjectTransfers.Kind.IMPORT?"Arquivo não importado":"Exportação não concluída",result.message);
+            return;
+        }
+        ProjectTransfers.Snapshot progress=transfers.snapshot();if(progress==null){dismissTransferDialog();return;}
+        String title=progress.kind==ProjectTransfers.Kind.IMPORT?"Importando projeto":"Exportando arquivo";
+        String message=progress.cancelRequested?"Cancelando a transferência…":progress.phase==ProjectTransfers.Phase.COMMITTING?"O arquivo foi validado. Salvando o novo projeto…":progress.kind==ProjectTransfers.Kind.IMPORT?"Lendo e verificando o arquivo. Seus projetos existentes serão preservados.":"Gravando e fechando o arquivo no destino escolhido…";
+        if(transferDialog==null){
+            transferDialog=new AlertDialog.Builder(this).setTitle(title).setMessage(message).setNegativeButton("Cancelar",null).setCancelable(false).create();
+            transferDialog.show();transferDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(v->{if(!transfers.cancel())toast("O projeto está sendo salvo. Aguarde a conclusão.");});
+        }else{transferDialog.setTitle(title);transferDialog.setMessage(message);}
+        transferDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(progress.canCancel());
     }
     private void showStorageError(){error("Armazenamento indisponível",storageWarning==null?"Não foi possível acessar a pasta local de projetos.":storageWarning);}
     private void error(String title,String message){if(!isFinishing())new AlertDialog.Builder(this).setTitle(title).setMessage(message).setPositiveButton("Entendi",null).show();}

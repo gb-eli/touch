@@ -1,8 +1,8 @@
-# TV Touch Android — MVP 0.1.0-dev
+# TV Touch Android — MVP 0.1.1-dev
 
 Aplicativo Android nativo de construção com blocos 3D, missões e projetos locais. O MVP usa **Java, Views Android e OpenGL ES 2.0**, com um código compartilhado para o Galaxy S25 Ultra e a Samsung WA86F. A decisão de implementação e sua relação com o planejamento inicial estão registradas em [Arquitetura e build](../docs/android/BUILD.md).
 
-O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev` e aparece no launcher como **AGV Touch · Teste**. O aceite físico no S25 Ultra e na WA86F está **pendente**; execução em um aparelho ou emulador não homologa o outro.
+O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev`, versão **`0.1.1-dev`**, código **`4`**, e aparece no launcher como **AGV Touch · Teste**. O aceite físico no S25 Ultra e na WA86F está **pendente**; execução em um aparelho ou emulador não homologa o outro.
 
 ## Telas e funções implementadas
 
@@ -11,7 +11,7 @@ O pacote de desenvolvimento tem identidade `br.com.agv.touch.dev` e aparece no l
 | **Início** | Abrir construção livre, continuar projeto ou rascunho da sessão e acessar missões. |
 | **Explorar** | Construção livre, quatro missões e informação sobre as próximas experiências de câmera. |
 | **Missão** | Prévia do objetivo, instruções e início da atividade escolhida. |
-| **Construtor** | Seleção e confirmação de posições, adicionar/apagar blocos, girar, aproximar, afastar, restaurar a vista e escolher coordenadas. Nove materiais, desfazer/refazer, contagem e progresso. |
+| **Construtor** | Seleção e confirmação de posições, adicionar/apagar blocos, girar, aproximar, afastar, enquadrar a construção e escolher coordenadas. Nove materiais, desfazer/refazer, contagem e progresso. |
 | **Projetos** | Salvar, abrir, renomear, excluir mediante confirmação, importar e exportar JSON. |
 | **Ajustes** | Perfil visual, preferência de movimento reduzido, limite de renderização de 30/60 FPS e diagnóstico local exportável. |
 
@@ -32,18 +32,26 @@ A conclusão considera as coordenadas-alvo; permite materiais diferentes e bloco
 2. Escolha um material e a ferramenta **Adicionar**.
 3. Toque no chão ou em uma face. Confira a prévia e use **Colocar bloco** para confirmar.
 4. Para remover, escolha **Apagar**, selecione o bloco e confirme. Para mudar a vista, use **Girar**, pinça ou os botões de câmera.
-5. Use **Coordenadas** quando precisar escolher precisamente X, Y e Z.
+5. Use **Coordenadas**, disponível também em **Ferramentas → Escolher coordenadas**, quando precisar escolher precisamente X, Y e Z.
 6. Toque em **Salvar**, informe o nome e aguarde a confirmação. O projeto passa a aparecer em **Projetos**.
 
 Selecionar uma posição e editar são ações separadas. Arrastar ou fazer pinça não coloca blocos automaticamente.
+
+**Enquadrar construção** considera o chão inteiro, a altura da construção e os objetivos da missão, adaptando a distância à proporção da área 3D. O enquadramento permanece estável enquanto você edita ou gira; use esse comando novamente depois de aumentar a altura. Aproximar manualmente pode cortar parte da cena. A rotação da tela preserva a vista; abrir ou criar outro projeto inicia um novo enquadramento.
 
 ## Projetos, importação e recuperação
 
 Os projetos explícitos e o rascunho de recuperação são armazenados separadamente na área privada do app. Existe uma cópia anterior válida para recuperação. Se essa cópia for utilizada, a interface informa o ocorrido; confirme o conteúdo antes de salvá-lo novamente.
 
-Em **Projetos → Importar JSON**, o app aceita o formato voxel legado `version:1` e suas próprias exportações. Valida tamanho, tipos, coordenadas, materiais e duplicatas antes de salvar. **Cada importação recebe um novo UUID**: identidades recebidas no arquivo não substituem projetos existentes nem definem caminhos locais.
+Descartar alterações de um projeto recuperado exige primeiro abrir sua versão salva ou uma cópia anterior válida. Se ambas estiverem ilegíveis, o rascunho permanece disponível e o app informa o erro. Essa proteção também vale para **Descartar rascunho** no aviso de recuperação ao iniciar. Um rascunho novo, sem projeto salvo associado, pode ser descartado após a escolha explícita.
+
+Em **Projetos → Importar JSON**, o app aceita o formato voxel legado `version:1` e suas próprias exportações. Valida UTF-8, tamanho, tipos, coordenadas, materiais e duplicatas antes de salvar; bytes de texto inválidos são rejeitados. **Cada importação recebe um novo UUID**: identidades recebidas no arquivo não substituem projetos existentes nem definem caminhos locais.
 
 Para obter uma cópia externa, use **Projetos → Opções do projeto → Exportar JSON** e escolha o destino no seletor de arquivos Android. O núcleo funciona offline; para testar importação/exportação sem rede, escolha um provedor de arquivos local.
+
+Importar e exportar executam o acesso ao provedor em segundo plano, com uma operação por vez. A interface mostra a etapa atual e permite solicitar cancelamento. Na importação, o cancelamento deixa de estar disponível quando começa a gravação local do projeto validado. Na exportação, a confirmação só aparece depois de gravar e fechar o arquivo; uma falha ou um cancelamento pode deixar um arquivo de destino incompleto.
+
+O coordenador mantém a operação e seu resultado durante a rotação da tela. Cada importação pertence à sessão que a solicitou: se a edição atual tiver mudado, o projeto importado fica em **Projetos**, sem substituir essa edição. Encerrar o processo pelo sistema não tem a mesma garantia de rotação; ao restaurar uma sessão interrompida, confira **Projetos** e o destino da exportação antes de tentar novamente.
 
 **Exporte os projetos antes de reinstalar, trocar a chave de assinatura ou migrar para outra identidade do aplicativo.** A variante `.dev` e uma futura versão de produção têm áreas de dados diferentes. O MVP não depende de backup automático do sistema ou sincronização em nuvem.
 
@@ -74,7 +82,7 @@ APK resultante: `app/build/outputs/apk/debug/app-debug.apk`, a partir da pasta `
 
 A chave de teste fica **fora do Git**. Para atualizar uma instalação de desenvolvimento, preserve identidade e assinatura. Builds de outros ambientes podem ter outra chave; siga as orientações de migração do documento de build.
 
-O runner `tests/run-core-tests.sh` executa conformidade com o modelo web, validação de projetos, persistência e picking. Ele usa um JAR JSON apenas no host; o app utiliza o JSON do Android. Instruções e limites desses testes estão no contrato do domínio.
+O runner `tests/run-core-tests.sh` executa conformidade com o modelo web, validação de projetos, persistência, picking, transferência com streams simulados e projeção da câmera. Ele usa um JAR JSON apenas no host; o app utiliza o JSON do Android. Os testes cobrem descarte seguro, UTF-8 inválido, cancelamento antes do commit, falha ao fechar arquivos e entrega do resultado a uma nova sessão de interface. Instruções e limites desses testes estão no contrato do domínio; eles não comprovam o funcionamento de um provedor SAF real nem a renderização no aparelho.
 
 ## Aceite
 

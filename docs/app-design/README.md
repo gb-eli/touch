@@ -62,6 +62,10 @@ O roteiro [verify-prototype.cjs](verify-prototype.cjs) usa Node.js, Playwright e
 node docs/app-design/verify-prototype.cjs
 ```
 
-Se necessário, informe `BROWSER_EXECUTABLE_PATH` com o caminho do Chromium. Playwright é uma dependência exclusiva da verificação; o protótipo não depende dele. O relatório registra erros JavaScript/console, requisições externas e largura de conteúdo nos dois viewports. As capturas respeitam movimento reduzido e aguardam o desaparecimento das mensagens temporárias.
+Se necessário, informe `BROWSER_EXECUTABLE_PATH` com o caminho do Chromium. Playwright é uma dependência exclusiva da verificação; o protótipo não depende dele. O roteiro cobre 1280 × 720, 412 × 915 e 844 × 390. Em paisagem curta, também exige cena com pelo menos 65% da altura da janela, controles ao lado da cena e confirmação visível com alvo de pelo menos 48 px. O relatório registra erros JavaScript/console, requisições externas e largura de conteúdo nos três viewports. As capturas respeitam movimento reduzido e aguardam o desaparecimento das mensagens temporárias.
+
+A CI executa esse roteiro com o Chrome instalado no runner e guarda as evidências em `browser-artifacts/prototype`. Use `TV_TOUCH_PROTOTYPE_OUTPUT` para escolher outra pasta de saída sem substituir o conjunto histórico de capturas acima.
+
+Na revisão 0.1.1, o construtor ganhou uma composição lateral para celulares em paisagem curta e texto secundário com maior contraste. A baixa fidelidade e o fluxograma mantêm a mesma arquitetura de telas.
 
 Os testes do navegador verificam esta prévia. A instalação do APK, desempenho, pausa/retorno, toque/caneta e aceitação física na escola pertencem à validação nativa e aos testes nos aparelhos.

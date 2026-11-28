@@ -23,7 +23,7 @@ import java.util.List;
 /** Product-specific visual tokens shared by every native screen. No network assets. */
 final class UiKit {
     static final int INK=0xff0d2230, SURFACE=0xfff4f7f3, PAPER=Color.WHITE;
-    static final int TEXT=0xff163141, MUTED=0xff637984, LIME=0xffc7f36b;
+    static final int TEXT=0xff163141, MUTED=0xff526875, LIME=0xffc7f36b;
     static final int CYAN=0xff79dcec, BORDER=0xffdce7e3, DANGER=0xffb23b43;
     final Context context;
     UiKit(Context context) { this.context=context; }
@@ -48,14 +48,19 @@ final class UiKit {
     Button button(String label,int background,int foreground,Runnable action) {
         Button b=new Button(context);b.setText(label);b.setAllCaps(false);b.setTextSize(15);
         b.setTypeface(Typeface.create("sans-serif-medium",Typeface.NORMAL));
-        b.setTextColor(new ColorStateList(new int[][]{new int[]{-android.R.attr.state_enabled},new int[]{}},new int[]{0xff80908f,foreground}));
         boolean tv="tv".equals(context.getSharedPreferences("preferences",Context.MODE_PRIVATE).getString("profile","auto"));
         b.setMinHeight(dp(tv?56:50));b.setMinimumHeight(dp(tv?56:50));b.setMinWidth(0);b.setMinimumWidth(0);
         b.setPadding(dp(16),dp(10),dp(16),dp(10));b.setStateListAnimator(null);
+        styleButton(b,background,foreground,false);
+        b.setOnClickListener(v->action.run());return b;
+    }
+    void styleButton(Button b,int background,int foreground,boolean selected) {
+        b.setTextColor(new ColorStateList(new int[][]{new int[]{-android.R.attr.state_enabled},new int[]{}},new int[]{0xff677b79,foreground}));
         StateListDrawable states=new StateListDrawable();
         states.addState(new int[]{-android.R.attr.state_enabled},shape(0xffe7ece8,14));
-        states.addState(new int[]{},new RippleDrawable(ColorStateList.valueOf(0x26163141),outline(background,14,background==PAPER?BORDER:background),shape(Color.WHITE,14)));
-        b.setBackground(states);b.setOnClickListener(v->action.run());return b;
+        int ripple=foreground==PAPER?0x3dffffff:0x26163141;
+        states.addState(new int[]{},new RippleDrawable(ColorStateList.valueOf(ripple),outline(background,14,selected?TEXT:background==PAPER?BORDER:background),shape(Color.WHITE,14)));
+        b.setBackground(states);b.setSelected(selected);
     }
     LinearLayout vertical() {LinearLayout v=new LinearLayout(context);v.setOrientation(LinearLayout.VERTICAL);return v;}
     LinearLayout row() {LinearLayout v=new LinearLayout(context);v.setOrientation(LinearLayout.HORIZONTAL);v.setGravity(Gravity.CENTER_VERTICAL);return v;}

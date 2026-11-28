@@ -1,4 +1,4 @@
-# Aceite do TV Touch Android — MVP 0.1.0-dev
+# Aceite do TV Touch Android — MVP 0.1.1-dev
 
 ## Estado e identificação
 
@@ -22,7 +22,7 @@ Classificações: **Não executado**, **Aprovado**, **Reprovado** ou **Bloqueado
 
 ## 1. Preparação e preservação dos projetos
 
-- [ ] Identificar o APK como `0.1.0-dev`, `br.com.agv.touch.dev`, antes da instalação.
+- [ ] Identificar o APK como `0.1.1-dev` (versionCode `4`), `br.com.agv.touch.dev`, antes da instalação.
 - [ ] Exportar JSON dos projetos existentes antes de reinstalar, trocar assinatura ou migrar de identidade de app.
 - [ ] Usar a mesma chave de teste para o ensaio de atualização. A chave permanece fora do repositório.
 - [ ] Preparar um JSON legado válido, um inválido e uma exportação desta versão para os testes de migração.
@@ -75,13 +75,16 @@ Executar em Android/emulador e repetir os fluxos essenciais no aparelho real. En
 | R03 | Editar, usar Voltar e escolher Continuar editando, Salvar ou Descartar em ensaios separados. | Cancelar preserva edição; salvar confirma após escrita; descartar retorna ao último salvo ou encerra o projeto novo conforme a escolha. | Pendente |
 | R04 | Editar um projeto de teste e encerrar seu processo; abrir novamente. | Rascunho oferecido separadamente do salvo explícito; usuário decide recuperar ou descartar. | Pendente |
 | R05 | Tornar ilegível o rascunho principal, preservando sua cópia anterior válida. | Diálogo informa **cópia anterior** e apresenta aviso; não promete recuperar a última edição corrompida. | Pendente |
-| R06 | Com rascunho válido, tornar ilegíveis principal e backup do salvo; solicitar Descartar. | Falha é informada e o rascunho é preservado, pois a substituição não pôde ser preparada. | Pendente |
+| R06 | Com rascunho válido, tornar ilegíveis principal e backup do salvo; solicitar Descartar no diálogo inicial e, em ensaio separado, após recuperar no editor. | Falha é informada e o rascunho é preservado, pois a substituição não pôde ser preparada. | Pendente |
 | R07 | Provocar falha de limpeza do rascunho após uma gravação explícita bem-sucedida. | App reconhece que o projeto foi salvo; eventual aviso de limpeza não transforma sucesso em perda de dados. | Pendente |
 | R08 | Cancelar o seletor de importação/exportação; repetir com arquivo inválido, destino indisponível ou permissão revogada. | Sem falsa confirmação; projeto atual e arquivos anteriores preservados. | Pendente |
 | R09 | Exportar projeto, importar duas vezes e verificar a lista. | Três identidades distintas: original e duas cópias. UUID recebido não substitui outro projeto. | Pendente |
 | R10 | Tentar importar coordenada ausente, string numérica, duplicata, material desconhecido e mais de 256 blocos. | Todos rejeitados sem modificar projeto em edição ou salvo. | Pendente |
 | R11 | Excluir projeto e cancelar primeiro; depois confirmar em projeto descartável. | Cancelar mantém os dados; confirmar remove projeto e cópia anterior, com estado da sessão coerente. | Pendente |
 | R12 | Entrar/sair do construtor dez vezes e alternar com outro app. | Cena retoma; controles respondem; ausência de travamentos ou gestos presos observáveis. | Pendente |
+| R13 | Importar/exportar com provedor lento, girar durante a operação e cancelar antes do salvamento da importação. | Tela responde; estado da operação reaparece após rotação; resultado consumido uma vez. Cancelamento informa eventual destino parcial na exportação. | Pendente |
+| R14 | Abrir construtor de missão em paisagem curta, depois em retrato estreito com fonte ampliada. | Cena utilizável; confirmação, desfazer e refazer alcançáveis; sem texto ilegível por compressão. | Pendente |
+| R15 | Enquadrar uma construção alta e girar entre retrato/paisagem. | Grade e altura da construção cabem na vista enquadrada; zoom manual permanece ajustável. | Pendente |
 
 O teste de fechamento de processo é diferente da rotação. Na rotação, o modelo em memória preserva o histórico. Após encerramento do processo, a recuperação assegura a construção gravada no rascunho; histórico completo, seleção transitória e estado de um diálogo não são prometidos como dados persistidos.
 

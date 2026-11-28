@@ -32,7 +32,7 @@ def main():
         if not (build_tools / name).is_file():
             parser.error("SDK Build Tools 35.0.1 not found: " + str(build_tools / name))
 
-    signature = run([str(build_tools / "apksigner"), "verify", "--verbose", str(apk)])
+    signature = run([str(build_tools / "apksigner"), "verify", "--verbose", "--print-certs", str(apk)])
     run([str(build_tools / "zipalign"), "-c", "-P", "16", "4", str(apk)])
     badging = run([str(build_tools / "aapt2"), "dump", "badging", str(apk)])
     permissions = run([str(build_tools / "aapt2"), "dump", "permissions", str(apk)])
@@ -40,6 +40,11 @@ def main():
     match = re.search(r"^package: name='([^']+)'", badging, re.MULTILINE)
     if not match or match.group(1) != args.package:
         raise ValueError("Unexpected application ID in APK.")
+    version_code = re.search(r"versionCode='([0-9]+)'", badging)
+    version_name = re.search(r"versionName='([^']+)'", badging)
+    certificate = re.search(r"Signer #1 certificate SHA-256 digest: ([0-9a-f]{64})", signature)
+    if not version_code or not version_name or not certificate:
+        raise ValueError("APK version or signer identity could not be read.")
     if not re.search(r"^(?:minSdkVersion|sdkVersion):'26'$", badging, re.MULTILINE) or "targetSdkVersion:'35'" not in badging:
         raise ValueError("Unexpected SDK requirements in APK.")
     permission_names = re.findall(r"uses-permission[^:]*: name='([^']+)'", permissions)
@@ -57,6 +62,9 @@ def main():
     print(json.dumps({
         "apk": str(apk),
         "application_id": match.group(1),
+        "version_code": int(version_code.group(1)),
+        "version_name": version_name.group(1),
+        "signer_certificate_sha256": certificate.group(1),
         "bytes": apk.stat().st_size,
         "sha256": hashlib.sha256(apk.read_bytes()).hexdigest(),
         "minimum_api": 26,
