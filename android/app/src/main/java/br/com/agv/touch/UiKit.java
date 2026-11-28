@@ -102,6 +102,12 @@ final class UiKit {
             Path path=new Path();
             if("home".equals(kind)) {path.moveTo(3,11);path.lineTo(12,3);path.lineTo(21,11);path.moveTo(5,10);path.lineTo(5,21);path.lineTo(10,21);path.lineTo(10,15);path.lineTo(14,15);path.lineTo(14,21);path.lineTo(19,21);path.lineTo(19,10);c.drawPath(path,p);}
             else if("explore".equals(kind)) {for(int y:new int[]{4,14})for(int x:new int[]{4,14})c.drawRoundRect(x,y,x+6,y+6,1,1,p);}
+            else if("library".equals(kind)) {
+                path.moveTo(4,5);path.lineTo(10,4);path.lineTo(10,20);path.lineTo(4,21);path.close();
+                path.moveTo(12,4);path.lineTo(19,5);path.lineTo(20,21);path.lineTo(12,20);path.close();
+                path.moveTo(7,8);path.lineTo(7,16);path.moveTo(15,8);path.lineTo(16,16);
+                c.drawPath(path,p);
+            }
             else if("projects".equals(kind)) {path.moveTo(3,8);path.lineTo(3,5);path.lineTo(10,5);path.lineTo(12,8);path.lineTo(21,8);path.lineTo(21,20);path.lineTo(3,20);path.close();c.drawPath(path,p);}
             else if("settings".equals(kind)) {c.drawCircle(12,12,6,p);c.drawCircle(12,12,2,p);for(int i=0;i<8;i++){double a=i*Math.PI/4;c.drawLine(12+(float)Math.cos(a)*8,12+(float)Math.sin(a)*8,12+(float)Math.cos(a)*10,12+(float)Math.sin(a)*10,p);}}
             else if("cube".equals(kind)) {path.moveTo(12,2);path.lineTo(21,7);path.lineTo(21,17);path.lineTo(12,22);path.lineTo(3,17);path.lineTo(3,7);path.close();path.moveTo(3,7);path.lineTo(12,12);path.lineTo(21,7);path.moveTo(12,12);path.lineTo(12,22);c.drawPath(path,p);}
